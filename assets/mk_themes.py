@@ -1,0 +1,148 @@
+# Генератор src/data/themes.js — темы фона для песен без обложки.
+# Каждая тема: id, раздел, названия ru/en, 2 цвета основы (градиент) + 3 цвета пятен, декор.
+import json
+C = 'holidays', 'seasons', 'nature', 'space', 'cities', 'mood', 'genres', 'tastes', 'classic'
+T = [
+ # --- праздники
+ ('christmas','holidays','Рождество','Christmas',['#0f3d2e','#06180f'],['#1f7a4d','#c0392b','#f5d76e'],'snow'),
+ ('new_year','holidays','Новый год','New Year',['#0b1d3a','#050a17'],['#2e5aa8','#c9a227','#e8e8f0'],'confetti'),
+ ('santa','holidays','Дед Мороз','Santa',['#5c0f14','#1e0507'],['#c0392b','#f2f2f2','#2e7d32'],'snow'),
+ ('winter_eve','holidays','Зимний вечер','Winter Eve',['#14213d','#070b16'],['#3d5a80','#98c1d9','#e0fbfc'],'snow'),
+ ('gingerbread','holidays','Имбирный пряник','Gingerbread',['#4a2c17','#1c0f07'],['#a0612b','#e8c39e','#c0392b'],'none'),
+ ('halloween','holidays','Хэллоуин','Halloween',['#1a0d24','#07030b'],['#ff7518','#5b2a86','#2b2b2b'],'stars'),
+ ('pumpkin','holidays','Тыквенная ночь','Pumpkin Night',['#2a1405','#0c0602'],['#e8740c','#f2a541','#3d1f0a'],'none'),
+ ('witch','holidays','Ведьмин час','Witching Hour',['#120a1f','#040208'],['#4b2e83','#2d6a4f','#9d4edd'],'stars'),
+ ('day_of_dead','holidays','День мёртвых','Day of the Dead',['#2b0a2f','#0d030f'],['#ff6f91','#ffc75f','#845ec2'],'confetti'),
+ ('valentine','holidays','День святого Валентина','Valentine',['#4a0d1f','#1a040b'],['#e63462','#ff8fab','#b5179e'],'none'),
+ ('march8','holidays','8 Марта','Women’s Day',['#3d1830','#160810'],['#f4a6c1','#ffd6e0','#9bcf53'],'none'),
+ ('easter','holidays','Пасха','Easter',['#2f3e46','#121a1f'],['#ffd6a5','#caffbf','#bdb2ff'],'none'),
+ ('birthday','holidays','День рождения','Birthday',['#2a1b4a','#0e0819'],['#ff5d8f','#ffd23f','#3bceac'],'confetti'),
+ ('party','holidays','Вечеринка','Party',['#1b0b3b','#08031a'],['#f72585','#4cc9f0','#7209b7'],'confetti'),
+ ('carnival','holidays','Карнавал','Carnival',['#3a0d4a','#12031a'],['#ffbe0b','#fb5607','#3a86ff'],'confetti'),
+ ('lunar_new_year','holidays','Китайский Новый год','Lunar New Year',['#4a0a0a','#1a0303'],['#d62828','#f77f00','#fcbf49'],'none'),
+ ('diwali','holidays','Дивали','Diwali',['#2b1033','#0e0511'],['#ff9f1c','#ffbf69','#cb48b7'],'stars'),
+ ('hanukkah','holidays','Ханука','Hanukkah',['#0b2447','#030b17'],['#19376d','#576cbc','#d4af37'],'stars'),
+ ('st_patrick','holidays','День святого Патрика','St. Patrick’s',['#0b3d20','#03140a'],['#2a9d8f','#57cc99','#e9c46a'],'none'),
+ ('thanksgiving','holidays','День благодарения','Thanksgiving',['#3b2314','#140b06'],['#bc6c25','#dda15e','#606c38'],'none'),
+ ('oktoberfest','holidays','Октоберфест','Oktoberfest',['#0d2b52','#040d1a'],['#3a6ea5','#f5f5f5','#e0a526'],'none'),
+ ('wedding','holidays','Свадьба','Wedding',['#3c3a40','#18171a'],['#f1e4e8','#d8c3a5','#e6c79c'],'stars'),
+ # --- времена года
+ ('early_spring','seasons','Ранняя весна','Early Spring',['#24382c','#0d140f'],['#9ad1a5','#e3f2c1','#c8a2c8'],'none'),
+ ('blossom','seasons','Цветение','Blossom',['#3d2433','#160c12'],['#ffb7c5','#ffe5ec','#a3c4a8'],'none'),
+ ('summer','seasons','Лето','Summer',['#0b4f6c','#04202c'],['#ffd166','#06d6a0','#118ab2'],'none'),
+ ('heat','seasons','Зной','Heat Wave',['#4a1c0b','#1a0904'],['#ff7b00','#ffb700','#d00000'],'none'),
+ ('golden_autumn','seasons','Золотая осень','Golden Autumn',['#3d2a0d','#140d03'],['#e09f3e','#9e2a2b','#f2c14e'],'none'),
+ ('rainy_autumn','seasons','Дождливая осень','Rainy Autumn',['#283035','#0d1012'],['#6c757d','#8d6e63','#a3b1ba'],'none'),
+ ('first_snow','seasons','Первый снег','First Snow',['#2d3a48','#0f141a'],['#cfd8dc','#90a4ae','#eceff1'],'snow'),
+ ('frost','seasons','Мороз','Frost',['#0d2a3f','#040e16'],['#a9d6e5','#61a5c2','#e0f7fa'],'snow'),
+ ('white_nights','seasons','Белые ночи','White Nights',['#2f3a5a','#11152a'],['#c9d6ff','#f7c6d9','#e2e2e2'],'none'),
+ ('indian_summer','seasons','Бабье лето','Indian Summer',['#3a2e14','#141006'],['#e9c46a','#f4a261','#e76f51'],'none'),
+ # --- природа
+ ('forest','nature','Лес','Forest',['#1b3022','#08100b'],['#2d6a4f','#52b788','#95d5b2'],'none'),
+ ('ocean','nature','Океан','Ocean',['#03254c','#010c1a'],['#1167b1','#187bcd','#2a9df4'],'none'),
+ ('lagoon','nature','Лагуна','Lagoon',['#00454a','#00191b'],['#00a6a6','#7dcfb6','#fbd1a2'],'none'),
+ ('desert','nature','Пустыня','Desert',['#4a2f1a','#1a1009'],['#d4a373','#e9c46a','#bc6c25'],'none'),
+ ('aurora','nature','Северное сияние','Aurora',['#06141f','#02070b'],['#00f5d4','#9b5de5','#00bbf9'],'stars'),
+ ('sunset','nature','Закат','Sunset',['#3d0e3a','#150413'],['#ff6b6b','#feca57','#ff9ff3'],'none'),
+ ('sunrise','nature','Рассвет','Sunrise',['#3b2a4d','#140e1b'],['#ffafcc','#ffd6a5','#a2d2ff'],'none'),
+ ('lavender','nature','Лавандовое поле','Lavender Field',['#2e2445','#100c19'],['#b8a1e3','#e0c3fc','#8e7dbe'],'none'),
+ ('sakura','nature','Сакура','Sakura',['#3a2230','#140b11'],['#ffc0cb','#ffe4e1','#f08080'],'none'),
+ ('rainforest','nature','Тропики','Rainforest',['#0b3d2e','#031510'],['#06d6a0','#118ab2','#ffd166'],'none'),
+ ('coral_reef','nature','Коралловый риф','Coral Reef',['#01395c','#001524'],['#ff7f50','#00b4d8','#ffd6a5'],'none'),
+ ('mountain_lake','nature','Горное озеро','Mountain Lake',['#1d3557','#0a1320'],['#457b9d','#a8dadc','#f1faee'],'none'),
+ ('meadow','nature','Луг','Meadow',['#2b3d1b','#0f1609'],['#a7c957','#f2e8cf','#6a994e'],'none'),
+ ('storm','nature','Гроза','Storm',['#1c1f26','#08090c'],['#4a5568','#718096','#a0aec0'],'none'),
+ ('volcano','nature','Вулкан','Volcano',['#2b0a03','#0d0301'],['#d00000','#ff7b00','#3a0ca3'],'none'),
+ ('moonlight','nature','Лунный свет','Moonlight',['#101935','#050813'],['#3e5c76','#748cab','#f0ebd8'],'stars'),
+ ('tundra','nature','Тундра','Tundra',['#2b3a3a','#0f1414'],['#8aa29e','#d5e3e0','#5c7457'],'snow'),
+ ('bamboo','nature','Бамбук','Bamboo',['#1f3a1f','#0a140a'],['#6b8f3a','#b5c99a','#e9edc9'],'none'),
+ # --- космос
+ ('galaxy','space','Галактика','Galaxy',['#0d0221','#03000a'],['#7b2cbf','#3a0ca3','#f72585'],'stars'),
+ ('nebula','space','Туманность','Nebula',['#140b2e','#05030f'],['#ff4d6d','#4361ee','#4cc9f0'],'stars'),
+ ('deep_space','space','Глубокий космос','Deep Space',['#05070f','#000000'],['#1b263b','#415a77','#778da9'],'stars'),
+ ('mars','space','Марс','Mars',['#3a120a','#120402'],['#c1440e','#e77d11','#fda600'],'stars'),
+ ('moon','space','Луна','Moon',['#1e1e24','#09090b'],['#8d99ae','#edf2f4','#4a4e69'],'stars'),
+ ('eclipse','space','Затмение','Eclipse',['#0a0a0a','#000000'],['#ff9e00','#3c096c','#240046'],'stars'),
+ # --- города
+ ('paris','cities','Ночной Париж','Paris Night',['#1b1f3b','#090b17'],['#e0aaff','#ffd6a5','#6d6875'],'stars'),
+ ('tokyo','cities','Неоновый Токио','Neon Tokyo',['#10002b','#04000d'],['#ff006e','#3a86ff','#8338ec'],'none'),
+ ('new_york','cities','Нью-Йорк','New York',['#1c1c1c','#080808'],['#f4d35e','#ee964b','#0d3b66'],'none'),
+ ('venice','cities','Венеция','Venice',['#203a43','#0b1418'],['#2c5364','#e9c46a','#f4a261'],'none'),
+ ('istanbul','cities','Стамбул','Istanbul',['#2a1b3d','#0e0915'],['#44318d','#d83f87','#e98074'],'none'),
+ ('havana','cities','Гавана','Havana',['#2d4059','#0f1620'],['#ea5455','#f07b3f','#ffd460'],'none'),
+ ('lisbon','cities','Лиссабон','Lisbon',['#1d3557','#0a1320'],['#f4a261','#e9c46a','#a8dadc'],'none'),
+ ('nordic','cities','Скандинавия','Nordic',['#2b2d42','#0f1017'],['#8d99ae','#edf2f4','#ef233c'],'snow'),
+ # --- настроение
+ ('calm','mood','Спокойствие','Calm',['#1f2d3d','#0b1016'],['#6c8ebf','#a3bcd9','#cfe0f0'],'none'),
+ ('romance','mood','Романтика','Romance',['#3d1426','#16070e'],['#e5989b','#ffb4a2','#b5838d'],'none'),
+ ('melancholy','mood','Меланхолия','Melancholy',['#1e2430','#0a0c11'],['#5c677d','#7d8597','#33415c'],'none'),
+ ('energy','mood','Энергия','Energy',['#2b0b3f','#0f0316'],['#ff0054','#ffbd00','#00f5d4'],'none'),
+ ('focus','mood','Фокус','Focus',['#13232f','#060c10'],['#2a6f97','#61a5c2','#89c2d9'],'none'),
+ ('dream','mood','Мечта','Dream',['#2a2350','#0e0b1c'],['#cdb4db','#a2d2ff','#ffc8dd'],'stars'),
+ ('nostalgia','mood','Ностальгия','Nostalgia',['#3a2e2a','#14100e'],['#d4a373','#ccd5ae','#a98467'],'none'),
+ ('chill','mood','Чилл','Chill',['#14353a','#061315'],['#83c5be','#edf6f9','#ffddd2'],'none'),
+ ('euphoria','mood','Эйфория','Euphoria',['#2d0a3a','#0f0314'],['#ff70a6','#ff9770','#ffd670'],'confetti'),
+ ('mystery','mood','Тайна','Mystery',['#0f0a1f','#04020a'],['#3c096c','#5a189a','#10002b'],'stars'),
+ ('warmth','mood','Тепло','Warmth',['#3a1f0f','#140a05'],['#f4a259','#bc4b51','#f4e285'],'none'),
+ ('freshness','mood','Свежесть','Freshness',['#0f3b36','#051513'],['#80ed99','#c7f9cc','#57cc99'],'none'),
+ # --- жанры
+ ('jazz','genres','Джаз-клуб','Jazz Club',['#2a1a0f','#0d0805'],['#c08552','#895737','#f3e9dc'],'none'),
+ ('rock','genres','Рок','Rock',['#1a1a1a','#050505'],['#c1121f','#780000','#fdf0d5'],'none'),
+ ('metal','genres','Метал','Metal',['#111111','#000000'],['#4a4e69','#9a8c98','#c9ada7'],'none'),
+ ('techno','genres','Техно','Techno',['#0a0f1f','#02040a'],['#00f5ff','#7b2ff7','#f107a3'],'none'),
+ ('synthwave','genres','Синтвейв','Synthwave',['#1a0533','#070112'],['#ff2a6d','#05d9e8','#d1f7ff'],'stars'),
+ ('lofi','genres','Lo-fi','Lo-fi',['#2e2a3a','#100e15'],['#b8a9c9','#f2d0a4','#9dbbae'],'none'),
+ ('classical','genres','Классика','Classical',['#2b2118','#0f0b08'],['#d4af37','#f5f0e1','#8b6f47'],'none'),
+ ('blues','genres','Блюз','Blues',['#0d1b2a','#04080d'],['#1b4965','#5fa8d3','#cae9ff'],'none'),
+ ('reggae','genres','Регги','Reggae',['#1b2a12','#0a1006'],['#2b9348','#f9c80e','#d62828'],'none'),
+ ('hiphop','genres','Хип-хоп','Hip-Hop',['#1a1a1d','#08080a'],['#c3073f','#6f2232','#f1c40f'],'none'),
+ ('pop','genres','Поп','Pop',['#2a0f3d','#0e0515'],['#ff5ca8','#ffd6ff','#7ae7ff'],'confetti'),
+ ('disco','genres','Диско','Disco',['#24093a','#0b0214'],['#f9c80e','#f86624','#ea3546'],'confetti'),
+ ('ambient','genres','Эмбиент','Ambient',['#15232b','#070c0f'],['#4f6d7a','#c0d6df','#dbe9ee'],'none'),
+ ('folk','genres','Фолк','Folk',['#2e2a1f','#100e0a'],['#a68a64','#7f5539','#ddb892'],'none'),
+ ('latin','genres','Латино','Latin',['#3a0f14','#140507'],['#ff595e','#ffca3a','#8ac926'],'none'),
+ ('chanson','genres','Шансон','Chanson',['#1f1a24','#0b090d'],['#7f5a83','#c9a0dc','#e6c79c'],'none'),
+ # --- вкусы
+ ('coffee','tastes','Кофе','Coffee',['#2c1a12','#0f0906'],['#6f4e37','#c69c72','#e6ccb2'],'none'),
+ ('chocolate','tastes','Шоколад','Chocolate',['#2a140c','#0e0704'],['#7b3f00','#a0522d','#d2a679'],'none'),
+ ('wine','tastes','Вино','Wine',['#2b0a14','#0f0307'],['#722f37','#a4133c','#e5989b'],'none'),
+ ('mint','tastes','Мята','Mint',['#0f2e2a','#05100e'],['#3eb489','#98ff98','#d8f3dc'],'none'),
+ ('peach','tastes','Персик','Peach',['#3a2220','#140b0a'],['#ffb4a2','#ffcdb2','#e5989b'],'none'),
+ ('cherry','tastes','Вишня','Cherry',['#2e0710','#100205'],['#9d0208','#dc2f02','#ffccd5'],'none'),
+ ('lemon','tastes','Лимон','Lemon',['#2f3215','#111207'],['#f7ec59','#c3e88d','#fff9c4'],'none'),
+ ('berries','tastes','Ягоды','Berries',['#2a0e2e','#0e0410'],['#7b2cbf','#c9184a','#4361ee'],'none'),
+ ('caramel','tastes','Карамель','Caramel',['#33200d','#120b04'],['#c68b59','#e0a96d','#f6e0b5'],'none'),
+ ('matcha','tastes','Матча','Matcha',['#1f2e1a','#0b1009'],['#7d9d67','#c5d8a4','#eef3e2'],'none'),
+ # --- классика
+ ('graphite','classic','Графит','Graphite',['#2b2a2e','#0c0c0d'],['#4a4950','#6b6a70','#8e8d93'],'none'),
+ ('pearl','classic','Жемчуг','Pearl',['#3a3a40','#141416'],['#e8e6e1','#c9c5bc','#a9a49b'],'none'),
+ ('onyx','classic','Оникс','Onyx',['#0b0b0c','#000000'],['#2b2b2e','#1a1a1c','#3d3d42'],'none'),
+ ('sand','classic','Песок','Sand',['#3a3328','#14110d'],['#d6c7a1','#b8a07e','#ece2c6'],'none'),
+ ('slate','classic','Сланец','Slate',['#232a33','#0b0e11'],['#4f5d75','#7a8597','#bfc0c0'],'none'),
+ ('silver','classic','Серебро','Silver',['#2e2f33','#101113'],['#c0c0c0','#a8a9ad','#e3e4e6'],'none'),
+ ('champagne','classic','Шампань','Champagne',['#352d22','#13100b'],['#f7e7ce','#d4b483','#c9a66b'],'stars'),
+ ('navy','classic','Морской','Navy',['#0b1d33','#030a12'],['#1d3557','#457b9d','#a8dadc'],'none'),
+ ('emerald','classic','Изумруд','Emerald',['#0b2e22','#03100b'],['#046307','#2e8b57','#50c878'],'none'),
+ ('ruby','classic','Рубин','Ruby',['#2e0a12','#100306'],['#9b111e','#e0115f','#ff6f91'],'none'),
+ ('sapphire','classic','Сапфир','Sapphire',['#0a1a3a','#030814'],['#0f52ba','#4169e1','#87cefa'],'none'),
+ ('amethyst','classic','Аметист','Amethyst',['#24123a','#0c0614'],['#9966cc','#b19cd9','#e6e6fa'],'none'),
+]
+ids = [t[0] for t in T]
+assert len(ids) == len(set(ids))
+cats = {
+ 'holidays': ('Праздники', 'Holidays'), 'seasons': ('Времена года', 'Seasons'), 'nature': ('Природа', 'Nature'),
+ 'space': ('Космос', 'Space'), 'cities': ('Города', 'Cities'), 'mood': ('Настроение', 'Mood'),
+ 'genres': ('Жанры', 'Genres'), 'tastes': ('Вкусы', 'Tastes'), 'classic': ('Классика', 'Classic'),
+}
+out = ["// Темы фона для песен без обложки (генератор: assets/mk_themes.py).",
+       "// base — градиент основы, blobs — цвета пятен, decor — snow | stars | confetti | none.",
+       "export const THEME_CATEGORIES = " + json.dumps([{'id': c, 'ru': cats[c][0], 'en': cats[c][1]} for c in C], ensure_ascii=False) + ";",
+       "export const THEMES = ["]
+for i, ru, en, *_ in [(t[0], t[2], t[3]) for t in T]: pass
+for (i, cat, ru, en, base, blobs, decor) in T:
+    out.append("  " + json.dumps({'id': i, 'cat': cat, 'ru': ru, 'en': en, 'base': base, 'blobs': blobs, 'decor': decor}, ensure_ascii=False) + ",")
+out.append("];")
+out.append("export const THEME_BY_ID = Object.fromEntries(THEMES.map(t => [t.id, t]));")
+out.append("export const themeName = (t, lang) => (t ? (lang === 'ru' || lang === 'uk' ? t.ru : t.en) : '');")
+open(r'D:\apps-android\apk-stefu-music\src\data\themes.js', 'w', encoding='utf8').write("\n".join(out) + "\n")
+print(len(T), 'themes')

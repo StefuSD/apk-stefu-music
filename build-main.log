@@ -1,0 +1,194 @@
+[32m[ExpoRootProject][0m Using the following versions:
+  - buildTools:  [32m36.0.0[0m
+  - minSdk:      [32m24[0m
+  - compileSdk:  [32m36[0m
+  - targetSdk:   [32m36[0m
+  - ndk:         [32m27.1.12297006[0m
+  - kotlin:      [32m2.1.20[0m
+  - ksp:         [32m2.1.20-2.0.1[0m
+
+Using expo modules
+  - [32mexpo-audio[0m (1.1.1)
+  - [32mexpo-constants[0m (18.0.14)
+  - [32mexpo-file-system[0m (19.0.24)
+  - [32mexpo-modules-core[0m (3.0.30)
+  - [33m[?][0m [32mexpo-asset[0m (12.0.14)
+  - [33m[?][0m [32mexpo-document-picker[0m (14.0.8)
+  - [33m[?][0m [32mexpo-font[0m (14.0.12)
+  - [33m[?][0m [32mexpo-image-loader[0m (6.0.0)
+  - [33m[?][0m [32mexpo-image-picker[0m (17.0.11)
+  - [33m[?][0m [32mexpo-keep-awake[0m (15.0.8)
+  - [33m[?][0m [32mexpo-navigation-bar[0m (5.0.10)
+  - [33m[?][0m [32mexpo-sharing[0m (14.0.8)
+
+The NODE_ENV environment variable is required but was not specified. Ensure the project is bundled with Expo CLI or NODE_ENV is set. Using only .env.local and .env
+Starting Metro Bundler
+warning: Bundler cache is empty, rebuilding (this may take a minute)
+Android .\index.js â–‘â–‘â–‘â–‘â–‘â–‘â–‘â–‘â–‘â–‘â–‘â–‘â–‘â–‘â–‘â–‘  0.0% (0/1)
+Android .\index.js â–‘â–‘â–‘â–‘â–‘â–‘â–‘â–‘â–‘â–‘â–‘â–‘â–‘â–‘â–‘â–‘  1.0% (1/1)
+Android .\index.js â–“â–‘â–‘â–‘â–‘â–‘â–‘â–‘â–‘â–‘â–‘â–‘â–‘â–‘â–‘â–‘  9.0% ( 16/121)
+Android .\index.js â–“â–‘â–‘â–‘â–‘â–‘â–‘â–‘â–‘â–‘â–‘â–‘â–‘â–‘â–‘â–‘  9.0% ( 30/158)
+Android .\index.js â–“â–‘â–‘â–‘â–‘â–‘â–‘â–‘â–‘â–‘â–‘â–‘â–‘â–‘â–‘â–‘ 10.9% ( 62/188)
+Android .\index.js â–“â–“â–“â–“â–‘â–‘â–‘â–‘â–‘â–‘â–‘â–‘â–‘â–‘â–‘â–‘ 29.1% (193/358)
+Android .\index.js â–“â–“â–“â–“â–“â–“â–“â–“â–‘â–‘â–‘â–‘â–‘â–‘â–‘â–‘ 52.9% (358/492)
+Android .\index.js â–“â–“â–“â–“â–“â–“â–“â–“â–“â–“â–“â–“â–‘â–‘â–‘â–‘ 77.0% (557/643)
+Android .\index.js â–“â–“â–“â–“â–“â–“â–“â–“â–“â–“â–“â–“â–‘â–‘â–‘â–‘ 77.0% (676/826)
+Android .\index.js â–“â–“â–“â–“â–“â–“â–“â–“â–“â–“â–“â–“â–“â–“â–‘â–‘ 93.6% (866/895)
+Android .\index.js â–“â–“â–“â–“â–“â–“â–“â–“â–“â–“â–“â–“â–“â–“â–“â–‘ 99.9% (965/965)
+Android Bundled 45529ms index.js (965 modules)
+Android .\index.js â–“â–“â–“â–“â–“â–“â–“â–“â–“â–“â–“â–“â–“â–“â–“â–‘ 99.9% (965/965)
+Writing bundle output to: android\app\build\generated\assets\createBundleReleaseJsAndAssets\index.android.bundle
+Writing sourcemap output to: android\app\build\intermediates\sourcemaps\react\release\index.android.bundle.packager.map
+Copying 6 asset files
+Done writing bundle output
+Done writing sourcemap output
+ERROR: D:\apps-android\apk-stefu-music\android\app\build\intermediates\dex\release\mergeDexRelease: D8: java.nio.file.FileSystemException: D:\apps-android\apk-stefu-music\android\app\build\intermediates\dex\release\mergeDexRelease\classes.dex: Ïðîöåññ íå ìîæåò ïîëó÷èòü äîñòóï ê ôàéëó, òàê êàê ýòîò ôàéë çàíÿò äðóãèì ïðîöåññîì
+com.android.builder.dexing.DexArchiveMergerException: Error while merging dex archives: 
+	at com.android.builder.dexing.D8DexArchiveMerger.getMergingExceptionToRethrow(D8DexArchiveMerger.java:230)
+	at com.android.builder.dexing.D8DexArchiveMerger.mergeDexArchives(D8DexArchiveMerger.java:218)
+	at com.android.build.gradle.internal.tasks.DexMergingWorkAction.merge(DexMergingTask.kt:935)
+	at com.android.build.gradle.internal.tasks.DexMergingWorkAction.run(DexMergingTask.kt:884)
+	at com.android.build.gradle.internal.profile.ProfileAwareWorkAction.execute(ProfileAwareWorkAction.kt:74)
+	at org.gradle.workers.internal.DefaultWorkerServer.execute(DefaultWorkerServer.java:63)
+	at org.gradle.workers.internal.NoIsolationWorkerFactory$1$1.create(NoIsolationWorkerFactory.java:66)
+	at org.gradle.workers.internal.NoIsolationWorkerFactory$1$1.create(NoIsolationWorkerFactory.java:62)
+	at org.gradle.internal.classloader.ClassLoaderUtils.executeInClassloader(ClassLoaderUtils.java:100)
+	at org.gradle.workers.internal.NoIsolationWorkerFactory$1.lambda$execute$0(NoIsolationWorkerFactory.java:62)
+	at org.gradle.workers.internal.AbstractWorker$1.call(AbstractWorker.java:44)
+	at org.gradle.workers.internal.AbstractWorker$1.call(AbstractWorker.java:41)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner$CallableBuildOperationWorker.execute(DefaultBuildOperationRunner.java:210)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner$CallableBuildOperationWorker.execute(DefaultBuildOperationRunner.java:205)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner$2.execute(DefaultBuildOperationRunner.java:67)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner$2.execute(DefaultBuildOperationRunner.java:60)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner.execute(DefaultBuildOperationRunner.java:167)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner.execute(DefaultBuildOperationRunner.java:60)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner.call(DefaultBuildOperationRunner.java:54)
+	at org.gradle.workers.internal.AbstractWorker.executeWrappedInBuildOperation(AbstractWorker.java:41)
+	at org.gradle.workers.internal.NoIsolationWorkerFactory$1.execute(NoIsolationWorkerFactory.java:59)
+	at org.gradle.workers.internal.DefaultWorkerExecutor.lambda$submitWork$0(DefaultWorkerExecutor.java:174)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:264)
+	at org.gradle.internal.work.DefaultConditionalExecutionQueue$ExecutionRunner.runExecution(DefaultConditionalExecutionQueue.java:194)
+	at org.gradle.internal.work.DefaultConditionalExecutionQueue$ExecutionRunner.access$700(DefaultConditionalExecutionQueue.java:127)
+	at org.gradle.internal.work.DefaultConditionalExecutionQueue$ExecutionRunner$1.run(DefaultConditionalExecutionQueue.java:169)
+	at org.gradle.internal.Factories$1.create(Factories.java:31)
+	at org.gradle.internal.work.DefaultWorkerLeaseService.withLocks(DefaultWorkerLeaseService.java:263)
+	at org.gradle.internal.work.DefaultWorkerLeaseService.runAsWorkerThread(DefaultWorkerLeaseService.java:127)
+	at org.gradle.internal.work.DefaultWorkerLeaseService.runAsWorkerThread(DefaultWorkerLeaseService.java:132)
+	at org.gradle.internal.work.DefaultConditionalExecutionQueue$ExecutionRunner.runBatch(DefaultConditionalExecutionQueue.java:164)
+	at org.gradle.internal.work.DefaultConditionalExecutionQueue$ExecutionRunner.run(DefaultConditionalExecutionQueue.java:133)
+	at java.base/java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:539)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:264)
+	at org.gradle.internal.concurrent.ExecutorPolicy$CatchAndRecordFailures.onExecute(ExecutorPolicy.java:64)
+	at org.gradle.internal.concurrent.AbstractManagedExecutor$1.run(AbstractManagedExecutor.java:48)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
+	at java.base/java.lang.Thread.run(Thread.java:840)
+Caused by: com.android.tools.r8.CompilationFailedException: Compilation failed to complete, origin: D:\apps-android\apk-stefu-music\android\app\build\intermediates\dex\release\mergeDexRelease\classes.dex
+	at Version.fakeStackEntry(Version_8.11.18.java:0)
+	at com.android.tools.r8.P.a(R8_8.11.18_94248c9a6fd57686ded562f231d18f14e8923ad1fe977e99b974a9bf901c8a48:1)
+	at com.android.tools.r8.internal.xv.a(R8_8.11.18_94248c9a6fd57686ded562f231d18f14e8923ad1fe977e99b974a9bf901c8a48:82)
+	at com.android.tools.r8.internal.xv.a(R8_8.11.18_94248c9a6fd57686ded562f231d18f14e8923ad1fe977e99b974a9bf901c8a48:32)
+	at com.android.tools.r8.internal.xv.a(R8_8.11.18_94248c9a6fd57686ded562f231d18f14e8923ad1fe977e99b974a9bf901c8a48:31)
+	at com.android.tools.r8.internal.xv.b(R8_8.11.18_94248c9a6fd57686ded562f231d18f14e8923ad1fe977e99b974a9bf901c8a48:2)
+	at com.android.tools.r8.D8.run(R8_8.11.18_94248c9a6fd57686ded562f231d18f14e8923ad1fe977e99b974a9bf901c8a48:11)
+	at com.android.builder.dexing.D8DexArchiveMerger.mergeDexArchives(D8DexArchiveMerger.java:216)
+	... 37 more
+Caused by: java.nio.file.FileSystemException: D:\apps-android\apk-stefu-music\android\app\build\intermediates\dex\release\mergeDexRelease\classes.dex: Ïðîöåññ íå ìîæåò ïîëó÷èòü äîñòóï ê ôàéëó, òàê êàê ýòîò ôàéë çàíÿò äðóãèì ïðîöåññîì
+	at java.base/sun.nio.fs.WindowsException.translateToIOException(WindowsException.java:92)
+	at java.base/sun.nio.fs.WindowsException.rethrowAsIOException(WindowsException.java:103)
+	at java.base/sun.nio.fs.WindowsException.rethrowAsIOException(WindowsException.java:108)
+	at java.base/sun.nio.fs.WindowsFileSystemProvider.implDelete(WindowsFileSystemProvider.java:275)
+	at java.base/sun.nio.fs.AbstractFileSystemProvider.delete(AbstractFileSystemProvider.java:105)
+	at java.base/java.nio.file.Files.delete(Files.java:1152)
+	at com.android.tools.r8.DexIndexedConsumer$DirectoryConsumer.a(R8_8.11.18_94248c9a6fd57686ded562f231d18f14e8923ad1fe977e99b974a9bf901c8a48:4)
+	at com.android.tools.r8.DexIndexedConsumer$DirectoryConsumer.accept(R8_8.11.18_94248c9a6fd57686ded562f231d18f14e8923ad1fe977e99b974a9bf901c8a48:8)
+	at com.android.tools.r8.dex.k.a(R8_8.11.18_94248c9a6fd57686ded562f231d18f14e8923ad1fe977e99b974a9bf901c8a48:242)
+	at com.android.tools.r8.dex.k.b(R8_8.11.18_94248c9a6fd57686ded562f231d18f14e8923ad1fe977e99b974a9bf901c8a48:2)
+	at com.android.tools.r8.internal.Fs0.a(R8_8.11.18_94248c9a6fd57686ded562f231d18f14e8923ad1fe977e99b974a9bf901c8a48:2)
+	at com.android.tools.r8.internal.Fs0.a(R8_8.11.18_94248c9a6fd57686ded562f231d18f14e8923ad1fe977e99b974a9bf901c8a48:17)
+	at java.base/java.util.concurrent.ForkJoinTask$AdaptedCallable.exec(ForkJoinTask.java:1428)
+	at java.base/java.util.concurrent.ForkJoinTask.doExec(ForkJoinTask.java:373)
+	at java.base/java.util.concurrent.ForkJoinPool$WorkQueue.topLevelExec(ForkJoinPool.java:1182)
+	at java.base/java.util.concurrent.ForkJoinPool.scan(ForkJoinPool.java:1655)
+	at java.base/java.util.concurrent.ForkJoinPool.runWorker(ForkJoinPool.java:1622)
+	at java.base/java.util.concurrent.ForkJoinWorkerThread.run(ForkJoinWorkerThread.java:165)
+	Suppressed: java.lang.RuntimeException: com.android.tools.r8.internal.g: java.nio.file.FileSystemException: D:\apps-android\apk-stefu-music\android\app\build\intermediates\dex\release\mergeDexRelease\classes.dex: Ïðîöåññ íå ìîæåò ïîëó÷èòü äîñòóï ê ôàéëó, òàê êàê ýòîò ôàéë çàíÿò äðóãèì ïðîöåññîì
+		at com.android.tools.r8.internal.yg0.a(R8_8.11.18_94248c9a6fd57686ded562f231d18f14e8923ad1fe977e99b974a9bf901c8a48:27)
+		at com.android.tools.r8.dex.k.a(R8_8.11.18_94248c9a6fd57686ded562f231d18f14e8923ad1fe977e99b974a9bf901c8a48:377)
+		at com.android.tools.r8.D8.a(R8_8.11.18_94248c9a6fd57686ded562f231d18f14e8923ad1fe977e99b974a9bf901c8a48:109)
+		at com.android.tools.r8.D8.d(R8_8.11.18_94248c9a6fd57686ded562f231d18f14e8923ad1fe977e99b974a9bf901c8a48:149)
+		at com.android.tools.r8.D8.b(R8_8.11.18_94248c9a6fd57686ded562f231d18f14e8923ad1fe977e99b974a9bf901c8a48:1)
+		at com.android.tools.r8.internal.xv.a(R8_8.11.18_94248c9a6fd57686ded562f231d18f14e8923ad1fe977e99b974a9bf901c8a48:28)
+		at com.android.tools.r8.internal.xv.b(R8_8.11.18_94248c9a6fd57686ded562f231d18f14e8923ad1fe977e99b974a9bf901c8a48:2)
+		at com.android.tools.r8.D8.run(R8_8.11.18_94248c9a6fd57686ded562f231d18f14e8923ad1fe977e99b974a9bf901c8a48:11)
+		at com.android.builder.dexing.D8DexArchiveMerger.mergeDexArchives(D8DexArchiveMerger.java:216)
+		at com.android.build.gradle.internal.tasks.DexMergingWorkAction.merge(DexMergingTask.kt:935)
+		at com.android.build.gradle.internal.tasks.DexMergingWorkAction.run(DexMergingTask.kt:884)
+		at com.android.build.gradle.internal.profile.ProfileAwareWorkAction.execute(ProfileAwareWorkAction.kt:74)
+		at org.gradle.workers.internal.DefaultWorkerServer.execute(DefaultWorkerServer.java:63)
+		at org.gradle.workers.internal.NoIsolationWorkerFactory$1$1.create(NoIsolationWorkerFactory.java:66)
+		at org.gradle.workers.internal.NoIsolationWorkerFactory$1$1.create(NoIsolationWorkerFactory.java:62)
+		at org.gradle.internal.classloader.ClassLoaderUtils.executeInClassloader(ClassLoaderUtils.java:100)
+		at org.gradle.workers.internal.NoIsolationWorkerFactory$1.lambda$execute$0(NoIsolationWorkerFactory.java:62)
+		at org.gradle.workers.internal.AbstractWorker$1.call(AbstractWorker.java:44)
+		at org.gradle.workers.internal.AbstractWorker$1.call(AbstractWorker.java:41)
+		at org.gradle.internal.operations.DefaultBuildOperationRunner$CallableBuildOperationWorker.execute(DefaultBuildOperationRunner.java:210)
+		at org.gradle.internal.operations.DefaultBuildOperationRunner$CallableBuildOperationWorker.execute(DefaultBuildOperationRunner.java:205)
+		at org.gradle.internal.operations.DefaultBuildOperationRunner$2.execute(DefaultBuildOperationRunner.java:67)
+		at org.gradle.internal.operations.DefaultBuildOperationRunner$2.execute(DefaultBuildOperationRunner.java:60)
+		at org.gradle.internal.operations.DefaultBuildOperationRunner.execute(DefaultBuildOperationRunner.java:167)
+		at org.gradle.internal.operations.DefaultBuildOperationRunner.execute(DefaultBuildOperationRunner.java:60)
+		at org.gradle.internal.operations.DefaultBuildOperationRunner.call(DefaultBuildOperationRunner.java:54)
+		at org.gradle.workers.internal.AbstractWorker.executeWrappedInBuildOperation(AbstractWorker.java:41)
+		at org.gradle.workers.internal.NoIsolationWorkerFactory$1.execute(NoIsolationWorkerFactory.java:59)
+		at org.gradle.workers.internal.DefaultWorkerExecutor.lambda$submitWork$0(DefaultWorkerExecutor.java:174)
+		at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:264)
+		at org.gradle.internal.work.DefaultConditionalExecutionQueue$ExecutionRunner.runExecution(DefaultConditionalExecutionQueue.java:194)
+		at org.gradle.internal.work.DefaultConditionalExecutionQueue$ExecutionRunner.access$700(DefaultConditionalExecutionQueue.java:127)
+		at org.gradle.internal.work.DefaultConditionalExecutionQueue$ExecutionRunner$1.run(DefaultConditionalExecutionQueue.java:169)
+		at org.gradle.internal.Factories$1.create(Factories.java:31)
+		at org.gradle.internal.work.DefaultWorkerLeaseService.withLocks(DefaultWorkerLeaseService.java:263)
+		at org.gradle.internal.work.DefaultWorkerLeaseService.runAsWorkerThread(DefaultWorkerLeaseService.java:127)
+		at org.gradle.internal.work.DefaultWorkerLeaseService.runAsWorkerThread(DefaultWorkerLeaseService.java:132)
+		at org.gradle.internal.work.DefaultConditionalExecutionQueue$ExecutionRunner.runBatch(DefaultConditionalExecutionQueue.java:164)
+		at org.gradle.internal.work.DefaultConditionalExecutionQueue$ExecutionRunner.run(DefaultConditionalExecutionQueue.java:133)
+		at java.base/java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:539)
+		at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:264)
+		at org.gradle.internal.concurrent.ExecutorPolicy$CatchAndRecordFailures.onExecute(ExecutorPolicy.java:64)
+		at org.gradle.internal.concurrent.AbstractManagedExecutor$1.run(AbstractManagedExecutor.java:48)
+		at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)
+		at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
+		at java.base/java.lang.Thread.run(Thread.java:840)
+	Caused by: com.android.tools.r8.internal.g: java.nio.file.FileSystemException: D:\apps-android\apk-stefu-music\android\app\build\intermediates\dex\release\mergeDexRelease\classes.dex: Ïðîöåññ íå ìîæåò ïîëó÷èòü äîñòóï ê ôàéëó, òàê êàê ýòîò ôàéë çàíÿò äðóãèì ïðîöåññîì
+		at com.android.tools.r8.internal.yg0.a(R8_8.11.18_94248c9a6fd57686ded562f231d18f14e8923ad1fe977e99b974a9bf901c8a48:21)
+		at com.android.tools.r8.internal.yg0.error(R8_8.11.18_94248c9a6fd57686ded562f231d18f14e8923ad1fe977e99b974a9bf901c8a48:1)
+		at com.android.tools.r8.DexIndexedConsumer$DirectoryConsumer.accept(R8_8.11.18_94248c9a6fd57686ded562f231d18f14e8923ad1fe977e99b974a9bf901c8a48:11)
+		at com.android.tools.r8.dex.k.a(R8_8.11.18_94248c9a6fd57686ded562f231d18f14e8923ad1fe977e99b974a9bf901c8a48:242)
+		at com.android.tools.r8.dex.k.b(R8_8.11.18_94248c9a6fd57686ded562f231d18f14e8923ad1fe977e99b974a9bf901c8a48:2)
+		at com.android.tools.r8.internal.Fs0.a(R8_8.11.18_94248c9a6fd57686ded562f231d18f14e8923ad1fe977e99b974a9bf901c8a48:2)
+		at com.android.tools.r8.internal.Fs0.a(R8_8.11.18_94248c9a6fd57686ded562f231d18f14e8923ad1fe977e99b974a9bf901c8a48:17)
+		at java.base/java.util.concurrent.ForkJoinTask$AdaptedCallable.exec(ForkJoinTask.java:1428)
+		at java.base/java.util.concurrent.ForkJoinTask.doExec(ForkJoinTask.java:373)
+		at java.base/java.util.concurrent.ForkJoinPool$WorkQueue.topLevelExec(ForkJoinPool.java:1182)
+		at java.base/java.util.concurrent.ForkJoinPool.scan(ForkJoinPool.java:1655)
+		at java.base/java.util.concurrent.ForkJoinPool.runWorker(ForkJoinPool.java:1622)
+		at java.base/java.util.concurrent.ForkJoinWorkerThread.run(ForkJoinWorkerThread.java:165)
+	Caused by: [CIRCULAR REFERENCE: java.nio.file.FileSystemException: D:\apps-android\apk-stefu-music\android\app\build\intermediates\dex\release\mergeDexRelease\classes.dex: Ïðîöåññ íå ìîæåò ïîëó÷èòü äîñòóï ê ôàéëó, òàê êàê ýòîò ôàéë çàíÿò äðóãèì ïðîöåññîì]
+
+
+FAILURE: Build failed with an exception.
+
+* What went wrong:
+Execution failed for task ':app:mergeDexRelease'.
+> A failure occurred while executing com.android.build.gradle.internal.tasks.DexMergingTaskDelegate
+   > There was a failure while executing work items
+      > A failure occurred while executing com.android.build.gradle.internal.tasks.DexMergingWorkAction
+         > com.android.builder.dexing.DexArchiveMergerException: Error while merging dex archives: 
+
+* Try:
+> Run with --stacktrace option to get the stack trace.
+> Run with --info or --debug option to get more log output.
+> Run with --scan to get full insights.
+> Get more help at https://help.gradle.org.
+
+BUILD FAILED in 6m 14s
