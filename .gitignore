@@ -2,3 +2,7 @@ node_modules/
 android/
 .expo/
 build-out/
+
+# сборка нативного модуля и кэш Python
+modules/*/android/build/
+__pycache__/
