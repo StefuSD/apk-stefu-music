@@ -21,7 +21,7 @@ export function HomeTabs({ tab, onTab }) {
   const { t } = useLang();
   const tabs = [['home', t('tab_home')], ['songs', t('tab_songs')], ['playlists', t('tab_playlists')], ['artists', t('tab_artists')]];
   return (
-    <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{ flexGrow: 0 }} contentContainerStyle={{ paddingHorizontal: 12, paddingVertical: 12, gap: 8 }}>
+    <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{ flexGrow: 0, flexShrink: 0 }} contentContainerStyle={{ paddingHorizontal: 12, paddingVertical: 12, gap: 8 }}>
       {tabs.map(([k, l]) => {
         const on = tab === k;
         return (
