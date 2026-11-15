@@ -1,8 +1,10 @@
 // Главная «Музыки» — вкладка «Для вас»: быстрые действия, «Новые», «Рекомендуемое»,
 // «Часто слушаете», «Избранное»; и вкладки «Плейлисты» и «Исполнители».
 // Список песен со всеми фильтрами — вкладка «Песни» (LibraryScreen).
-import React, { useMemo, useState } from 'react';
-import { View, Text, Pressable, ScrollView, StyleSheet, Dimensions } from 'react-native';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { View, Text, Pressable, ScrollView, StyleSheet, Dimensions, InteractionManager } from 'react-native';
+import { FlashList } from '@shopify/flash-list';
+import { Image } from 'expo-image';
 import { useTheme } from '../context/ThemeContext';
 import { useLang } from '../i18n';
 import { useLibrary } from '../context/LibraryContext';
@@ -42,6 +44,7 @@ export function HomeView({ actions, onMore, snipPro }) {
   const lib = useLibrary();
   const player = usePlayer();
   const [recSeed, setRecSeed] = useState(0);
+  useWarmArtists();
 
   const fresh = useMemo(() => [...lib.songs].sort((a, b) => (b.addedAt || 0) - (a.addedAt || 0)).slice(0, N), [lib.songs]);
   const top = useMemo(() => lib.songs.filter(s => lib.playCount[s.id])
@@ -180,40 +183,84 @@ export function PlaylistsView({ onOpen, onCreate }) {
 }
 
 /** Вкладка «Исполнители»: по числу прослушиваний, затем по числу песен; нажатие — его песни. */
+// Индекс исполнителей. Группировка по песням считается один раз на версию библиотеки
+// (lib.songs), прослушивания досчитываются отдельно (lib.playCount) — быстрый проход по готовым группам.
+const artistCache = { songs: null, groups: null, pc: null, list: null };
+export function artistIndex(songs, playCount) {
+  if (artistCache.songs !== songs) {
+    const m = new Map();
+    for (const s of songs) for (const a of artistsOf(s)) {
+      let r = m.get(a);
+      if (!r) { r = { name: a, ids: [], song: s }; m.set(a, r); }
+      r.ids.push(s.id);
+      if (!r.song.cover && s.cover) r.song = s;
+    }
+    artistCache.songs = songs; artistCache.groups = [...m.values()]; artistCache.pc = null;
+  }
+  if (artistCache.pc !== playCount) {
+    artistCache.list = artistCache.groups.map(g => {
+      let plays = 0;
+      for (const id of g.ids) plays += playCount[id] || 0;
+      return { name: g.name, n: g.ids.length, plays, song: g.song };
+    }).sort((a, b) => b.plays - a.plays || b.n - a.n || a.name.localeCompare(b.name));
+    artistCache.pc = playCount;
+  }
+  return artistCache.list;
+}
+
+/** Прогрев вкладки «Исполнители»: в свободное время собрать индекс и подгрузить обложки первого экрана. */
+export function useWarmArtists() {
+  const lib = useLibrary();
+  useEffect(() => {
+    if (!lib.songs.length) return;
+    const task = InteractionManager.runAfterInteractions(() => {
+      const list = artistIndex(lib.songs, lib.playCount);
+      const uris = list.slice(0, 14).map(a => lib.coverUri(a.song)).filter(Boolean);
+      if (uris.length) Image.prefetch(uris, 'memory-disk').catch(() => {});
+    });
+    return () => task.cancel();
+  }, [lib.songs, lib.playCount]);
+}
+
+const ArtistRow = React.memo(function ArtistRow({ a, onOpen, colors, countText }) {
+  return (
+    <Pressable onPress={() => onOpen(a.name)}
+      style={({ pressed }) => [st.recRow, { marginBottom: 10, backgroundColor: pressed ? colors.accentSoft : colors.bgCard, borderColor: colors.border }]}>
+      <Cover song={a.song} size={52} radius={26} />
+      <View style={{ flex: 1, marginLeft: 12 }}>
+        <Text numberOfLines={1} style={{ color: colors.text, fontWeight: '700', fontSize: 16 }}>{a.name}</Text>
+        <Text style={{ color: colors.textMuted, fontSize: 13 }}>{countText}</Text>
+      </View>
+      {a.plays ? (
+        <View style={{ flexDirection: 'row', alignItems: 'center', marginRight: 6 }}>
+          <HeadphonesIcon color={colors.textMuted} size={14} />
+          <Text style={{ color: colors.textMuted, fontSize: 13, marginLeft: 4 }}>{a.plays}</Text>
+        </View>
+      ) : null}
+      <ChevRightIcon color={colors.textMuted} size={24} />
+    </Pressable>
+  );
+});
+
+/** Вкладка «Исполнители»: виртуальный список — рисуются только видимые строки. */
 export function ArtistsView({ onOpen }) {
   const { colors } = useTheme();
   const { t } = useLang();
   const lib = useLibrary();
-  const list = useMemo(() => {
-    const m = new Map();
-    for (const s of lib.songs) for (const a of artistsOf(s)) {
-      const r = m.get(a) || { name: a, n: 0, plays: 0, song: s };
-      r.n++; r.plays += lib.playCount[s.id] || 0;
-      if (!r.song.cover && s.cover) r.song = s;
-      m.set(a, r);
-    }
-    return [...m.values()].sort((a, b) => b.plays - a.plays || b.n - a.n || a.name.localeCompare(b.name));
-  }, [lib.songs, lib.playCount]);
+  const list = useMemo(() => artistIndex(lib.songs, lib.playCount), [lib.songs, lib.playCount]);
+  const openRef = useRef(onOpen);
+  openRef.current = onOpen;
+  const open = useCallback(name => openRef.current(name), []);
+  const renderItem = useCallback(({ item }) => (
+    <ArtistRow a={item} onOpen={open} colors={colors} countText={t('songs_count', { n: item.n })} />
+  ), [colors, t, open]);
   return (
-    <ScrollView contentContainerStyle={{ padding: 14, paddingTop: 0, gap: 10, paddingBottom: 28 }}>
-      {list.map(a => (
-        <Pressable key={a.name} onPress={() => onOpen(a.name)}
-          style={({ pressed }) => [st.recRow, { backgroundColor: pressed ? colors.accentSoft : colors.bgCard, borderColor: colors.border }]}>
-          <Cover song={a.song} size={52} radius={26} />
-          <View style={{ flex: 1, marginLeft: 12 }}>
-            <Text numberOfLines={1} style={{ color: colors.text, fontWeight: '700', fontSize: 16 }}>{a.name}</Text>
-            <Text style={{ color: colors.textMuted, fontSize: 13 }}>{t('songs_count', { n: a.n })}</Text>
-          </View>
-          {a.plays ? (
-            <View style={{ flexDirection: 'row', alignItems: 'center', marginRight: 6 }}>
-              <HeadphonesIcon color={colors.textMuted} size={14} />
-              <Text style={{ color: colors.textMuted, fontSize: 13, marginLeft: 4 }}>{a.plays}</Text>
-            </View>
-          ) : null}
-          <ChevRightIcon color={colors.textMuted} size={24} />
-        </Pressable>
-      ))}
-    </ScrollView>
+    <FlashList
+      data={list}
+      keyExtractor={a => a.name}
+      renderItem={renderItem}
+      contentContainerStyle={{ paddingHorizontal: 14, paddingBottom: 28 }}
+    />
   );
 }
 
