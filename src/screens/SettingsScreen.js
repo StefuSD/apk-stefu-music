@@ -1,6 +1,8 @@
 import React, { useRef, useState } from 'react';
 import { View, Text, Pressable, ScrollView, StyleSheet, Switch, Alert, Modal, ActivityIndicator, ToastAndroid } from 'react-native';
 import HeaderBg from '../components/HeaderBg';
+import { LIGHT, DARK, LILAC, APP_THEMES } from '../context/ThemeContext';
+import { APP_THEME_SPECS, appThemeName } from '../data/appThemes';
 import { usePlayer } from '../context/PlayerContext';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import * as FileSystem from 'expo-file-system/legacy';
@@ -127,17 +129,24 @@ export default function SettingsScreen() {
       <ScrollView contentContainerStyle={{ padding: 12, paddingBottom: 30 }}>
         <ProRow style={{ marginTop: 6, marginBottom: 0 }} />
         <Section title={t('s_look')}>
-          {/* Тема: светлая, тёмная или «Сирень» (кружок — цвет шапки темы) */}
+          {/* Тема: обычные (светлая, тёмная, «Сирень») и тематические оформления — плитки с превью шапки */}
           <View style={{ paddingHorizontal: 14, paddingTop: 12 }}>
             <Text style={{ fontSize: 15, fontWeight: '700', color: colors.text, marginBottom: 10 }}>{t('s_theme')}</Text>
             <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 8 }}>
-              {[['light', 's_theme_light', '#18171a'], ['night', 's_theme_night', '#111012'], ['lilac', 's_theme_lilac', '#8a4fd6']].map(([m, k, dot]) => {
-                const on = colors.mode === m;
+              {[[LIGHT, t('s_theme_light')], [DARK, t('s_theme_night')], [LILAC, t('s_theme_lilac')],
+                ...APP_THEMES.map((th, i) => [th, appThemeName(APP_THEME_SPECS[i], lang)])].map(([th, label]) => {
+                const on = colors.mode === th.mode;
                 return (
-                  <Pressable key={m} onPress={() => setMode(m)}
-                    style={[st.pill, { flexDirection: 'row', alignItems: 'center', gap: 6 }, on ? { backgroundColor: colors.ink, borderWidth: 1, borderColor: colors.ink } : { borderWidth: 1, borderColor: colors.border }]}>
-                    <View style={{ width: 14, height: 14, borderRadius: 7, backgroundColor: dot, borderWidth: 1.5, borderColor: on ? colors.onInk : colors.border }} />
-                    <Text style={{ color: on ? colors.onInk : colors.text, fontWeight: '500' }}>{t(k)}</Text>
+                  <Pressable key={th.mode} onPress={() => setMode(th.mode)} style={{ width: '31.5%' }}>
+                    <View style={{ height: 46, borderRadius: 10, overflow: 'hidden', backgroundColor: th.bgHeader,
+                      borderWidth: on ? 2.5 : 1, borderColor: on ? colors.ink : colors.border, justifyContent: 'flex-end' }}>
+                      <HeaderBg theme={th} />
+                      <View style={{ height: 12, backgroundColor: th.bg, flexDirection: 'row', alignItems: 'center', paddingHorizontal: 6, gap: 4 }}>
+                        <View style={{ width: 14, height: 5, borderRadius: 3, backgroundColor: th.ink }} />
+                        <View style={{ width: 8, height: 5, borderRadius: 3, backgroundColor: th.accent }} />
+                      </View>
+                    </View>
+                    <Text numberOfLines={1} style={{ fontSize: 12, marginTop: 4, color: on ? colors.text : colors.textMuted, fontWeight: on ? '700' : '500' }}>{label}</Text>
                   </Pressable>
                 );
               })}

@@ -422,8 +422,8 @@ export default function ReportsScreen({ route, navigation, top = false }) {
         </View>
         <View style={[st.seg, { backgroundColor: colors.headerBtn }]}>
           {PERIODS.map(p => (
-            <Pressable key={p.k} onPress={() => setPeriod(p.k)} style={[st.segItem, period === p.k && { backgroundColor: colors.mode === 'night' ? colors.accent : '#fff' }]}>
-              <Text style={{ fontWeight: '700', fontSize: 13, color: period === p.k ? (colors.mode === 'night' ? '#000' : colors.accent) : colors.headerText }}>{t((top && p.k !== 'all' ? 'tp_' : 'r_') + p.k)}</Text>
+            <Pressable key={p.k} onPress={() => setPeriod(p.k)} style={[st.segItem, period === p.k && { backgroundColor: colors.dark ? colors.accent : '#fff' }]}>
+              <Text style={{ fontWeight: '700', fontSize: 13, color: period === p.k ? (colors.dark ? colors.onAccent : colors.accent) : colors.headerText }}>{t((top && p.k !== 'all' ? 'tp_' : 'r_') + p.k)}</Text>
             </Pressable>
           ))}
         </View>

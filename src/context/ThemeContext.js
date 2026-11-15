@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useEffect, useMemo } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { APP_THEME_SPECS, makeAppTheme } from '../data/appThemes';
 
 // Палитра Stefu Music — нейтральная: графит, тёплый серый и белый.
 // Цвета почти нет: главное — обложки и музыка. Фиолетовый остался только
@@ -117,11 +118,15 @@ export const LILAC = {
   onInk: '#ffffff',
 };
 
-const MODES = { light: LIGHT, night: DARK, lilac: LILAC };
+DARK.dark = true;
+
+// Тематические оформления (Новый год, Хэллоуин, Космос …) — src/data/appThemes.js
+export const APP_THEMES = APP_THEME_SPECS.map(s => makeAppTheme(s, s.dark ? DARK : LIGHT));
+const MODES = { light: LIGHT, night: DARK, lilac: LILAC, ...Object.fromEntries(APP_THEMES.map(x => [x.mode, x])) };
 
 // Теги — метки, а не украшение: один спокойный тон для всех.
 export function tagColor(colors) {
-  return colors.mode === 'night' ? '#a3a1a6' : '#6d6b70';
+  return colors.dark ? '#a3a1a6' : '#6d6b70';
 }
 
 const ThemeContext = createContext({ colors: LIGHT, toggle: () => {}, setMode: () => {}, isDark: false });
@@ -133,8 +138,8 @@ export function ThemeProvider({ children }) {
   }, []);
   const value = useMemo(() => ({
     colors,
-    isDark: colors.mode === 'night',
-    // тема по имени: 'light' | 'night' | 'lilac'
+    isDark: !!colors.dark,
+    // тема по имени: 'light' | 'night' | 'lilac' | id тематического оформления
     setMode: (mode) => {
       const next = MODES[mode] || LIGHT;
       setColors(next);
