@@ -53,7 +53,7 @@ export default {
   r_minutes: '{n} min', r_hours: '{h} u {m} min',
   r_never: 'Nooit gespeeld', r_never_hint: 'Nummers uit de bibliotheek die niet in de geschiedenis staan',
   r_avg_day: 'Gemiddeld {v} per dag',
-  s_look: 'Weergave', s_theme_dark: 'Donker thema', s_lang: 'Taal',
+  s_theme: 'Thema', s_theme_light: 'Licht', s_theme_night: 'Donker', s_theme_lilac: 'Lila', s_look: 'Weergave', s_theme_dark: 'Donker thema', s_lang: 'Taal',
   s_library: 'Bibliotheek', s_stats: 'Nummers: {n} · {size}',
   s_data: 'Gegevens', s_export: 'Geschiedenis en bibliotheek exporteren (JSON)',
   s_clear_history: 'Luistergeschiedenis wissen',

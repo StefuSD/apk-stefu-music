@@ -1,5 +1,6 @@
 import React, { useRef, useState } from 'react';
 import { View, Text, Pressable, ScrollView, StyleSheet, Switch, Alert, Modal, ActivityIndicator, ToastAndroid } from 'react-native';
+import HeaderBg from '../components/HeaderBg';
 import { usePlayer } from '../context/PlayerContext';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import * as FileSystem from 'expo-file-system/legacy';
@@ -25,6 +26,7 @@ function TagWeights({ visible, onClose }) {
     <Modal visible={visible} animationType="slide" onRequestClose={onClose} statusBarTranslucent navigationBarTranslucent>
       <View style={{ flex: 1, backgroundColor: colors.bg, paddingBottom: insets.bottom }}>
         <View style={{ backgroundColor: colors.bgHeader, paddingTop: insets.top + 10, paddingBottom: 12, paddingHorizontal: 14, flexDirection: 'row', alignItems: 'center' }}>
+          <HeaderBg />
           <Pressable onPress={onClose} hitSlop={10}><CloseIcon color={colors.headerText} size={24} /></Pressable>
           <Text style={{ color: colors.headerText, fontSize: 19, fontWeight: '700', marginLeft: 12 }}>{t('tw_title')}</Text>
         </View>
@@ -53,7 +55,7 @@ function TagWeights({ visible, onClose }) {
 import pkg from '../../package.json';
 
 export default function SettingsScreen() {
-  const { colors, isDark, toggle } = useTheme();
+  const { colors, setMode } = useTheme();
   const { t, lang, setLang } = useLang();
   const insets = useSafeAreaInsets();
   const lib = useLibrary();
@@ -118,13 +120,29 @@ export default function SettingsScreen() {
   return (
     <View style={{ flex: 1, backgroundColor: colors.bg }}>
       <View style={[st.header, { backgroundColor: colors.bgHeader, paddingTop: insets.top + 10 }]}>
+        <HeaderBg />
         <GearIcon color={colors.headerText} size={26} />
         <Text style={{ color: colors.headerText, fontSize: 20, fontWeight: '600', marginLeft: 10, letterSpacing: 0.3 }}>{t('nav_settings')}</Text>
       </View>
       <ScrollView contentContainerStyle={{ padding: 12, paddingBottom: 30 }}>
         <ProRow style={{ marginTop: 6, marginBottom: 0 }} />
         <Section title={t('s_look')}>
-          <Row label={t('s_theme_dark')} right={<Switch value={isDark} onValueChange={toggle} trackColor={{ true: colors.accent }} thumbColor="#fff" />} />
+          {/* Тема: светлая, тёмная или «Сирень» (кружок — цвет шапки темы) */}
+          <View style={{ paddingHorizontal: 14, paddingTop: 12 }}>
+            <Text style={{ fontSize: 15, fontWeight: '700', color: colors.text, marginBottom: 10 }}>{t('s_theme')}</Text>
+            <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 8 }}>
+              {[['light', 's_theme_light', '#18171a'], ['night', 's_theme_night', '#111012'], ['lilac', 's_theme_lilac', '#8a4fd6']].map(([m, k, dot]) => {
+                const on = colors.mode === m;
+                return (
+                  <Pressable key={m} onPress={() => setMode(m)}
+                    style={[st.pill, { flexDirection: 'row', alignItems: 'center', gap: 6 }, on ? { backgroundColor: colors.ink, borderWidth: 1, borderColor: colors.ink } : { borderWidth: 1, borderColor: colors.border }]}>
+                    <View style={{ width: 14, height: 14, borderRadius: 7, backgroundColor: dot, borderWidth: 1.5, borderColor: on ? colors.onInk : colors.border }} />
+                    <Text style={{ color: on ? colors.onInk : colors.text, fontWeight: '500' }}>{t(k)}</Text>
+                  </Pressable>
+                );
+              })}
+            </View>
+          </View>
           <View style={{ paddingHorizontal: 14, paddingVertical: 12 }}>
             <Text style={{ fontSize: 15, fontWeight: '700', color: colors.text, marginBottom: 10 }}>{t('s_lang')}</Text>
             <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 8 }}>

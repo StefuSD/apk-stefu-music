@@ -53,7 +53,7 @@ export default {
   r_minutes: '{n} λεπ.', r_hours: '{h} ώ. {m} λεπ.',
   r_never: 'Δεν ακούστηκαν ποτέ', r_never_hint: 'Τραγούδια της βιβλιοθήκης που δεν υπάρχουν στο ιστορικό',
   r_avg_day: 'Κατά μέσο όρο {v} την ημέρα',
-  s_look: 'Εμφάνιση', s_theme_dark: 'Σκούρο θέμα', s_lang: 'Γλώσσα',
+  s_theme: 'Θέμα', s_theme_light: 'Φωτεινό', s_theme_night: 'Σκούρο', s_theme_lilac: 'Πασχαλιά', s_look: 'Εμφάνιση', s_theme_dark: 'Σκούρο θέμα', s_lang: 'Γλώσσα',
   s_library: 'Βιβλιοθήκη', s_stats: 'Τραγούδια: {n} · {size}',
   s_data: 'Δεδομένα', s_export: 'Εξαγωγή ιστορικού και βιβλιοθήκης (JSON)',
   s_clear_history: 'Εκκαθάριση ιστορικού ακροάσεων',

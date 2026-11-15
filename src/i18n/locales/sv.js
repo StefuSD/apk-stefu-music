@@ -53,7 +53,7 @@ export default {
   r_minutes: '{n} min', r_hours: '{h} h {m} min',
   r_never: 'Aldrig spelade', r_never_hint: 'Låtar i biblioteket som inte finns i historiken',
   r_avg_day: 'I snitt {v} per dag',
-  s_look: 'Utseende', s_theme_dark: 'Mörkt tema', s_lang: 'Språk',
+  s_theme: 'Tema', s_theme_light: 'Ljust', s_theme_night: 'Mörkt', s_theme_lilac: 'Syren', s_look: 'Utseende', s_theme_dark: 'Mörkt tema', s_lang: 'Språk',
   s_library: 'Bibliotek', s_stats: 'Låtar: {n} · {size}',
   s_data: 'Data', s_export: 'Exportera historik och bibliotek (JSON)',
   s_clear_history: 'Rensa lyssningshistorik',

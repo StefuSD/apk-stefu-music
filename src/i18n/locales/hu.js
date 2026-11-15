@@ -53,7 +53,7 @@ export default {
   r_minutes: '{n} perc', r_hours: '{h} óra {m} perc',
   r_never: 'Sosem játszott', r_never_hint: 'A könyvtár dalai, amelyek nincsenek az előzményekben',
   r_avg_day: 'Átlagosan napi {v}',
-  s_look: 'Megjelenés', s_theme_dark: 'Sötét téma', s_lang: 'Nyelv',
+  s_theme: 'Téma', s_theme_light: 'Világos', s_theme_night: 'Sötét', s_theme_lilac: 'Orgona', s_look: 'Megjelenés', s_theme_dark: 'Sötét téma', s_lang: 'Nyelv',
   s_library: 'Könyvtár', s_stats: 'Dalok: {n} · {size}',
   s_data: 'Adatok', s_export: 'Előzmények és könyvtár exportálása (JSON)',
   s_clear_history: 'Hallgatási előzmények törlése',

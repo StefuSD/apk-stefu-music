@@ -51,7 +51,7 @@ export default {
   r_minutes: '{n} Min.', r_hours: '{h} Std. {m} Min.',
   r_never: 'Nie gehört', r_never_hint: 'Songs aus der Mediathek, die nicht im Verlauf sind',
   r_avg_day: 'Im Schnitt {v} pro Tag',
-  s_look: 'Darstellung', s_theme_dark: 'Dunkles Design', s_lang: 'Sprache',
+  s_theme: 'Design', s_theme_light: 'Hell', s_theme_night: 'Dunkel', s_theme_lilac: 'Flieder', s_look: 'Darstellung', s_theme_dark: 'Dunkles Design', s_lang: 'Sprache',
   s_library: 'Mediathek', s_stats: 'Songs: {n} · {size}',
   s_data: 'Daten', s_export: 'Verlauf und Mediathek exportieren (JSON)',
   s_clear_history: 'Hörverlauf löschen',

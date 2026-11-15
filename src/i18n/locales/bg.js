@@ -53,7 +53,7 @@ export default {
   r_minutes: '{n} мин', r_hours: '{h} ч {m} мин',
   r_never: 'Нито веднъж слушани', r_never_hint: 'Песни от библиотеката, които ги няма в историята',
   r_avg_day: 'Средно {v} на ден',
-  s_look: 'Външен вид', s_theme_dark: 'Тъмна тема', s_lang: 'Език',
+  s_theme: 'Тема', s_theme_light: 'Светла', s_theme_night: 'Тъмна', s_theme_lilac: 'Люляк', s_look: 'Външен вид', s_theme_dark: 'Тъмна тема', s_lang: 'Език',
   s_library: 'Библиотека', s_stats: 'Песни: {n} · {size}',
   s_data: 'Данни', s_export: 'Експорт на историята и библиотеката (JSON)',
   s_clear_history: 'Изчисти историята на слушане',

@@ -51,7 +51,7 @@ export default {
   r_minutes: '{n} хв', r_hours: '{h} год {m} хв',
   r_never: 'Ще не слухали', r_never_hint: 'Пісні з бібліотеки, яких немає в історії',
   r_avg_day: 'У середньому {v} на день',
-  s_look: 'Оформлення', s_theme_dark: 'Темна тема', s_lang: 'Мова',
+  s_theme: 'Тема', s_theme_light: 'Світла', s_theme_night: 'Темна', s_theme_lilac: 'Бузок', s_look: 'Оформлення', s_theme_dark: 'Темна тема', s_lang: 'Мова',
   s_library: 'Бібліотека', s_stats: 'Пісень: {n} · {size}',
   s_data: 'Дані', s_export: 'Експортувати історію та бібліотеку (JSON)',
   s_clear_history: 'Очистити історію прослуховувань',

@@ -51,7 +51,7 @@ export default {
   r_minutes: '{n} min', r_hours: '{h} h {m} min',
   r_never: 'Niciodată ascultate', r_never_hint: 'Melodii din bibliotecă care nu apar în istoric',
   r_avg_day: 'În medie {v} pe zi',
-  s_look: 'Aspect', s_theme_dark: 'Temă întunecată', s_lang: 'Limbă',
+  s_theme: 'Temă', s_theme_light: 'Luminoasă', s_theme_night: 'Întunecată', s_theme_lilac: 'Liliac', s_look: 'Aspect', s_theme_dark: 'Temă întunecată', s_lang: 'Limbă',
   s_library: 'Bibliotecă', s_stats: 'Melodii: {n} · {size}',
   s_data: 'Date', s_export: 'Exportă istoricul și biblioteca (JSON)',
   s_clear_history: 'Șterge istoricul ascultărilor',

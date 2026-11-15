@@ -82,23 +82,66 @@ export const DARK = {
   miniEdge: '#0f2649',
 };
 
+// «Сирень»: светлые страницы, шапка — тёмно-фиолетовая основа с радиальными свечениями
+// (src/components/HeaderBg.js), кнопки и выделения — сиреневые вместо графитовых,
+// кнопки действия — сине-фиолетовые, удаление — малиновое.
+const LILAC_BTN = '#8a4fd6';   // сиреневый: выбранные кнопки, плавающие кнопки, активная вкладка (белый ~5:1)
+export const LILAC = {
+  ...LIGHT,
+  mode: 'lilac',
+  bg: '#f6f2fb',
+  bgHeader: '#3a1466',
+  headerGlow: [
+    { cx: 88, cy: 0, r: 75, color: '#c9a2ff', o: 0.85 },    // сиреневое сверху справа
+    { cx: 0, cy: 100, r: 85, color: '#c026d3', o: 0.75 },   // пурпурное снизу слева
+    { cx: 55, cy: 125, r: 60, color: '#4f46e5', o: 0.6 },   // синеватое снизу
+  ],
+  bgCard: '#ffffff',
+  bgInput: '#efe7f8',
+  bgSubtle: '#faf7fd',
+  border: '#e6dcf2',
+  text: '#1f1430',
+  textMuted: '#76688a',
+  accent: '#5b3fd1',
+  accentSoft: '#efe6fb',
+  danger: '#c2416b',
+  tabBar: '#ffffff',
+  tabActive: LILAC_BTN,
+  tabInact: '#b4a8c4',
+  headerText: '#ffffff',
+  navBar: '#2c0f4f',
+  headerBtn: 'rgba(255,255,255,0.16)',
+  player: '#2a1146',
+  playerSoft: '#dcc8fb',
+  ink: LILAC_BTN,
+  onInk: '#ffffff',
+};
+
+const MODES = { light: LIGHT, night: DARK, lilac: LILAC };
+
 // Теги — метки, а не украшение: один спокойный тон для всех.
 export function tagColor(colors) {
   return colors.mode === 'night' ? '#a3a1a6' : '#6d6b70';
 }
 
-const ThemeContext = createContext({ colors: LIGHT, toggle: () => {}, isDark: false });
+const ThemeContext = createContext({ colors: LIGHT, toggle: () => {}, setMode: () => {}, isDark: false });
 
 export function ThemeProvider({ children }) {
   const [colors, setColors] = useState(LIGHT);
   useEffect(() => {
-    AsyncStorage.getItem('sm_theme').then(s => { if (s === 'night') setColors(DARK); });
+    AsyncStorage.getItem('sm_theme').then(s => { if (MODES[s]) setColors(MODES[s]); });
   }, []);
   const value = useMemo(() => ({
     colors,
     isDark: colors.mode === 'night',
+    // тема по имени: 'light' | 'night' | 'lilac'
+    setMode: (mode) => {
+      const next = MODES[mode] || LIGHT;
+      setColors(next);
+      AsyncStorage.setItem('sm_theme', next.mode);
+    },
     toggle: () => {
-      const next = colors.mode === 'light' ? DARK : LIGHT;
+      const next = colors.mode === 'night' ? LIGHT : DARK;
       setColors(next);
       AsyncStorage.setItem('sm_theme', next.mode);
     },

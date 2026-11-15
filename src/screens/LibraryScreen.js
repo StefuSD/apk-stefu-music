@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { View, Text, TextInput, Pressable, StyleSheet, Alert, ScrollView, ActivityIndicator, ToastAndroid, Image, Switch } from 'react-native';
+import HeaderBg from '../components/HeaderBg';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import PromptDialog from '../components/PromptDialog';
 import PlaylistOrder from '../components/PlaylistOrder';
@@ -250,6 +251,7 @@ export default function LibraryScreen({ route }) {
   return (
     <View style={{ flex: 1, backgroundColor: colors.bg }}>
       <View style={[st.header, { backgroundColor: colors.bgHeader, paddingTop: insets.top + 10 }]}>
+        <HeaderBg />
         {sel ? (
           <View>
             <View style={{ flexDirection: 'row', alignItems: 'center', minHeight: 38 }}>

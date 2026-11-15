@@ -53,7 +53,7 @@ export default {
   r_minutes: '{n} min', r_hours: '{h} h {m} min',
   r_never: 'Nikdy nehráno', r_never_hint: 'Skladby z knihovny, které nejsou v historii',
   r_avg_day: 'V průměru {v} denně',
-  s_look: 'Vzhled', s_theme_dark: 'Tmavý motiv', s_lang: 'Jazyk',
+  s_theme: 'Motiv', s_theme_light: 'Světlý', s_theme_night: 'Tmavý', s_theme_lilac: 'Šeřík', s_look: 'Vzhled', s_theme_dark: 'Tmavý motiv', s_lang: 'Jazyk',
   s_library: 'Knihovna', s_stats: 'Skladeb: {n} · {size}',
   s_data: 'Data', s_export: 'Exportovat historii a knihovnu (JSON)',
   s_clear_history: 'Vymazat historii poslechu',

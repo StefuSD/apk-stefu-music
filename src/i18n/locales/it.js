@@ -51,7 +51,7 @@ export default {
   r_minutes: '{n} min', r_hours: '{h} h {m} min',
   r_never: 'Mai ascoltati', r_never_hint: 'Brani della libreria che non sono nella cronologia',
   r_avg_day: 'In media {v} al giorno',
-  s_look: 'Aspetto', s_theme_dark: 'Tema scuro', s_lang: 'Lingua',
+  s_theme: 'Tema', s_theme_light: 'Chiaro', s_theme_night: 'Scuro', s_theme_lilac: 'Lilla', s_look: 'Aspetto', s_theme_dark: 'Tema scuro', s_lang: 'Lingua',
   s_library: 'Libreria', s_stats: 'Brani: {n} · {size}',
   s_data: 'Dati', s_export: 'Esporta cronologia e libreria (JSON)',
   s_clear_history: 'Cancella cronologia di ascolto',

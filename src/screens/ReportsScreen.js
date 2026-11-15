@@ -1,5 +1,6 @@
 import React, { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { View, Text, Pressable, ScrollView, StyleSheet } from 'react-native';
+import HeaderBg from '../components/HeaderBg';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTheme, tagColor } from '../context/ThemeContext';
 import { useLang } from '../i18n';
@@ -384,6 +385,7 @@ export default function ReportsScreen({ route, navigation, top = false }) {
   return (
     <View style={{ flex: 1, backgroundColor: colors.bg }}>
       <View style={[st.header, { backgroundColor: colors.bgHeader, paddingTop: insets.top + 10 }]}>
+        <HeaderBg />
         {/* Топ-20 за неделю, месяц или год: название периода — в шапке
             вместо слова «Топ-20» (и так понятно), стрелки рядом. Под переключателем периода
             строки больше нет. «За всё время» — просто «Топ-20». */}

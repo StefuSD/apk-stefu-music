@@ -51,7 +51,7 @@ export default {
   r_minutes: '{n} min', r_hours: '{h} godz. {m} min',
   r_never: 'Nigdy nie słuchane', r_never_hint: 'Utwory z biblioteki, których nie ma w historii',
   r_avg_day: 'Średnio {v} dziennie',
-  s_look: 'Wygląd', s_theme_dark: 'Ciemny motyw', s_lang: 'Język',
+  s_theme: 'Motyw', s_theme_light: 'Jasny', s_theme_night: 'Ciemny', s_theme_lilac: 'Bez', s_look: 'Wygląd', s_theme_dark: 'Ciemny motyw', s_lang: 'Język',
   s_library: 'Biblioteka', s_stats: 'Utwory: {n} · {size}',
   s_data: 'Dane', s_export: 'Eksportuj historię i bibliotekę (JSON)',
   s_clear_history: 'Wyczyść historię odsłuchań',

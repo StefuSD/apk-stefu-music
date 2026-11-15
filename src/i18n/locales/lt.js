@@ -53,7 +53,7 @@ export default {
   r_minutes: '{n} min.', r_hours: '{h} val. {m} min.',
   r_never: 'Niekada neklausytos', r_never_hint: 'Bibliotekos dainos, kurių nėra istorijoje',
   r_avg_day: 'Vidutiniškai {v} per dieną',
-  s_look: 'Išvaizda', s_theme_dark: 'Tamsi tema', s_lang: 'Kalba',
+  s_theme: 'Tema', s_theme_light: 'Šviesi', s_theme_night: 'Tamsi', s_theme_lilac: 'Alyvinė', s_look: 'Išvaizda', s_theme_dark: 'Tamsi tema', s_lang: 'Kalba',
   s_library: 'Biblioteka', s_stats: 'Dainų: {n} · {size}',
   s_data: 'Duomenys', s_export: 'Eksportuoti istoriją ir biblioteką (JSON)',
   s_clear_history: 'Išvalyti klausymo istoriją',

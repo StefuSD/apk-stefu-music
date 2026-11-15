@@ -75,7 +75,7 @@ const ru = {
   r_never: 'Ни разу не слушали', r_never_hint: 'Песни из библиотеки, которых нет в истории',
   r_avg_day: 'В среднем {v} в день',
   // settings
-  s_look: 'Оформление', s_theme_dark: 'Тёмная тема', s_lang: 'Язык',
+  s_theme: 'Тема', s_theme_light: 'Светлая', s_theme_night: 'Тёмная', s_theme_lilac: 'Сирень', s_look: 'Оформление', s_theme_dark: 'Тёмная тема', s_lang: 'Язык',
   s_library: 'Библиотека', s_stats: 'Песен: {n} · {size}',
   s_data: 'Данные', s_export: 'Выгрузить историю и библиотеку (JSON)',
   s_clear_history: 'Очистить историю прослушиваний',
@@ -196,7 +196,7 @@ const en = {
   r_minutes: '{n} min', r_hours: '{h} h {m} min',
   r_never: 'Never played', r_never_hint: 'Library songs that are not in the history',
   r_avg_day: 'On average {v} a day',
-  s_look: 'Appearance', s_theme_dark: 'Dark theme', s_lang: 'Language',
+  s_theme: 'Theme', s_theme_light: 'Light', s_theme_night: 'Dark', s_theme_lilac: 'Lilac', s_look: 'Appearance', s_theme_dark: 'Dark theme', s_lang: 'Language',
   s_library: 'Library', s_stats: 'Songs: {n} · {size}',
   s_data: 'Data', s_export: 'Export history and library (JSON)',
   s_clear_history: 'Clear listening history',

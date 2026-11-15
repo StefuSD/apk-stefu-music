@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { View, Text, TextInput, Pressable, Modal, ScrollView, StyleSheet, ToastAndroid } from 'react-native';
+import HeaderBg from './HeaderBg';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTheme } from '../context/ThemeContext';
 import { useLang } from '../i18n';
@@ -76,6 +77,7 @@ export default function BulkEditor({ ids, onClose, onDone }) {
     <Modal visible={visible} animationType="slide" onRequestClose={onClose} statusBarTranslucent navigationBarTranslucent>
       <View style={{ flex: 1, backgroundColor: colors.bg }}>
         <View style={{ backgroundColor: colors.bgHeader, paddingTop: insets.top + 10, paddingBottom: 12, paddingHorizontal: 14, flexDirection: 'row', alignItems: 'center' }}>
+          <HeaderBg />
           <Pressable onPress={onClose} hitSlop={10}><CloseIcon color={colors.headerText} size={24} /></Pressable>
           <Text style={{ color: colors.headerText, fontSize: 19, fontWeight: '700', marginLeft: 12, flex: 1 }}>{t('bulk_title', { n: (ids || []).length })}</Text>
         </View>

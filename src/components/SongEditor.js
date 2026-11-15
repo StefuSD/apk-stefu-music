@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, TextInput, Pressable, Modal, ScrollView, StyleSheet, Alert, KeyboardAvoidingView, Image, Linking } from 'react-native';
+import HeaderBg from './HeaderBg';
 import { SONG_LANGS, langName, toLangCode, normalizeUrl } from '../utils/languages';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import * as ImagePicker from 'expo-image-picker';
@@ -140,6 +141,7 @@ export default function SongEditor({ song, onClose }) {
     <Modal visible animationType="slide" onRequestClose={onClose} statusBarTranslucent navigationBarTranslucent>
       <KeyboardAvoidingView behavior="height" style={{ flex: 1, backgroundColor: colors.bg }}>
         <View style={[st.header, { backgroundColor: colors.bgHeader, paddingTop: insets.top + 8 }]}>
+          <HeaderBg />
           <Pressable onPress={onClose} hitSlop={10} style={[st.hBtn, { backgroundColor: colors.headerBtn }]}><CloseIcon color={colors.headerText} size={22} /></Pressable>
           <Text style={{ color: colors.headerText, fontSize: 19, fontWeight: '700', flex: 1, marginLeft: 12 }}>{t('edit_song')}</Text>
           <Pressable onPress={del} hitSlop={10} style={[st.hBtn, { backgroundColor: colors.headerBtn }]}><TrashIcon color={colors.headerText} size={22} /></Pressable>

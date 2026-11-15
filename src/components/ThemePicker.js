@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, Text, Pressable, Modal, ScrollView, StyleSheet, Dimensions } from 'react-native';
+import HeaderBg from './HeaderBg';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTheme } from '../context/ThemeContext';
 import { useLang } from '../i18n';
@@ -37,6 +38,7 @@ export default function ThemePicker({ visible, seed, value, variant, onPick, onC
     <Modal visible={visible} animationType="slide" onRequestClose={onClose} statusBarTranslucent navigationBarTranslucent>
       <View style={{ flex: 1, backgroundColor: colors.bg }}>
         <View style={[st.header, { backgroundColor: colors.bgHeader, paddingTop: insets.top + 8 }]}>
+          <HeaderBg />
           <Pressable onPress={onClose} hitSlop={10} style={[st.hBtn, { backgroundColor: colors.headerBtn }]}><CloseIcon color={colors.headerText} size={22} /></Pressable>
           <Text style={{ color: colors.headerText, fontSize: 19, fontWeight: '700', marginLeft: 12 }}>{t('f_theme')}</Text>
         </View>

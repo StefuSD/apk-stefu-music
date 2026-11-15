@@ -51,7 +51,7 @@ export default {
   r_minutes: '{n} dk', r_hours: '{h} sa {m} dk',
   r_never: 'Hiç dinlenmeyenler', r_never_hint: 'Kitaplıkta olup geçmişte bulunmayan şarkılar',
   r_avg_day: 'Günde ortalama {v}',
-  s_look: 'Görünüm', s_theme_dark: 'Koyu tema', s_lang: 'Dil',
+  s_theme: 'Tema', s_theme_light: 'Açık', s_theme_night: 'Koyu', s_theme_lilac: 'Leylak', s_look: 'Görünüm', s_theme_dark: 'Koyu tema', s_lang: 'Dil',
   s_library: 'Kitaplık', s_stats: 'Şarkılar: {n} · {size}',
   s_data: 'Veriler', s_export: 'Geçmişi ve kitaplığı dışa aktar (JSON)',
   s_clear_history: 'Dinleme geçmişini temizle',

@@ -53,7 +53,7 @@ export default {
   r_minutes: '{n} min', r_hours: '{h} h {m} min',
   r_never: 'Nikad slušano', r_never_hint: 'Pjesme iz biblioteke kojih nema u povijesti',
   r_avg_day: 'Prosječno {v} dnevno',
-  s_look: 'Izgled', s_theme_dark: 'Tamna tema', s_lang: 'Jezik',
+  s_theme: 'Tema', s_theme_light: 'Svijetla', s_theme_night: 'Tamna', s_theme_lilac: 'Jorgovan', s_look: 'Izgled', s_theme_dark: 'Tamna tema', s_lang: 'Jezik',
   s_library: 'Biblioteka', s_stats: 'Pjesama: {n} · {size}',
   s_data: 'Podaci', s_export: 'Izvezi povijest i biblioteku (JSON)',
   s_clear_history: 'Očisti povijest slušanja',
