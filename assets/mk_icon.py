@@ -1,6 +1,6 @@
-# Иконка Stefu Music: две белые ноты под толстой наклонной перекладиной (правая выше) на фоне темы «Сирень»:
-# тёмно-фиолетовая основа и радиальные свечения — как шапка приложения (src/components/HeaderBg.js).
-# Монохромный знак, без фото. Запуск: python assets/mk_icon.py, затем
+# Иконка Stefu Music: белый фон, на нём две ноты под толстой наклонной перекладиной (правая выше),
+# залитые градиентом темы «Сирень» (тёмно-фиолетовая основа и радиальные свечения — как шапка приложения,
+# src/components/HeaderBg.js). Градиент растянут на рамку знака, чтобы все свечения попали в ноты. Без фото. Запуск: python assets/mk_icon.py, затем
 # иконки сразу пишутся и в android/app/src/main/res/mipmap-* (без expo prebuild).
 from PIL import Image, ImageDraw, ImageFilter
 import math, os
@@ -62,21 +62,37 @@ def glyph(n, scale):
     g.putalpha(m)
     return g
 
+WHITE = (255, 255, 255, 255)
+
+
+def colored(n, scale):
+    """Знак, залитый градиентом «Сирень»: градиент растянут на рамку знака."""
+    g = glyph(n, scale)
+    a = g.split()[3]
+    x0, y0, x1, y1 = a.getbbox()
+    side = max(x1 - x0, y1 - y0)
+    grad = gradient(side).resize((x1 - x0, y1 - y0), Image.BICUBIC)
+    fill = Image.new('RGBA', (n, n), (0, 0, 0, 0))
+    fill.paste(grad.convert('RGBA'), (x0, y0))
+    fill.putalpha(a)
+    return fill
+
+
 def with_shadow(base, g):
     a = g.split()[3].filter(ImageFilter.GaussianBlur(N * 0.014))
-    sh = Image.new('RGBA', g.size, (35, 8, 70, 0))
-    sh.putalpha(a.point(lambda v: int(v * 0.35)))
+    sh = Image.new('RGBA', g.size, (58, 20, 102, 0))
+    sh.putalpha(a.point(lambda v: int(v * 0.18)))
     base.alpha_composite(sh, (0, int(N * 0.012)))
     base.alpha_composite(g)
     return base
 
 
-icon = with_shadow(gradient(N).convert('RGBA'), glyph(N, 0.68))
+icon = with_shadow(Image.new('RGBA', (N, N), WHITE), colored(N, 0.68))
 icon.convert('RGB').save('icon.png')
 icon.convert('RGB').resize((48, 48), Image.LANCZOS).save('favicon.png')
 
-# адаптивная: знак в безопасной зоне (середина 66/108 после маски)
-with_shadow(gradient(N, 108 / 66).convert('RGBA'), glyph(N, 0.68 * 62 / 108)).save('adaptive-icon.png')
+# адаптивная: знак в безопасной зоне (середина 66/108 после маски), фон белый
+with_shadow(Image.new('RGBA', (N, N), WHITE), colored(N, 0.68 * 62 / 108)).save('adaptive-icon.png')
 
 # Заставка — как в Stefu Football (правило для всех приложений Stefu): знак-силуэт без круга,
 # под ним название тонким Roboto Light с разрядкой. Светлая и тёмная; те же картинки и размер 288 dp
@@ -150,7 +166,7 @@ if os.path.isdir(RES_M):
     if os.path.exists(col):
         txt = open(col, encoding='utf-8').read()
         import re as _re
-        txt = _re.sub(r'(<color name="iconBackground">)#[0-9a-fA-F]{6}(</color>)', r'\g<1>#3a1466\g<2>', txt)
+        txt = _re.sub(r'(<color name="iconBackground">)#[0-9a-fA-F]{6}(</color>)', r'\g<1>#ffffff\g<2>', txt)
         open(col, 'w', encoding='utf-8').write(txt)
 
 prev = Image.new('RGB', (620, 300), (255, 255, 255))

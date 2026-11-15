@@ -19,7 +19,7 @@
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#3a1466"
+        "backgroundColor": "#ffffff"
       },
       "package": "com.stefu.music",
       "versionCode": 1,

@@ -479,6 +479,10 @@ export function MiniPlayer({ onOpen }) {
         <View style={{ height: 3, width: `${pos * 100}%`, backgroundColor: mc.bar }} />
       </View>
       <View style={{ flexDirection: 'row', alignItems: 'center', paddingHorizontal: 12, paddingVertical: 8 }}>
+        {/* Предыдущая песня — слева, перед обложкой (зеркально «Следующей» справа). */}
+        <Pressable onPress={p.prev} hitSlop={10} style={{ padding: 6, marginLeft: -6, marginRight: 4 }}>
+          <PrevIcon color={mc.text} size={30} />
+        </Pressable>
         {/* Play/Pause — прямо на обложке: экономит место. */}
         <Pressable onPress={p.toggle} hitSlop={8}>
           <Cover song={song} size={42} radius={8} bare />
