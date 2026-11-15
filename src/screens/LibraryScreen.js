@@ -263,10 +263,8 @@ export default function LibraryScreen({ route }) {
             <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ gap: 8, marginTop: 12 }}>
               {[
                 { k: 'pl_add', Icon: PlaylistIcon, on: () => setPlPick({ ids: [...sel] }) },
-                { k: 'bulk_edit', Icon: EditIcon, on: () => setBulk([...sel]) },
                 { k: 'queue_next', Icon: PlayNextIcon, on: () => { [...sel].reverse().forEach(id => player.playNext(id)); ToastAndroid.show(t('queued'), ToastAndroid.SHORT); setSel(null); } },
                 ...(curPl ? [{ k: 'pl_remove', Icon: CloseIcon, on: () => { sel.forEach(id => lib.removeFromPlaylist(curPl.id, id)); setSel(null); } }] : []),
-                { k: 'delete', Icon: TrashIcon, on: delSelected },
               ].map(b => (
                 <Pressable key={b.k} onPress={b.on} style={[st.addBtn, { backgroundColor: colors.headerBtn }]}>
                   <b.Icon color={colors.headerText} size={18} />
@@ -329,7 +327,7 @@ export default function LibraryScreen({ route }) {
           renderItem={renderItem}
           extraData={renderItem}
           keyboardShouldPersistTaps="handled"
-          contentContainerStyle={{ paddingBottom: 24 }}
+          contentContainerStyle={{ paddingBottom: sel ? 160 : 24 }}
           ListHeaderComponent={!showBar ? null :
             <View>
               <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ paddingHorizontal: 12, paddingTop: 12, gap: 8 }}>
@@ -396,6 +394,19 @@ export default function LibraryScreen({ route }) {
       <PromptDialog visible={!!prompt} title={prompt ? prompt.title : ''} value={prompt ? prompt.value : ''} placeholder={t('pl_name')}
         onDone={v => prompt && prompt.onDone(v)} onClose={() => setPrompt(null)} />
       <PlaylistOrder playlist={orderPl} onClose={() => setOrderPl(null)} />
+      {/* Выбор песен: «Изменить» и «Удалить» — плавающие кнопки справа внизу (над мини-плеером). */}
+      {sel ? (
+        <View style={st.fabs} pointerEvents="box-none">
+          <Pressable onPress={() => sel.length && setBulk([...sel])} disabled={!sel.length} accessibilityLabel={t('bulk_edit')}
+            style={({ pressed }) => [st.fab, { backgroundColor: colors.ink, opacity: !sel.length ? 0.4 : pressed ? 0.8 : 1 }]}>
+            <EditIcon color={colors.onInk} size={24} />
+          </Pressable>
+          <Pressable onPress={() => sel.length && delSelected()} disabled={!sel.length} accessibilityLabel={t('delete')}
+            style={({ pressed }) => [st.fab, { backgroundColor: colors.danger, opacity: !sel.length ? 0.4 : pressed ? 0.8 : 1 }]}>
+            <TrashIcon color="#ffffff" size={24} />
+          </Pressable>
+        </View>
+      ) : null}
       <BulkEditor ids={bulk} onClose={() => setBulk(null)} onDone={() => setSel(null)} />
     </View>
   );
@@ -406,6 +417,9 @@ const st = StyleSheet.create({
   title: { fontSize: 20, fontWeight: '600', flex: 1, letterSpacing: 0.3, marginLeft: 6 },
   addBtn: { flexDirection: 'row', alignItems: 'center', paddingHorizontal: 12, paddingVertical: 8, borderRadius: 20 },
   iconBtn: { width: 38, height: 38, borderRadius: 19, alignItems: 'center', justifyContent: 'center', marginLeft: 8 },
+  fabs: { position: 'absolute', right: 16, bottom: 16, gap: 12, alignItems: 'center' },
+  fab: { width: 56, height: 56, borderRadius: 28, alignItems: 'center', justifyContent: 'center', elevation: 6,
+    shadowColor: '#000', shadowOpacity: 0.25, shadowRadius: 6, shadowOffset: { width: 0, height: 3 } },
   search: { flexDirection: 'row', alignItems: 'center', borderRadius: 14, paddingHorizontal: 12, marginTop: 12 },
   chip: { flexDirection: 'row', alignItems: 'center', paddingHorizontal: 13, paddingVertical: 6, borderRadius: 16, borderWidth: StyleSheet.hairlineWidth },
   act: { flexDirection: 'row', alignItems: 'center', paddingHorizontal: 14, paddingVertical: 9, borderRadius: 20 },
