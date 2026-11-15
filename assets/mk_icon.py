@@ -1,21 +1,34 @@
-# Иконка Stefu Music: две белые ноты под толстой наклонной перекладиной (правая выше) на графитовом диагональном градиенте (чёрно-белая).
+# Иконка Stefu Music: две белые ноты под толстой наклонной перекладиной (правая выше) на фоне темы «Сирень»:
+# тёмно-фиолетовая основа и радиальные свечения — как шапка приложения (src/components/HeaderBg.js).
 # Монохромный знак, без фото. Запуск: python assets/mk_icon.py, затем
-# npx expo prebuild --platform android --no-install (перепишет mipmap-ресурсы).
+# иконки сразу пишутся и в android/app/src/main/res/mipmap-* (без expo prebuild).
 from PIL import Image, ImageDraw, ImageFilter
 import math, os
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
 N = 1024
-TOP, BOT = (78, 77, 82), (10, 10, 11)           # чёрно-белая: светлый графит → почти чёрный (из угла в угол)
+# Фон — тема «Сирень» (src/context/ThemeContext.js → LILAC): основа и три свечения (x, y, радиус в 0–100,
+# цвет, непрозрачность в центре); свечение гаснет к краю: 0 → o, 0,55 → o·0,45, 1 → 0.
+BASE = (0x3a, 0x14, 0x66)
+GLOW = [(88, 0, 75, (0xc9, 0xa2, 0xff), 0.85),   # сиреневое сверху справа
+        (0, 100, 85, (0xc0, 0x26, 0xd3), 0.75),  # пурпурное снизу слева
+        (55, 125, 60, (0x4f, 0x46, 0xe5), 0.6)]  # синеватое снизу
 
 
 def gradient(n, stretch=1.0):
-    # stretch > 1 — градиент круче: для адаптивной иконки, где видна только середина
-    small = Image.new('RGB', (256, 256))
+    # stretch > 1 — для адаптивной иконки: видна только середина (1/stretch), её и рисуем как обычную иконку
+    S = 256
+    small = Image.new('RGB', (S, S))
     px = small.load()
-    for y in range(256):
-        for x in range(256):
-            k = min(1.0, max(0.0, 0.5 + ((x + y) / 510.0 - 0.5) * stretch))
-            px[x, y] = tuple(int(TOP[i] + (BOT[i] - TOP[i]) * k) for i in range(3))
+    for y in range(S):
+        for x in range(S):
+            u = 50 + ((x + 0.5) / S * 100 - 50) * stretch
+            v = 50 + ((y + 0.5) / S * 100 - 50) * stretch
+            c = list(BASE)
+            for gx, gy, r, col, o in GLOW:
+                d = math.hypot(u - gx, v - gy) / r
+                a = o * (1 - d / 0.55 * 0.55) if d < 0.55 else (o * 0.45 * (1 - (d - 0.55) / 0.45) if d < 1 else 0)
+                c = [c[i] + (col[i] - c[i]) * a for i in range(3)]
+            px[x, y] = tuple(int(round(max(0, min(255, ch)))) for ch in c)
     return small.resize((n, n), Image.BICUBIC)
 
 
@@ -117,6 +130,28 @@ if os.path.isdir(RES):
         night = os.path.join(RES, folder.replace('drawable-', 'drawable-night-'))
         os.makedirs(night, exist_ok=True)
         sp_dark.resize(size, Image.LANCZOS).save(os.path.join(night, 'splashscreen_logo.png'))
+
+RES_M = os.path.join('..', 'android', 'app', 'src', 'main', 'res')
+if os.path.isdir(RES_M):
+    LEGACY = {'mdpi': 48, 'hdpi': 72, 'xhdpi': 96, 'xxhdpi': 144, 'xxxhdpi': 192}
+    fg_full = Image.open('adaptive-icon.png').convert('RGBA')
+    for dens, px_ in LEGACY.items():
+        folder = os.path.join(RES_M, 'mipmap-' + dens)
+        if not os.path.isdir(folder):
+            continue
+        sq = icon.convert('RGBA').resize((px_, px_), Image.LANCZOS)
+        sq.save(os.path.join(folder, 'ic_launcher.webp'), 'WEBP', quality=95)
+        rmask = Image.new('L', (px_ * 4, px_ * 4), 0)
+        ImageDraw.Draw(rmask).ellipse((0, 0, px_ * 4 - 1, px_ * 4 - 1), fill=255)
+        rnd = sq.copy(); rnd.putalpha(rmask.resize((px_, px_), Image.LANCZOS))
+        rnd.save(os.path.join(folder, 'ic_launcher_round.webp'), 'WEBP', quality=95)
+        fg_full.resize((px_ * 108 // 48, px_ * 108 // 48), Image.LANCZOS).save(os.path.join(folder, 'ic_launcher_foreground.webp'), 'WEBP', quality=95)
+    col = os.path.join(RES_M, 'values', 'colors.xml')
+    if os.path.exists(col):
+        txt = open(col, encoding='utf-8').read()
+        import re as _re
+        txt = _re.sub(r'(<color name="iconBackground">)#[0-9a-fA-F]{6}(</color>)', r'\g<1>#3a1466\g<2>', txt)
+        open(col, 'w', encoding='utf-8').write(txt)
 
 prev = Image.new('RGB', (620, 300), (255, 255, 255))
 pm = Image.new('L', (280, 280), 0); ImageDraw.Draw(pm).ellipse((0, 0, 279, 279), fill=255)
