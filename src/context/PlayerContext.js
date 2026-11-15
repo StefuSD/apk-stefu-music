@@ -1,9 +1,18 @@
 import React, { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useAudioPlayer, useAudioPlayerStatus, setAudioModeAsync } from 'expo-audio';
+import { useAudioPlayer, useAudioPlayerStatus, setAudioModeAsync, createAudioPlayer } from 'expo-audio';
 import { useLibrary } from './LibraryContext';
 import * as FileSystem from 'expo-file-system/legacy';
 import DEFAULT_ART from '../utils/defaultArtwork';
+import { snippetRange, SNIP_FADE_IN, SNIP_FADE_OUT } from '../utils/snippet';
+import { usePro } from '../pro/ProContext';
+import { dayKey } from '../utils/format';
+
+const K_SNIP_DAY = 'sm_snip_day';   // { d: день, n: сколько сниппетов сыграно } — бесплатный объём
+import { Platform } from 'react-native';
+import { requestWidgetUpdate } from 'react-native-android-widget';
+import PlayerWidget from '../widget/PlayerWidget';
+import { K_WIDGET } from '../widget/widgetTaskHandler';
 
 /**
  * Плеер: один на всё приложение.
@@ -18,6 +27,7 @@ import DEFAULT_ART from '../utils/defaultArtwork';
  */
 
 const K_STATE = 'sm_player';
+const K_XFADE = 'sm_xfade';   // секунды плавного перехода между песнями, 0 — выключен
 const PlayerCtx = createContext(null);
 const StatusCtx = createContext(null);
 
@@ -41,7 +51,46 @@ export function PlayerProvider({ children }) {
   const [shuffle, setShuffle] = useState(false);
   const [repeat, setRepeat] = useState('all');    // off | all | one
   const [currentId, setCurrentId] = useState(null);
-  const st = useRef({ queue: [], index: -1, repeat: 'all', orig: null, lockActive: false, trim: {} });
+  const [ready, setReady] = useState(false);       // очередь восстановлена — ссылкам можно включать музыку
+  // Таймер сна: { at: время остановки (ms) } или { end: true } — после этой песни.
+  const [sleep, setSleepState] = useState(null);
+  const [crossfade, setCrossfadeState] = useState(0);
+  const [snippets, setSnippetsState] = useState(false);   // режим «Только сниппеты»
+  // Бесплатный объём сниппетов в день (src/pro/pro.js → free.snippetsDay). Pro — без ограничения.
+  const pro = usePro();
+  const proRef = useRef(pro);
+  proRef.current = pro;
+  const [snipUsed, setSnipUsed] = useState(0);
+  const quota = useRef({ d: '', n: 0 });
+  useEffect(() => {
+    AsyncStorage.getItem(K_SNIP_DAY).then(raw => {
+      try { const q = JSON.parse(raw); if (q && q.d === dayKey(Date.now())) { quota.current = q; setSnipUsed(q.n); } } catch (e) { /* */ }
+    }).catch(() => {});
+  }, []);
+  const usedToday = () => (quota.current.d === dayKey(Date.now()) ? quota.current.n : 0);
+  /** Можно ли сыграть ещё один сниппет; нет — окно Pro, режим выключается. */
+  const takeSnippet = () => {
+    const used = usedToday();
+    if (!proRef.current.requireRoom('snippetsDay', used)) return false;
+    quota.current = { d: dayKey(Date.now()), n: used + 1 };
+    setSnipUsed(used + 1);
+    AsyncStorage.setItem(K_SNIP_DAY, JSON.stringify(quota.current)).catch(() => {});
+    return true;
+  };
+  const st = useRef({ queue: [], index: -1, repeat: 'all', orig: null, lockActive: false, trim: {}, sleep: null, xfade: 0, xf: null, snip: false });
+
+  /**
+   * Какой кусок песни играть: ts..te, плавные вход/выход и обрезан ли конец (cut).
+   * Обычно — обрезка из карточки песни, в режиме «Только припевы» — припев.
+   */
+  const range = (song, dur) => {
+    if (st.current.snip) {
+      const [a, b] = snippetRange(song, dur);
+      return { ts: a, te: b, fin: SNIP_FADE_IN, fout: SNIP_FADE_OUT, cut: true };
+    }
+    const te = song.trimEnd && (!dur || song.trimEnd < dur) ? song.trimEnd : dur;
+    return { ts: song.trimStart || 0, te, fin: song.fadeIn || 0, fout: song.fadeOut || 0, cut: !!song.trimEnd };
+  };
   const session = useRef(null);
   const restored = useRef(false);
 
@@ -56,6 +105,18 @@ export function PlayerProvider({ children }) {
       .catch(() => {});
   }, []);
 
+  // Сторож: если JavaScript подвис дольше 0,7 с (полоса перемотки встаёт), пишем в журнал
+  // Android строку «[lag] мс» — смотреть через adb logcat.
+  useEffect(() => {
+    let last = Date.now();
+    const iv = setInterval(() => {
+      const now = Date.now();
+      if (now - last > 1700) console.log('[lag]', now - last - 1000, 'ms');
+      last = now;
+    }, 1000);
+    return () => clearInterval(iv);
+  }, []);
+
   useEffect(() => {
     setAudioModeAsync({
       playsInSilentMode: true,
@@ -63,6 +124,21 @@ export function PlayerProvider({ children }) {
       interruptionMode: 'doNotMix',
     }).catch(() => {});
   }, []);
+
+  useEffect(() => {
+    AsyncStorage.getItem(K_XFADE).then(v => { const n = Number(v) || 0; st.current.xfade = n; setCrossfadeState(n); }).catch(() => {});
+  }, []);
+
+  /**
+   * Кроссфейд: хвост уходящей песни доигрывает второй, временный плеер и
+   * затихает, а основной уже играет следующую песню и набирает громкость.
+   * Шторка и учёт прослушиваний остаются на основном плеере.
+   */
+  const killTail = () => {
+    const xf = st.current.xf;
+    if (xf && xf.tail) { try { xf.tail.pause(); xf.tail.remove(); } catch (e) { /* уже освобождён */ } }
+    st.current.xf = null;
+  };
 
   const saveState = () => {
     AsyncStorage.setItem(K_STATE, JSON.stringify({
@@ -108,18 +184,26 @@ export function PlayerProvider({ children }) {
 
 
   /** Загрузить песню очереди под номером i; play — сразу играть. */
-  const load = useCallback((q, i, play = true) => {
+  const load = useCallback((q, i, play = true, fromXfade = false) => {
     const id = q[i];
     const song = libRef.current.getSong(id);
     if (!song) return false;
+    if (!fromXfade) killTail();
+    // Сниппеты сверх бесплатного объёма: режим выключается, музыка встаёт, открыто окно Pro.
+    if (st.current.snip && play && !takeSnippet()) {
+      st.current.snip = false; setSnippetsState(false);
+      killTail(); closeSession(); player.pause();
+      return false;
+    }
     closeSession();
     setQ(q, i);
     player.replace({ uri: libRef.current.songUri(song) });
     // Обрезка: начинаем с trimStart; пока перемотка не сработала — тишина,
     // чтобы не было слышно первых долей секунды обрезанного начала.
-    st.current.trim = { songId: id, applied: !song.trimStart, ended: false };
-    if (song.trimStart) { player.volume = 0; player.seekTo(song.trimStart).catch(() => {}); }
-    else player.volume = song.fadeIn ? 0 : 1;
+    const r0 = range(song, song.duration || 0);
+    st.current.trim = { songId: id, applied: !r0.ts, ended: false };
+    if (r0.ts) { player.volume = 0; player.seekTo(r0.ts).catch(() => {}); }
+    else player.volume = r0.fin || fromXfade ? 0 : 1;
     if (play) {
       player.play();
       session.current = { id: Date.now().toString(36) + Math.random().toString(36).slice(2, 5), songId: id, start: Date.now(), sec: 0, saved: 0, counted: false, tick: null };
@@ -145,10 +229,10 @@ export function PlayerProvider({ children }) {
         const i = Math.max(0, q.indexOf(curId));
         if (q.length) load(q, i, false);
       } catch (e) { /* без очереди */ }
-    });
+    }).catch(() => {}).finally(() => setReady(true));
   }, [lib.loaded]);
 
-  const next = useCallback((auto = false) => {
+  const next = useCallback((auto = false, fromXfade = false) => {
     const { queue: q, index: i } = st.current;
     if (!q.length) return;
     let j = i + 1;
@@ -158,14 +242,49 @@ export function PlayerProvider({ children }) {
       if (auto && st.current.repeat === 'off') { closeSession(); player.pause(); player.seekTo(0); return; }
       j = 0;
     }
-    load(q, j, true);
+    load(q, j, true, fromXfade);
   }, [load, player]);
+
+  /** Есть ли куда переходить после текущей песни (для кроссфейда). */
+  const hasNext = () => {
+    const { queue: q, index: i, repeat: r } = st.current;
+    if (r === 'one') return false;
+    for (let j = i + 1; j < q.length; j++) if (libRef.current.byId[q[j]]) return true;
+    return r === 'all' && q.length > 1;
+  };
+
+  /** Начать кроссфейд: хвост — во временный плеер, основной — на следующую песню. */
+  const startXfade = (song, at, vol) => {
+    const dur = st.current.xfade;
+    let tail;
+    try { tail = createAudioPlayer({ uri: libRef.current.songUri(song) }, { updateInterval: 250 }); } catch (e) { return false; }
+    st.current.xf = { tail, start: 0, dur, vol, pending: true };
+    tail.volume = 0;
+    tail.seekTo(at).catch(() => {});
+    tail.play();
+    // Переключаем основной, когда хвост действительно зазвучал (или через 1,2 с).
+    let done = false;
+    const sw = () => {
+      if (done) return;
+      done = true;
+      try { sub.remove(); } catch (e) { /* */ }
+      const xf = st.current.xf;
+      if (!xf || xf.tail !== tail) return;
+      tail.volume = vol;
+      xf.pending = false;
+      xf.start = Date.now();
+      next(true, true);
+    };
+    const sub = tail.addListener('playbackStatusUpdate', (s) => { if (s.playing && (s.currentTime || 0) >= at - 0.3) sw(); });
+    setTimeout(sw, 1200);
+    return true;
+  };
 
   const prev = useCallback(() => {
     const { queue: q, index: i } = st.current;
     if (!q.length) return;
     const cur = libRef.current.byId[q[i]];
-    const from = (cur && cur.trimStart) || 0;
+    const from = cur ? range(cur, cur.duration || 0).ts : 0;
     if ((player.currentTime || 0) > from + 4 || i <= 0) { player.seekTo(from); return; }
     load(q, i - 1, true);
   }, [load, player]);
@@ -182,23 +301,51 @@ export function PlayerProvider({ children }) {
       let cutEnd = false;
       const curId = st.current.queue[st.current.index];
       const cs = libRef.current.byId[curId];
-      if (cs && (cs.trimStart || cs.trimEnd || cs.fadeIn || cs.fadeOut)) {
+      const dur0 = s.duration > 0 ? s.duration : 0;
+      const pos = s.currentTime || 0;
+      const rg = cs ? range(cs, dur0) : null;
+      const teAll = rg ? rg.te : dur0;
+      let vol = 1;
+      if (rg && (rg.ts || rg.cut || rg.fin || rg.fout)) {
         const tr = st.current.trim;
-        const dur = s.duration > 0 ? s.duration : 0;
-        const ts = cs.trimStart || 0;
-        const te = cs.trimEnd && (!dur || cs.trimEnd < dur) ? cs.trimEnd : dur;
-        const now2 = s.currentTime || 0;
-        if (tr.songId === curId && !tr.applied && dur > 0) {
-          if (now2 < ts - 0.5) player.seekTo(ts).catch(() => {});
+        const ts = rg.ts;
+        const te = teAll;
+        if (tr.songId === curId && !tr.applied && dur0 > 0) {
+          if (pos < ts - 0.5) player.seekTo(ts).catch(() => {});
           else tr.applied = true;
         }
-        let vol = tr.applied ? 1 : 0;
-        if (tr.applied && cs.fadeIn) vol = Math.min(vol, Math.max(0, (now2 - ts) / cs.fadeIn));
-        if (cs.fadeOut && te) vol = Math.min(vol, Math.max(0, (te - now2) / cs.fadeOut));
-        vol = Math.max(0, Math.min(1, vol));
-        if (Math.abs((player.volume ?? 1) - vol) > 0.01) player.volume = vol;
-        if (cs.trimEnd && te && s.playing && now2 >= te - 0.2 && !tr.ended && tr.songId === curId) { tr.ended = true; cutEnd = true; }
-      } else if ((player.volume ?? 1) !== 1) player.volume = 1;
+        vol = tr.applied ? 1 : 0;
+        if (tr.applied && rg.fin) vol = Math.min(vol, Math.max(0, (pos - ts) / rg.fin));
+        if (rg.fout && te) vol = Math.min(vol, Math.max(0, (te - pos) / rg.fout));
+        if (rg.cut && te && s.playing && pos >= te - 0.2 && !tr.ended && tr.songId === curId) { tr.ended = true; cutEnd = true; }
+      }
+      // Кроссфейд: основной набирает громкость, хвост во временном плеере затихает.
+      const xf = st.current.xf;
+      if (xf && !xf.pending) {
+        const k = Math.min(1, (Date.now() - xf.start) / (xf.dur * 1000));
+        vol = Math.min(vol, k);
+        try { xf.tail.volume = Math.max(0, xf.vol * (1 - k)); } catch (e) { /* */ }
+        if (k >= 1) killTail();
+      }
+      // Таймер сна: последние 10 секунд громкость плавно уходит, потом пауза.
+      const sl = st.current.sleep;
+      if (sl && sl.at) {
+        const left = (sl.at - Date.now()) / 1000;
+        if (left <= 0) {
+          st.current.sleep = null; setSleepState(null);
+          killTail(); player.pause(); player.volume = 1;
+          return;
+        }
+        if (left < 10) vol = Math.min(vol, left / 10);
+      }
+      vol = Math.max(0, Math.min(1, vol));
+      if (Math.abs((player.volume ?? 1) - vol) > 0.01) player.volume = vol;
+      // Пора начинать кроссфейд: до конца песни (с учётом обрезки) осталось xfade секунд.
+      if (st.current.xfade > 0 && !st.current.xf && s.playing && cs && teAll > st.current.xfade * 3
+        && teAll - pos <= st.current.xfade && teAll - pos > 0.5 && hasNext() && !(sl && sl.end)
+        && (!st.current.trim || st.current.trim.songId !== curId || st.current.trim.applied !== false)) {
+        if (startXfade(cs, pos + 0.25, vol)) return;
+      }
       if (ses) {
         if (s.playing) {
           if (ses.tick) ses.sec += Math.min((now - ses.tick) / 1000, 2);
@@ -216,6 +363,12 @@ export function PlayerProvider({ children }) {
         if (song && dur > 0 && !song.duration) libRef.current.updateSong(song.id, { duration: Math.round(dur) });
       }
       if (s.didJustFinish || cutEnd) {
+        if (st.current.sleep && st.current.sleep.end) {
+          // Таймер сна «после этой песни».
+          st.current.sleep = null; setSleepState(null);
+          closeSession(); player.pause(); player.seekTo(rg ? rg.ts : 0);
+          return;
+        }
         if (st.current.repeat === 'one') {
           const { queue: q, index: i } = st.current;
           load(q, i, true);
@@ -248,6 +401,9 @@ export function PlayerProvider({ children }) {
 
   const playList = useCallback((ids, startId, opts = {}) => {
     if (!ids.length) return;
+    // Обычный запуск выключает «Только припевы»; запуск припевов — включает.
+    const snip = !!opts.snippets;
+    if (snip !== st.current.snip) { st.current.snip = snip; setSnippetsState(snip); }
     if (opts.shuffle) {
       const first = startId || ids[Math.floor(Math.random() * ids.length)];
       const rest = shuffled(ids.filter(x => x !== first));
@@ -301,10 +457,28 @@ export function PlayerProvider({ children }) {
     if (st.current.orig && !st.current.orig.includes(id)) st.current.orig = [...st.current.orig, id];
   }, [load]);
 
-  const seek = useCallback((sec) => { player.seekTo(Math.max(0, sec)); }, [player]);
+  /** Перемотка. В режиме сниппетов увод ползунка за пределы сниппета выключает режим:
+      песня дальше играет целиком с выбранного места (иначе приглушение и «конец сниппета»
+      сбивали громкость и прогресс). */
+  const seek = useCallback((sec) => {
+    const t = Math.max(0, sec);
+    if (st.current.snip) {
+      const song = libRef.current.byId[st.current.queue[st.current.index]];
+      if (song) {
+        const [a, b] = snippetRange(song, player.duration || song.duration);
+        if (t < a - 0.5 || t > b) {
+          st.current.snip = false; setSnippetsState(false);
+          st.current.trim = { songId: song.id, applied: true, ended: false };
+          player.volume = 1;
+        }
+      }
+    }
+    player.seekTo(t);
+  }, [player]);
 
   /** Крестик в мини-плеере: остановить, убрать плашку и уведомление в шторке. Очередь остаётся. */
   const stop = useCallback(() => {
+    killTail();
     closeSession();
     player.pause();
     setQ(st.current.queue, -1);
@@ -312,10 +486,99 @@ export function PlayerProvider({ children }) {
     st.current.lockActive = false;
   }, [player]);
 
+  /** Таймер сна: минуты, 'end' — после этой песни, null — выключить. */
+  const setSleep = useCallback((v) => {
+    const s = v == null ? null : v === 'end' ? { end: true } : { at: Date.now() + v * 60000 };
+    st.current.sleep = s;
+    setSleepState(s);
+    if (!s && (player.volume ?? 1) < 1) player.volume = 1;
+  }, [player]);
+
+  // Время таймера вышло, пока музыка стояла на паузе, — просто выключаем таймер.
+  useEffect(() => {
+    if (!sleep || !sleep.at) return;
+    const tm = setTimeout(() => {
+      if (st.current.sleep !== sleep) return;
+      st.current.sleep = null; setSleepState(null);
+      if (player.playing) { killTail(); player.pause(); }
+      player.volume = 1;
+    }, Math.max(0, sleep.at - Date.now() + 1500));
+    return () => clearTimeout(tm);
+  }, [sleep, player]);
+
+  /** Включить/выключить «Только припевы» для того, что уже играет. */
+  const setSnippets = useCallback((on) => {
+    st.current.snip = !!on; setSnippetsState(!!on);
+    const { queue: q, index: i } = st.current;
+    const song = libRef.current.byId[q[i]];
+    if (!song) return;
+    if (on) {
+      if (!takeSnippet()) { st.current.snip = false; setSnippetsState(false); return; }
+      // сразу на сниппет текущей песни
+      const [a] = snippetRange(song, player.duration || song.duration);
+      st.current.trim = { songId: song.id, applied: true, ended: false };
+      player.seekTo(a).catch(() => {});
+      if (!player.playing) player.play();
+    } else {
+      st.current.trim = { songId: song.id, applied: true, ended: false };
+    }
+  }, [player]);
+
+  /** «Слушать целиком»: выйти из припевов и начать текущую песню сначала. */
+  const playFull = useCallback(() => {
+    st.current.snip = false; setSnippetsState(false);
+    const { queue: q, index: i } = st.current;
+    if (q[i]) load(q, i, true);
+  }, [load]);
+
+  /** «С припева»: перемотать текущую песню на припев. */
+  const seekChorus = useCallback(() => {
+    const song = libRef.current.byId[st.current.queue[st.current.index]];
+    if (!song) return;
+    const [a] = snippetRange(song, player.duration || song.duration);
+    player.seekTo(Math.max(0, a - 0.3)).catch(() => {});
+    if (!player.playing) player.play();
+  }, [player]);
+
+  const setCrossfade = useCallback((sec) => {
+    st.current.xfade = sec;
+    setCrossfadeState(sec);
+    AsyncStorage.setItem(K_XFADE, String(sec)).catch(() => {});
+    if (!sec) killTail();
+  }, []);
+
   const value = useMemo(() => ({
-    queue, index, currentId, shuffle, repeat,
-    playList, toggle, next: () => next(false), prev, seek, stop, toggleShuffle, cycleRepeat, playNext,
-  }), [queue, index, currentId, shuffle, repeat, playList, toggle, next, prev, seek, stop, toggleShuffle, cycleRepeat, playNext]);
+    queue, index, currentId, shuffle, repeat, ready, sleep, crossfade, snippets, snipUsed,
+    playList, toggle, next: () => next(false), prev, seek, stop, toggleShuffle, cycleRepeat, playNext, setSleep, setCrossfade,
+    setSnippets, playFull, seekChorus,
+  }), [queue, index, currentId, shuffle, repeat, ready, sleep, crossfade, snippets, snipUsed, playList, toggle, next, prev, seek, stop, toggleShuffle, cycleRepeat, playNext, setSleep, setCrossfade,
+    setSnippets, playFull, seekChorus]);
+
+  // ---- Виджет на рабочем столе: команды кнопок и обновление при смене песни или паузе.
+  const cmds = useRef({});
+  cmds.current = { toggle, next: () => next(false), prev };
+  const widgetState = () => {
+    const song = libRef.current.byId[st.current.queue[st.current.index]];
+    return { title: song ? song.title : '', artist: song ? song.artist : '', playing: !!player.playing };
+  };
+  useEffect(() => {
+    global.__stefuWidget = {
+      cmd: (a) => {
+        if (a === 'TOGGLE') cmds.current.toggle();
+        else if (a === 'NEXT') cmds.current.next();
+        else if (a === 'PREV') cmds.current.prev();
+      },
+      state: widgetState,
+    };
+    return () => { global.__stefuWidget = null; };
+  }, [player]);
+  useEffect(() => {
+    if (Platform.OS !== 'android') return;
+    const s = widgetState();
+    s.playing = !!status.playing;
+    AsyncStorage.setItem(K_WIDGET, JSON.stringify({ title: s.title, artist: s.artist })).catch(() => {});
+    requestWidgetUpdate({ widgetName: 'Player', renderWidget: () => <PlayerWidget {...s} live /> }).catch(() => {});
+  }, [currentId, status.playing, lib.byId]);
 
   const statusValue = useMemo(() => ({
     playing: status.playing, currentTime: status.currentTime || 0, duration: status.duration || 0,

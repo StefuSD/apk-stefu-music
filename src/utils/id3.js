@@ -144,11 +144,20 @@ async function readV1(uri, size) {
   return { title: f(3, 33), artist: f(33, 63), album: f(63, 93), year: f(93, 97) };
 }
 
+/**
+ * «Исполнитель - Название» → { artist, title }. Делим только по тире С ПРОБЕЛАМИ
+ * вокруг: дефис без пробелов — часть имени («Би-2», «Hi-Fi», «Когда-то»). null — не делится.
+ */
+export function splitArtistTitle(text) {
+  const m = (text || '').trim().match(/^(.+?)\s+[-–—]\s+(.+)$/);
+  return m ? { artist: m[1].trim(), title: m[2].trim() } : null;
+}
+
 /** «Исполнитель - Название.mp3» → поля; иначе всё имя — название. */
 export function fromFileName(name) {
-  const base = (name || '').replace(/\.[^.]+$/, '').replace(/_/g, ' ').replace(/^\d{1,3}[.\s-]+/, '').trim();
-  const m = base.match(/^(.+?)\s+[-–—]\s+(.+)$/);
-  return m ? { artist: m[1].trim(), title: m[2].trim() } : { title: base };
+  // номер дорожки в начале («01. », «07 - Исп - Назв», «01 ») убираем; «2-Pac», «50 Cent», «Би-2» не трогаем
+  const base = (name || '').replace(/\.[^.]+$/, '').replace(/_/g, ' ').replace(/^(?:\d{1,3}\.\s*|\d{1,3}\s+[-–—]\s+(?=.+\s[-–—]\s)|0\d\s+)(?=\S)/, '').replace(/^[-–—]\s+/, '').trim();
+  return splitArtistTitle(base) || { title: base };
 }
 
 /** Поля песни из тегов файла. Ошибки чтения не роняют импорт. */
@@ -163,6 +172,17 @@ export async function readTags(uri, size, fileName) {
   }
   const byName = fromFileName(fileName);
   if (!tags.title) { tags.title = byName.title; if (!tags.artist && byName.artist) tags.artist = byName.artist; }
+  // Исполнителя нет, а в названии целиком «Би-2 - Варвара» — делим название.
+  if (!tags.artist) {
+    const sp = splitArtistTitle(tags.title);
+    if (sp) { tags.artist = sp.artist; tags.title = sp.title; }
+    else if (byName.artist) tags.artist = byName.artist;
+  }
+  // Название и исполнитель одинаковые «A - B» (так пишут некоторые загрузчики).
+  if (tags.artist && tags.title && tags.artist.trim() === tags.title.trim()) {
+    const sp = splitArtistTitle(tags.title);
+    if (sp) { tags.artist = sp.artist; tags.title = sp.title; }
+  }
   return tags;
 }
 

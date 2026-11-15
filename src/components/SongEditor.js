@@ -13,13 +13,17 @@ import { fmtDate, fmtSize, fmtTime } from '../utils/format';
 import Cover from './Cover';
 import ActionSheet from './ActionSheet';
 import TrimEditor from './TrimEditor';
+import ChorusEditor from './ChorusEditor';
+
 import AbstractArt, { resolveTheme } from './AbstractArt';
 import ThemePicker from './ThemePicker';
 import CoverFromUrl from './CoverFromUrl';
+import CoverSearch from './CoverSearch';
+import { openCoverSearch } from '../utils/coverWeb';
 import { embedTags } from '../utils/shareSong';
 import { themeName } from '../data/themes';
 import { artistsOf, joinArtists } from '../utils/artists';
-import { CloseIcon, TrashIcon, PlusIcon, HeartIcon, HeartOffIcon, ImageIcon, LyricsIcon, LanguageIcon, VideoIcon, CheckIcon, ScissorsIcon, LinkIcon } from './icons';
+import { CloseIcon, TrashIcon, PlusIcon, HeartIcon, HeartOffIcon, ImageIcon, LyricsIcon, LanguageIcon, VideoIcon, CheckIcon, ScissorsIcon, LinkIcon, SearchIcon } from './icons';
 
 // Название и исполнитель — главное в песне: их поля крупнее и жирные.
 const FIELDS = [{ k: 'album' }, { k: 'genre' }, { k: 'year' }];
@@ -37,6 +41,8 @@ export default function SongEditor({ song, onClose }) {
   const [newLang, setNewLang] = useState('');
   const [themeOpen, setThemeOpen] = useState(false);
   const [urlOpen, setUrlOpen] = useState(false);
+  const [findOpen, setFindOpen] = useState(false);
+
 
   useEffect(() => {
     if (song) {
@@ -44,7 +50,8 @@ export default function SongEditor({ song, onClose }) {
         note: song.note || '', lyrics: song.lyrics || '', tags: [...(song.tags || [])], fav: !!song.fav,
         langs: [...(song.langs || [])], videoUrl: song.videoUrl || '',
         artTheme: song.artTheme ?? null, artVariant: song.artVariant || 0,
-        trim: { trimStart: song.trimStart || 0, trimEnd: song.trimEnd || 0, fadeIn: song.fadeIn || 0, fadeOut: song.fadeOut || 0 } });
+        trim: { trimStart: song.trimStart || 0, trimEnd: song.trimEnd || 0, fadeIn: song.fadeIn || 0, fadeOut: song.fadeOut || 0 },
+        chorus: song.chorus || null, chorusTouched: false });
     }
     setNewTag('');
     setNewLang('');
@@ -98,6 +105,11 @@ export default function SongEditor({ song, onClose }) {
       artTheme: f.artTheme, artVariant: f.artVariant,
       ...f.trim,
     };
+    // Припев: ручной — как задан; «Сбросить» — заново найдёт разбор звука.
+    if (f.chorusTouched) {
+      patch.chorus = f.chorus;
+      if (!f.chorus) patch.av = 0;
+    }
     if (cover !== undefined) {
       if (song.cover) FileSystem.deleteAsync(COVERS_DIR + song.cover, { idempotent: true }).catch(() => {});
       patch.cover = null;
@@ -121,6 +133,8 @@ export default function SongEditor({ song, onClose }) {
   const suggestions = lib.allTags.filter(x => !f.tags.includes(x)).slice(0, 20);
   const input = [st.input, { backgroundColor: colors.bgInput, color: colors.text, borderColor: colors.border }];
   const hasCover = cover === undefined ? !!song.cover : !!cover;
+  // Поиск картинок в браузере по тому, что сейчас вписано в поля.
+  const coverWeb = () => openCoverSearch(joinArtists(f.artists) || song.artist, f.title.trim() || song.title);
 
   return (
     <Modal visible animationType="slide" onRequestClose={onClose} statusBarTranslucent navigationBarTranslucent>
@@ -143,6 +157,10 @@ export default function SongEditor({ song, onClose }) {
             <View style={{ flex: 1, marginLeft: 14 }}>
               <Pressable onPress={() => setCoverMenu(true)}>
                 <Text style={{ color: colors.accent, fontWeight: '700', marginBottom: 4 }}>{t(hasCover ? 'cover_change' : 'cover_pick')}</Text>
+              </Pressable>
+              <Pressable onPress={coverWeb} hitSlop={6} style={{ flexDirection: 'row', alignItems: 'center', alignSelf: 'flex-start', marginBottom: 4 }}>
+                <SearchIcon color={colors.accent} size={14} />
+                <Text style={{ color: colors.accent, fontWeight: '700', marginLeft: 4 }}>{t('cover_web')}</Text>
               </Pressable>
               <Text style={{ color: colors.textMuted, fontSize: 12 }} numberOfLines={2}>{song.origName}</Text>
               <Text style={{ color: colors.textMuted, fontSize: 12, marginTop: 2 }}>
@@ -292,6 +310,12 @@ export default function SongEditor({ song, onClose }) {
           </View>
           <TrimEditor song={song} value={f.trim} onChange={v => set('trim', v)} />
 
+          <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 16, marginBottom: 6 }}>
+            <LyricsIcon color={colors.textMuted} size={16} />
+            <Text style={[st.label, { color: colors.textMuted, marginBottom: 0, marginLeft: 6 }]}>{t('f_chorus')}</Text>
+          </View>
+          <ChorusEditor song={song} value={f.chorus} onChange={v => setF(x => ({ ...x, chorus: v, chorusTouched: true }))} />
+
           <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 16, marginBottom: 5 }}>
             <LyricsIcon color={colors.textMuted} size={16} />
             <Text style={[st.label, { color: colors.textMuted, marginBottom: 0, marginLeft: 6, flex: 1 }]}>{t('f_lyrics')}</Text>
@@ -321,11 +345,16 @@ export default function SongEditor({ song, onClose }) {
       </KeyboardAvoidingView>
       <ActionSheet visible={coverMenu} title={t('f_cover')} onClose={() => setCoverMenu(false)}
         items={[
+          { label: t('cover_find'), Icon: SearchIcon, onPress: () => setFindOpen(true) },
+          { label: t('cover_web'), Icon: SearchIcon, onPress: coverWeb },
           { label: t('cover_pick'), Icon: ImageIcon, onPress: pickCover },
           { label: t('cover_url'), Icon: LinkIcon, onPress: () => setUrlOpen(true) },
           ...(hasCover ? [{ label: t('cover_remove'), Icon: TrashIcon, danger: true, onPress: () => setCover(null) }] : []),
         ]} />
       <CoverFromUrl visible={urlOpen} onDone={uri => setCover(uri)} onClose={() => setUrlOpen(false)} />
+      <CoverSearch visible={findOpen} onDone={uri => setCover(uri)} onClose={() => setFindOpen(false)}
+        title={(f && f.title) || song.title}
+        artist={((f && f.artists) || artistsOf(song)).filter(Boolean).join(' ')} />
     </Modal>
   );
 }

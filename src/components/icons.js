@@ -1,5 +1,5 @@
 import React from 'react';
-import Svg, { Path } from 'react-native-svg';
+import Svg, { Path, Ellipse, G, Rect, Defs, LinearGradient, Stop } from 'react-native-svg';
 
 // Иконки Material Design (24×24), одним путём каждая.
 const P = {
@@ -7,6 +7,8 @@ const P = {
   chart: 'M5 9.2h3V19H5V9.2zM10.6 5h2.8v14h-2.8V5zm5.6 8H19v6h-2.8v-6z',
   gear: 'M19.14 12.94a7.07 7.07 0 0 0 .06-.94 7 7 0 0 0-.06-.94l2.03-1.58a.49.49 0 0 0 .12-.61l-1.92-3.32a.49.49 0 0 0-.59-.22l-2.39.96a7.03 7.03 0 0 0-1.62-.94l-.36-2.54a.48.48 0 0 0-.48-.41h-3.84a.48.48 0 0 0-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96a.48.48 0 0 0-.59.22L2.74 8.87a.47.47 0 0 0 .12.61l2.03 1.58c-.04.31-.07.63-.07.94s.02.63.06.94l-2.03 1.58a.49.49 0 0 0-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32a.47.47 0 0 0-.12-.61l-2.01-1.58zM12 15.6A3.6 3.6 0 1 1 12 8.4a3.6 3.6 0 0 1 0 7.2z',
   play: 'M8 5v14l11-7z',
+  // наушники — число прослушиваний
+  headphones: 'M12 1c-4.97 0-9 4.03-9 9v7c0 1.66 1.34 3 3 3h3v-8H5v-2c0-3.87 3.13-7 7-7s7 3.13 7 7v2h-4v8h3c1.66 0 3-1.34 3-3v-7c0-4.97-4.03-9-9-9z',
   pause: 'M6 19h4V5H6v14zm8-14v14h4V5h-4z',
   next: 'M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z',
   prev: 'M6 6h2v12H6zm3.5 6l8.5 6V6z',
@@ -38,6 +40,18 @@ const P = {
   language: 'M12.87 15.07l-2.54-2.51.03-.03A17.52 17.52 0 0 0 14.07 6H17V4h-7V2H8v2H1v1.99h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11.76-2.04zM18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2l-4.5-12zm-2.62 7l1.62-4.33L19.12 17h-3.24z',
   link: 'M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z',
   scissors: 'M9.64 7.64c.23-.5.36-1.05.36-1.64 0-2.21-1.79-4-4-4S2 3.79 2 6s1.79 4 4 4c.59 0 1.14-.13 1.64-.36L10 12l-2.36 2.36C7.14 14.13 6.59 14 6 14c-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4c0-.59-.13-1.14-.36-1.64L12 14l7 7h3v-1L9.64 7.64zM6 8c-1.1 0-2-.89-2-2s.9-2 2-2 2 .89 2 2-.9 2-2 2zm0 12c-1.1 0-2-.89-2-2s.9-2 2-2 2 .89 2 2-.9 2-2 2zm6-7.5c-.28 0-.5-.22-.5-.5s.22-.5.5-.5.5.22.5.5-.22.5-.5.5zM19 3l-6 6 2 2 7-7V3z',
+  trophy: 'M19 5h-2V3H7v2H5c-1.1 0-2 .9-2 2v1c0 2.55 1.92 4.63 4.39 4.94A5.01 5.01 0 0 0 11 15.9V19H7v2h10v-2h-4v-3.1a5.01 5.01 0 0 0 3.61-2.96C19.08 12.63 21 10.55 21 8V7c0-1.1-.9-2-2-2zM5 8V7h2v3.82C5.84 10.4 5 9.3 5 8zm14 0c0 1.3-.84 2.4-2 2.82V7h2v1z',
+  lock: 'M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z',
+  star: 'M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z',
+  moon: 'M12.3 22c-5.6 0-10.1-4.5-10.1-10.1 0-4.6 3-8.5 7.3-9.7.4-.1.8.3.6.7-.5 1.1-.7 2.3-.7 3.5 0 5 4 9 9 9 1.2 0 2.4-.2 3.5-.7.4-.2.8.2.7.6-1.2 4.3-5.1 7.3-9.7 7.3z',
+  playlist: 'M3 10h11v2H3zm0-4h11v2H3zm0 8h7v2H3zm13-1v-7h5v2h-3v7.5a2.5 2.5 0 1 1-2-2.45z',
+  select: 'M3 5h2V3c-1.1 0-2 .9-2 2zm0 8h2v-2H3v2zm4 8h2v-2H7v2zM3 9h2V7H3v2zm10-6h-2v2h2V3zm6 0v2h2c0-1.1-.9-2-2-2zM5 21v-2H3c0 1.1.9 2 2 2zm-2-4h2v-2H3v2zM9 3H7v2h2V3zm2 18h2v-2h-2v2zm8-8h2v-2h-2v2zm0 8c1.1 0 2-.9 2-2h-2v2zm0-12h2V7h-2v2zm0 8h2v-2h-2v2zm-4 4h2v-2h-2v2zm0-16h2V3h-2v2zM7 17h10V7H7v10zm2-8h6v6H9V9z',
+  drag: 'M20 9H4v2h16V9zM4 15h16v-2H4v2z',
+  up: 'M7.41 15.41 12 10.83l4.59 4.58L18 14l-6-6-6 6z',
+  arrowUp: 'M4 12l1.41 1.41L11 7.83V20h2V7.83l5.58 5.59L20 12l-8-8-8 8z',
+  arrowDown: 'M20 12l-1.41-1.41L13 16.17V4h-2v12.17l-5.58-5.59L4 12l8 8 8-8z',
+  chevLeft: 'M15.41 7.41 14 6l-6 6 6 6 1.41-1.41L10.83 12z',
+  chevRight: 'M10 6 8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z',
   share: 'M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11A2.99 2.99 0 0 0 21 5a3 3 0 1 0-5.91.7L8.04 9.81A2.99 2.99 0 0 0 3 12a3 3 0 0 0 5.04 2.19l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92s2.92-1.31 2.92-2.92-1.31-2.92-2.92-2.92z',
 };
 
@@ -55,6 +69,7 @@ export const MusicIcon = make('music');
 export const ChartIcon = make('chart');
 export const GearIcon = make('gear');
 export const PlayIcon = make('play');
+export const HeadphonesIcon = make('headphones');
 export const PauseIcon = make('pause');
 export const NextIcon = make('next');
 export const PrevIcon = make('prev');
@@ -86,3 +101,62 @@ export const LanguageIcon = make('language');
 export const LinkIcon = make('link');
 export const ScissorsIcon = make('scissors');
 export const ShareIcon = make('share');
+export const TrophyIcon = make('trophy');
+export const MoonIcon = make('moon');
+export const PlaylistIcon = make('playlist');
+export const SelectIcon = make('select');
+export const DragIcon = make('drag');
+export const ArrowUpIcon = make('arrowUp');
+export const ArrowDownIcon = make('arrowDown');
+export const ChevLeftIcon = make('chevLeft');
+export const ChevRightIcon = make('chevRight');
+
+// Знак приложения — две ноты под наклонной перекладиной, как на иконке (assets/mk_icon.py).
+// Координаты в квадрате 100×100, тот же расчёт, что в генераторе иконки.
+function NotesGlyph({ color }) {
+  return (
+    <G fill={color}>
+      <Ellipse cx={25.36} cy={83.44} rx={11.79} ry={10.38} transform="rotate(-18 25.36 83.44)" />
+      <Ellipse cx={69.36} cy={72.44} rx={11.79} ry={10.38} transform="rotate(-18 69.36 72.44)" />
+      <Path d="M31.8 22.7H36.9V83.4H31.8ZM75.8 6.9L81 6V72.4H75.8ZM31.8 22.5L81 6V28L31.8 44.5Z" />
+    </G>
+  );
+}
+
+/** Ноты одним цветом — для нижнего меню (красится как остальные значки). */
+export function AppGlyphIcon({ size = 24, color = '#000', style }) {
+  return (
+    <Svg width={size} height={size} viewBox="-6.65 -4 108 108" style={style}>
+      <NotesGlyph color={color} />
+    </Svg>
+  );
+}
+
+/** Иконка приложения целиком: графитовый градиент и белые ноты — для шапки. */
+export function AppIcon({ size = 30, style }) {
+  return (
+    <Svg width={size} height={size} viewBox="0 0 100 100" style={style}>
+      <Defs>
+        <LinearGradient id="appIconBg" x1="0" y1="0" x2="1" y2="1">
+          <Stop offset="0" stopColor="#4e4d52" />
+          <Stop offset="1" stopColor="#0a0a0b" />
+        </LinearGradient>
+      </Defs>
+      <Rect x={0} y={0} width={100} height={100} rx={22} fill="url(#appIconBg)" stroke="#ffffff33" strokeWidth={2} />
+      <G transform="translate(16 16) scale(0.68)">
+        <NotesGlyph color="#fff" />
+      </G>
+    </Svg>
+  );
+}
+export const LockIcon = make('lock');
+export const StarIcon = make('star');
+
+/** Значок по имени — для модуля Pro (src/pro/), общего с другими приложениями Stefu. */
+export function Icon({ name, size = 24, color = '#000', style }) {
+  return (
+    <Svg width={size} height={size} viewBox="0 0 24 24" style={style}>
+      <Path d={P[name] || P.star} fill={color} />
+    </Svg>
+  );
+}

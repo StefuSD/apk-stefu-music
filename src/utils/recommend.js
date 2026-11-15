@@ -10,23 +10,42 @@
  *     совместные прослушивания из истории (как «с этим слушают» в магазинах);
  *   • чуть-чуть — любимость и частота самой B, чтобы при равенстве
  *     впереди была музыка, которая вам нравится.
+ *   • звучание (если с компьютера пришли данные tools/sound.py): близкий
+ *     темп (с учётом половинного/двойного), энергия и яркость тембра;
+ *   • ручные веса тегов (Настройки → «Веса тегов»): ×0 — тег не учитывать,
+ *     ×2/×3 — тег важнее остальных.
  * Кандидатов без единого общего признака не предлагаем.
  */
 
 export const W = {
-  tag: 2.0, lang: 1.0, artist: 3.0, genre: 1.5, album: 1.0, year: 0.5, together: 1.2, fav: 0.4, plays: 0.15,
+  tag: 2.0, lang: 1.0, artist: 3.0, genre: 1.5, album: 1.0, year: 0.5, together: 1.2, fav: 0.4, plays: 0.15, sound: 1.6,
 };
+
+/** Сходство звучания 0..1: темп (± половинный/двойной), энергия, яркость. null — данных нет. */
+export function soundSimilarity(a, b) {
+  const x = a && a.sound, y = b && b.sound;
+  if (!x || !y) return null;
+  let sum = 0, n = 0;
+  if (x.bpm && y.bpm) {
+    const r = Math.max(x.bpm, y.bpm) / Math.min(x.bpm, y.bpm);
+    const d = Math.min(Math.abs(Math.log2(r)), Math.abs(Math.log2(r) - 1));   // 120 и 60 — почти один темп
+    sum += Math.max(0, 1 - d / 0.25); n++;
+  }
+  if (x.energy != null && y.energy != null) { sum += 1 - Math.min(1, Math.abs(x.energy - y.energy) / 0.5); n++; }
+  if (x.bright != null && y.bright != null) { sum += 1 - Math.min(1, Math.abs(x.bright - y.bright) / 0.5); n++; }
+  return n ? sum / n : null;
+}
 
 const norm = s => (s || '').trim().toLowerCase();
 import { artistsOf } from './artists';
 
 /** Подготовка: веса тегов и пары «слушали вместе». Пересчитывать при смене библиотеки/истории. */
-export function buildIndex(songs, plays) {
+export function buildIndex(songs, plays, tagWeights = {}) {
   const N = Math.max(1, songs.length);
   const df = {};
   for (const s of songs) for (const t of s.tags || []) df[t] = (df[t] || 0) + 1;
   const idf = {};
-  for (const t of Object.keys(df)) idf[t] = Math.log(1 + N / df[t]);
+  for (const t of Object.keys(df)) idf[t] = Math.log(1 + N / df[t]) * (tagWeights[t] != null ? tagWeights[t] : 1);
 
   // Совместные прослушивания: соседние засчитанные сеансы с разрывом < 20 мин.
   const together = {};
@@ -50,9 +69,9 @@ export function similarity(a, b, idx) {
   let score = 0;
   const why = [];
   const bt = new Set(b.tags || []);
-  const shared = (a.tags || []).filter(t => bt.has(t));
+  const shared = (a.tags || []).filter(t => bt.has(t) && idx.idf[t] !== 0);
   if (shared.length) {
-    score += W.tag * shared.reduce((x, t) => x + (idx.idf[t] || 1), 0);
+    score += W.tag * shared.reduce((x, t) => x + (idx.idf[t] ?? 1), 0);
     why.push(...shared);
   }
   const bl = new Set(b.langs || []);
@@ -66,6 +85,14 @@ export function similarity(a, b, idx) {
   if (ya && yb && Math.abs(ya - yb) <= 3) score += W.year;
   const tg = (idx.together[a.id] || {})[b.id] || 0;
   if (tg) score += W.together * Math.log2(1 + tg);
+  // Звучание: само по себе слабый признак (близкий темп есть у многих), поэтому
+  // добавляет очки только при заметном сходстве, а «похожими» делает лишь вместе с другим признаком
+  // или при очень близком звуке.
+  const ss = soundSimilarity(a, b);
+  if (ss != null && ss > 0.6) {
+    const add = W.sound * (ss - 0.6) / 0.4;
+    if (score > 0 || ss > 0.85) score += add;
+  }
   if (score <= 0) return { score: 0, why };
   if (b.fav) score += W.fav;
   score += W.plays * Math.log2(1 + (idx.count[b.id] || 0));
