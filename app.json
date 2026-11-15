@@ -10,7 +10,11 @@
     "splash": {
       "image": "./assets/splash-icon.png",
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#ffffff",
+      "dark": {
+        "image": "./assets/splash-icon-dark.png",
+        "backgroundColor": "#0A0A0A"
+      }
     },
     "android": {
       "adaptiveIcon": {
@@ -52,7 +56,28 @@
         }
       ],
       "./plugins/withShotsBuild",
-      "./plugins/withReleaseSigning"
+      "./plugins/withLinks",
+      "./plugins/withReleaseSigning",
+      [
+        "react-native-android-widget",
+        {
+          "widgets": [
+            {
+              "name": "Player",
+              "label": "Stefu Music",
+              "description": "Play, pause and skip songs from the home screen",
+              "minWidth": "250dp",
+              "minHeight": "60dp",
+              "targetCellWidth": 4,
+              "targetCellHeight": 1,
+              "maxResizeHeight": "110dp",
+              "previewImage": "./assets/widget-preview.png",
+              "resizeMode": "horizontal",
+              "updatePeriodMillis": 0
+            }
+          ]
+        }
+      ]
     ]
   }
 }
