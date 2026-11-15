@@ -90,6 +90,7 @@ export default {
   recap_song: 'Song des Jahres', recap_month: 'Musikalischster Monat', recap_hour: 'Lieblingszeit', recap_tag: 'Top-Tag',
   recap_mode_year: 'Jahr', recap_mode_month: 'Monat', recap_month_title: 'Rückblick: {m}', recap_month_empty: 'Diesen Monat hast du noch nichts gehört.', recap_song_month: 'Song des Monats', recap_day: 'Musikalischster Tag',
   bk_auto: 'Automatische Sicherung des Verlaufs', bk_auto_off: 'Ordner wählen (z. B. Downloads): Sicherung erfolgt wöchentlich', bk_now: 'Jetzt sichern', bk_auto_on: 'Wöchentlich, automatisch · zuletzt: {d}', bk_auto_never: 'Wöchentlich, automatisch · noch keine Sicherung', bk_folder: 'Anderer Ordner für Sicherungen', bk_restore: 'Verlauf aus Datei wiederherstellen', bk_done: 'Sicherung gespeichert', bk_restored: 'Wiedergaben hinzugefügt: {n}. Titel gefunden: {m} von {k}.', bk_bad: 'Datei passt nicht: Sicherung oder Export von Stefu Music nötig',
+  tab_home: 'Für dich', tab_songs: 'Songs', tab_playlists: 'Playlists', tab_artists: 'Künstler', h_new: 'Neu', h_rec: 'Empfohlen', h_top: 'Oft gehört', h_mix: 'Mix für dich', pl_none: 'Noch keine Playlists: erstelle die erste',
   recap_share: 'Als Bild teilen',
   show_all: 'Alle anzeigen ({n})', show_less: 'Weniger anzeigen',
   s_play: 'Wiedergabe', xfade: 'Überblenden zwischen Songs',

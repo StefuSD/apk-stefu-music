@@ -90,6 +90,7 @@ export default {
   recap_song: 'Yılın şarkısı', recap_month: 'En müzikli ay', recap_hour: 'En sevdiğiniz saat', recap_tag: 'Ana etiket',
   recap_mode_year: 'Yıl', recap_mode_month: 'Ay', recap_month_title: 'Özet: {m}', recap_month_empty: 'Bu ay henüz hiçbir şey dinlemediniz.', recap_song_month: 'Ayın şarkısı', recap_day: 'En müzikli gün',
   bk_auto: 'Geçmişin otomatik yedeği', bk_auto_off: 'Bir klasör seçin (ör. İndirilenler): yedek haftalık alınır', bk_now: 'Şimdi yedekle', bk_auto_on: 'Haftalık, otomatik · son: {d}', bk_auto_never: 'Haftalık, otomatik · henüz yedek yok', bk_folder: 'Yedekler için başka klasör', bk_restore: 'Geçmişi dosyadan geri yükle', bk_done: 'Yedek kaydedildi', bk_restored: 'Eklenen dinleme: {n}. Bulunan şarkı: {m}/{k}.', bk_bad: 'Dosya uygun değil: Stefu Music yedeği veya dışa aktarımı gerekli',
+  tab_home: 'Sana özel', tab_songs: 'Şarkılar', tab_playlists: 'Çalma listeleri', tab_artists: 'Sanatçılar', h_new: 'Yeni', h_rec: 'Önerilen', h_top: 'Sık dinlenen', h_mix: 'Sana özel mix', pl_none: 'Henüz çalma listesi yok: ilkini oluştur',
   recap_share: 'Resim olarak paylaş',
   show_all: 'Tümünü göster ({n})', show_less: 'Daha az göster',
   s_play: 'Çalma', xfade: 'Şarkılar arasında geçiş (crossfade)',

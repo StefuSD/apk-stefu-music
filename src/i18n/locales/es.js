@@ -90,6 +90,7 @@ export default {
   recap_song: 'Canción del año', recap_month: 'Mes más musical', recap_hour: 'Hora favorita', recap_tag: 'Etiqueta principal',
   recap_mode_year: 'Año', recap_mode_month: 'Mes', recap_month_title: 'Resumen: {m}', recap_month_empty: 'Este mes aún no has escuchado nada.', recap_song_month: 'Canción del mes', recap_day: 'Día más musical',
   bk_auto: 'Copia automática del historial', bk_auto_off: 'Elige una carpeta (p. ej., Descargas): se hará una copia cada semana', bk_now: 'Copiar ahora', bk_auto_on: 'Cada semana, automática · última: {d}', bk_auto_never: 'Cada semana, automática · aún no hay copias', bk_folder: 'Otra carpeta para las copias', bk_restore: 'Restaurar historial desde archivo', bk_done: 'Copia guardada', bk_restored: 'Escuchas añadidas: {n}. Canciones encontradas: {m} de {k}.', bk_bad: 'El archivo no sirve: se necesita una copia o exportación de Stefu Music',
+  tab_home: 'Para ti', tab_songs: 'Canciones', tab_playlists: 'Listas', tab_artists: 'Artistas', h_new: 'Nuevas', h_rec: 'Recomendado', h_top: 'Lo que más escuchas', h_mix: 'Mix para ti', pl_none: 'Aún no hay listas: crea la primera',
   recap_share: 'Compartir como imagen',
   show_all: 'Mostrar todo ({n})', show_less: 'Mostrar menos',
   s_play: 'Reproducción', xfade: 'Fundido entre canciones',

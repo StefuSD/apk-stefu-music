@@ -17,6 +17,7 @@ import Cover from '../components/Cover';
 import SongRow from '../components/SongRow';
 import { FlashList } from '@shopify/flash-list';
 import { radioQueue } from '../utils/recommend';
+import { HomeTabs, HomeView, PlaylistsView, ArtistsView } from './MusicHome';
 import { langName } from '../utils/languages';
 import ActionSheet from '../components/ActionSheet';
 import { shareSong } from '../utils/shareSong';
@@ -51,6 +52,8 @@ export default function LibraryScreen({ route }) {
   const [prompt, setPrompt] = useState(null);     // { title, value, onDone }
   const [orderPl, setOrderPl] = useState(null);   // плейлист, у которого меняем порядок
   const [bulk, setBulk] = useState(null);         // id песен для массовой правки
+  // вкладки: «Для вас» (главная), «Песни» (список с фильтрами), «Плейлисты», «Исполнители»
+  const [tab, setTab] = useState('home');
 
   // Сортировка и фильтр запоминаются (плейлист или тег — тоже, пока он существует).
   useEffect(() => {
@@ -83,7 +86,10 @@ export default function LibraryScreen({ route }) {
     if (!ls) return;
     setQ(typeof ls.q === 'string' ? ls.q : '');
     setFilter(typeof ls.filter === 'string' ? ls.filter : 'all');
+    setTab('songs');
   }, [linkAt]);
+  // поиск — всегда по списку песен
+  useEffect(() => { if (q) setTab('songs'); }, [q]);
 
   const list = useMemo(() => {
     const needle = q.trim().toLowerCase();
@@ -321,7 +327,31 @@ export default function LibraryScreen({ route }) {
             <Text style={{ color: colors.onAccent, fontWeight: '700', fontSize: 16, marginLeft: 6 }}>{t('add_music')}</Text>
           </Pressable>
         </View>
+      ) : !sel && tab !== 'songs' ? (
+        <View style={{ flex: 1 }}>
+          <HomeTabs tab={tab} onTab={setTab} />
+          {tab === 'home' ? (
+            <HomeView snipPro={player.snipUsed >= pro.limit('snippetsDay')}
+              actions={{
+                shuffle: () => player.playList(lib.songs.map(x => x.id), null, { shuffle: true }),
+                playAll: () => { const all = [...lib.songs].sort((x, y) => (y.addedAt || 0) - (x.addedAt || 0)).map(x => x.id); player.playList(all, all[0]); },
+                mix: mixForYou,
+                snippets: playSnippets,
+              }}
+              onMore={k => {
+                setQ('');
+                if (k === 'fav') setFilter('fav'); else { setFilter('all'); setSort(k === 'top' ? 'plays' : 'recent'); }
+                setTab('songs');
+              }} />
+          ) : tab === 'playlists' ? (
+            <PlaylistsView onCreate={() => newPlaylist()} onOpen={pl => { setQ(''); setFilter('pl:' + pl.id); setTab('songs'); }} />
+          ) : (
+            <ArtistsView onOpen={name => { setFilter('all'); setQ(name); setTab('songs'); }} />
+          )}
+        </View>
       ) : (
+        <View style={{ flex: 1 }}>
+        {!sel ? <HomeTabs tab={tab} onTab={setTab} /> : null}
         <FlashList
           key={showBar ? 'bar' : 'nobar'}
           data={list}
@@ -332,7 +362,7 @@ export default function LibraryScreen({ route }) {
           contentContainerStyle={{ paddingBottom: sel ? 160 : 24 }}
           ListHeaderComponent={!showBar ? null :
             <View>
-              <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ paddingHorizontal: 12, paddingTop: 12, gap: 8 }}>
+              <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ paddingHorizontal: 12, paddingTop: 0, gap: 8 }}>
                 {filterChip({ k: 'all', label: t('all') })}
                 {filterChip({ k: 'fav', label: t('favorites'), Icon: HeartIcon })}
                 {lib.songs.some(x => x.lyrics) ? filterChip({ k: 'has:lyrics', label: t('flt_lyrics'), Icon: LyricsIcon }) : null}
@@ -386,6 +416,7 @@ export default function LibraryScreen({ route }) {
           }
           ListEmptyComponent={lib.loaded ? <Text style={{ color: colors.textMuted, textAlign: 'center', marginTop: 30 }}>{t('nothing_found')}</Text> : null}
         />
+        </View>
       )}
       <ActionSheet visible={!!menu} title={menu?.title} subtitle={menu ? (menu.artist || t('unknown_artist')) : ''}
         lead={menu ? <Cover song={menu} size={46} /> : null} items={menuItems} onClose={() => setMenu(null)} />

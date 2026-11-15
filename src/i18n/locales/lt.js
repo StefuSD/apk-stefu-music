@@ -92,6 +92,7 @@ export default {
   recap_song: 'Metų daina', recap_month: 'Muzikaliausias mėnuo', recap_hour: 'Mėgstamas laikas', recap_tag: 'Pagrindinė žyma',
   recap_mode_year: 'Metai', recap_mode_month: 'Mėnuo', recap_month_title: 'Apžvalga: {m}', recap_month_empty: 'Šį mėnesį dar nieko neklausėte.', recap_song_month: 'Mėnesio daina', recap_day: 'Muzikaliausia diena',
   bk_auto: 'Automatinė istorijos kopija', bk_auto_off: 'Pasirinkite aplanką (pvz., Atsisiuntimai): kopija kas savaitę', bk_now: 'Kopijuoti dabar', bk_auto_on: 'Kas savaitę, automatiškai · paskutinė: {d}', bk_auto_never: 'Kas savaitę, automatiškai · kopijų dar nebuvo', bk_folder: 'Kitas aplankas kopijoms', bk_restore: 'Atkurti istoriją iš failo', bk_done: 'Kopija išsaugota', bk_restored: 'Pridėta perklausų: {n}. Rasta dainų: {m} iš {k}.', bk_bad: 'Netinkamas failas: reikia Stefu Music kopijos arba eksporto',
+  tab_home: 'Jums', tab_songs: 'Dainos', tab_playlists: 'Grojaraščiai', tab_artists: 'Atlikėjai', h_new: 'Naujos', h_rec: 'Rekomenduojama', h_top: 'Dažnai klausote', h_mix: 'Miksas jums', pl_none: 'Grojaraščių dar nėra: sukurkite pirmąjį',
   recap_share: 'Bendrinti kaip paveikslėlį',
   show_all: 'Rodyti visas ({n})', show_less: 'Rodyti mažiau',
   s_play: 'Atkūrimas', xfade: 'Sklandus perėjimas tarp dainų',

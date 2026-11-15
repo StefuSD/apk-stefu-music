@@ -92,6 +92,7 @@ export default {
   recap_song: 'Skladba roku', recap_month: 'Nejhudebnější měsíc', recap_hour: 'Oblíbený čas', recap_tag: 'Hlavní štítek',
   recap_mode_year: 'Rok', recap_mode_month: 'Měsíc', recap_month_title: 'Shrnutí: {m}', recap_month_empty: 'Tento měsíc jste zatím nic neposlouchali.', recap_song_month: 'Píseň měsíce', recap_day: 'Nejhudebnější den',
   bk_auto: 'Automatická záloha historie', bk_auto_off: 'Vyberte složku (např. Stažené): záloha bude každý týden', bk_now: 'Zálohovat nyní', bk_auto_on: 'Každý týden, automaticky · poslední: {d}', bk_auto_never: 'Každý týden, automaticky · zatím žádná záloha', bk_folder: 'Jiná složka pro zálohy', bk_restore: 'Obnovit historii ze souboru', bk_done: 'Záloha uložena', bk_restored: 'Přidáno poslechů: {n}. Nalezeno skladeb: {m} z {k}.', bk_bad: 'Soubor nevyhovuje: je potřeba záloha nebo export Stefu Music',
+  tab_home: 'Pro vás', tab_songs: 'Skladby', tab_playlists: 'Playlisty', tab_artists: 'Interpreti', h_new: 'Nové', h_rec: 'Doporučené', h_top: 'Často posloucháte', h_mix: 'Mix pro vás', pl_none: 'Zatím žádné playlisty: vytvořte první',
   recap_share: 'Sdílet jako obrázek',
   show_all: 'Zobrazit vše ({n})', show_less: 'Zobrazit méně',
   s_play: 'Přehrávání', xfade: 'Prolínání skladeb',

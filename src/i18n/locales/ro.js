@@ -90,6 +90,7 @@ export default {
   recap_song: 'Melodia anului', recap_month: 'Cea mai muzicală lună', recap_hour: 'Ora preferată', recap_tag: 'Eticheta principală',
   recap_mode_year: 'An', recap_mode_month: 'Lună', recap_month_title: 'Rezumat: {m}', recap_month_empty: 'Luna aceasta nu ați ascultat încă nimic.', recap_song_month: 'Melodia lunii', recap_day: 'Cea mai muzicală zi',
   bk_auto: 'Copie automată a istoricului', bk_auto_off: 'Alegeți un dosar (de ex. Descărcări): copia se face săptămânal', bk_now: 'Fă o copie acum', bk_auto_on: 'Săptămânal, automat · ultima: {d}', bk_auto_never: 'Săptămânal, automat · nicio copie încă', bk_folder: 'Alt dosar pentru copii', bk_restore: 'Restaurează istoricul din fișier', bk_done: 'Copie salvată', bk_restored: 'Ascultări adăugate: {n}. Melodii găsite: {m} din {k}.', bk_bad: 'Fișier nepotrivit: e nevoie de o copie sau un export Stefu Music',
+  tab_home: 'Pentru tine', tab_songs: 'Melodii', tab_playlists: 'Playlisturi', tab_artists: 'Artiști', h_new: 'Noi', h_rec: 'Recomandate', h_top: 'Ascultate des', h_mix: 'Mix pentru tine', pl_none: 'Încă nu există playlisturi: creează primul',
   recap_share: 'Distribuie ca imagine',
   show_all: 'Arată tot ({n})', show_less: 'Arată mai puțin',
   s_play: 'Redare', xfade: 'Tranziție lină între melodii',

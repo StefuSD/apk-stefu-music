@@ -90,6 +90,7 @@ export default {
   recap_song: 'Titre de l’année', recap_month: 'Mois le plus musical', recap_hour: 'Moment préféré', recap_tag: 'Tag principal',
   recap_mode_year: 'Année', recap_mode_month: 'Mois', recap_month_title: 'Bilan : {m}', recap_month_empty: 'Vous n’avez encore rien écouté ce mois-ci.', recap_song_month: 'Chanson du mois', recap_day: 'Jour le plus musical',
   bk_auto: 'Sauvegarde auto de l’historique', bk_auto_off: 'Choisissez un dossier (ex. Téléchargements) : sauvegarde chaque semaine', bk_now: 'Sauvegarder maintenant', bk_auto_on: 'Chaque semaine, auto · dernière : {d}', bk_auto_never: 'Chaque semaine, auto · aucune sauvegarde', bk_folder: 'Autre dossier pour les sauvegardes', bk_restore: 'Restaurer l’historique depuis un fichier', bk_done: 'Sauvegarde enregistrée', bk_restored: 'Écoutes ajoutées : {n}. Titres retrouvés : {m} sur {k}.', bk_bad: 'Fichier inadapté : il faut une sauvegarde ou un export Stefu Music',
+  tab_home: 'Pour vous', tab_songs: 'Titres', tab_playlists: 'Playlists', tab_artists: 'Artistes', h_new: 'Nouveautés', h_rec: 'Recommandé', h_top: 'Écouté souvent', h_mix: 'Mix pour vous', pl_none: 'Pas encore de playlist : créez la première',
   recap_share: 'Partager en image',
   show_all: 'Tout afficher ({n})', show_less: 'Afficher moins',
   s_play: 'Lecture', xfade: 'Fondu enchaîné entre les titres',

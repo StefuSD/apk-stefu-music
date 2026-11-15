@@ -92,6 +92,7 @@ export default {
   recap_song: 'Pjesma godine', recap_month: 'Najglazbeniji mjesec', recap_hour: 'Omiljeno vrijeme', recap_tag: 'Glavna oznaka',
   recap_mode_year: 'Godina', recap_mode_month: 'Mjesec', recap_month_title: 'Sažetak: {m}', recap_month_empty: 'Ovaj mjesec još niste ništa slušali.', recap_song_month: 'Pjesma mjeseca', recap_day: 'Najglazbeniji dan',
   bk_auto: 'Automatska kopija povijesti', bk_auto_off: 'Odaberite mapu (npr. Preuzimanja): kopija svaki tjedan', bk_now: 'Napravi kopiju sada', bk_auto_on: 'Svaki tjedan, automatski · zadnja: {d}', bk_auto_never: 'Svaki tjedan, automatski · još nema kopija', bk_folder: 'Druga mapa za kopije', bk_restore: 'Vrati povijest iz datoteke', bk_done: 'Kopija spremljena', bk_restored: 'Dodano slušanja: {n}. Pronađeno pjesama: {m} od {k}.', bk_bad: 'Datoteka ne odgovara: potrebna je kopija ili izvoz Stefu Music',
+  tab_home: 'Za vas', tab_songs: 'Pjesme', tab_playlists: 'Popisi', tab_artists: 'Izvođači', h_new: 'Novo', h_rec: 'Preporučeno', h_top: 'Često slušate', h_mix: 'Miks za vas', pl_none: 'Još nema popisa: napravite prvi',
   recap_share: 'Podijeli kao sliku',
   show_all: 'Prikaži sve ({n})', show_less: 'Prikaži manje',
   s_play: 'Reprodukcija', xfade: 'Pretapanje između pjesama',

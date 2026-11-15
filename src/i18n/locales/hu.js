@@ -92,6 +92,7 @@ export default {
   recap_song: 'Az év dala', recap_month: 'A legzenésebb hónap', recap_hour: 'Kedvenc időpont', recap_tag: 'Fő címke',
   recap_mode_year: 'Év', recap_mode_month: 'Hónap', recap_month_title: 'Összegzés: {m}', recap_month_empty: 'Ebben a hónapban még semmit sem hallgattál.', recap_song_month: 'A hónap dala', recap_day: 'A legzenésebb nap',
   bk_auto: 'Előzmények automatikus mentése', bk_auto_off: 'Válassz mappát (pl. Letöltések): hetente készül mentés', bk_now: 'Mentés most', bk_auto_on: 'Hetente, automatikusan · utolsó: {d}', bk_auto_never: 'Hetente, automatikusan · még nincs mentés', bk_folder: 'Másik mappa a mentésekhez', bk_restore: 'Előzmények visszaállítása fájlból', bk_done: 'Mentés kész', bk_restored: 'Hozzáadott lejátszások: {n}. Megtalált dalok: {m}/{k}.', bk_bad: 'A fájl nem megfelelő: Stefu Music mentés vagy export kell',
+  tab_home: 'Neked', tab_songs: 'Dalok', tab_playlists: 'Lejátszási listák', tab_artists: 'Előadók', h_new: 'Újak', h_rec: 'Ajánlott', h_top: 'Gyakran hallgatod', h_mix: 'Mix neked', pl_none: 'Még nincs lejátszási lista: hozd létre az elsőt',
   recap_share: 'Megosztás képként',
   show_all: 'Összes mutatása ({n})', show_less: 'Kevesebb',
   s_play: 'Lejátszás', xfade: 'Áttűnés a dalok között',
