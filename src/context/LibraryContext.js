@@ -279,6 +279,8 @@ export function LibraryProvider({ children }) {
     await ensureDirs();
     let added = 0, dup = 0, updated = 0;
     const fresh = [];
+    const ids = [];   // id песни для каждого принятого файла (новой или уже бывшей в библиотеке)
+    const known = [];  // все песни этого импорта: fresh сбрасывается при порционном сохранении
     const isDup = (name, size) => fresh.concat(songsRef.current).some(s => s.origName === name && s.size === size);
     // Та же песня под другим именем, в другом качестве или с новой обложкой:
     // те же исполнители и название и длительность ±2 с.
@@ -294,6 +296,8 @@ export function LibraryProvider({ children }) {
         }
         if (a.size && isDup(a.name, a.size)) {
           dup++;
+          const old = known.concat(songsRef.current).find(s => s.origName === a.name && s.size === a.size);
+          if (old) ids.push(old.id);
           if (a.move) FileSystem.deleteAsync(a.uri, { idempotent: true }).catch(() => {});
           continue;
         }
@@ -310,6 +314,8 @@ export function LibraryProvider({ children }) {
           a.size = info.size || 0;
           if (a.size && isDup(a.name, a.size)) {
             dup++;
+            const old = known.concat(songsRef.current).find(s => s.origName === a.name && s.size === a.size);
+            if (old) ids.push(old.id);
             FileSystem.deleteAsync(MUSIC_DIR + file, { idempotent: true }).catch(() => {});
             continue;
           }
@@ -322,6 +328,7 @@ export function LibraryProvider({ children }) {
         const twin = sameSong(songKey(xa, tags.title || a.name), duration);
         if (twin) {
           dup++;
+          ids.push(twin.id);
           const patch = {};
           if (!twin.cover && tags.cover) {
             const cn = twin.id + '-' + Date.now().toString(36) + (/png/i.test(tags.cover.mime) ? '.png' : '.jpg');
@@ -372,6 +379,8 @@ export function LibraryProvider({ children }) {
           if (snd) song.sound = snd;
         }
         fresh.unshift(song);
+        known.push(song);
+        ids.push(id);
         added++;
         // Сохраняем порциями: при сотне файлов список растёт на глазах,
         // а оборванный импорт не теряет уже скопированное.
@@ -380,8 +389,19 @@ export function LibraryProvider({ children }) {
     }
     if (fresh.length) commitSongs([...fresh, ...songsRef.current]);
     setProgress(null);
-    return { added, dup, updated };
+    return { added, dup, updated, ids };
   }, [commitSongs]);
+
+  /**
+   * Файл, открытый из другой программы («Открыть с помощью» в мессенджере, файловом менеджере):
+   * копируем в библиотеку обычным импортом (повтор не заводится второй раз) и отдаём id песни.
+   */
+  const openFile = useCallback(async (uri) => {
+    const last = decodeURIComponent(String(uri).split('?')[0]).split('/').pop() || '';
+    const name = /\.[A-Za-z0-9]{2,5}$/.test(last) ? last : (last || 'audio') + '.mp3';
+    const r = await ingest([{ uri, name, move: false }]);
+    return r.ids[0] || null;
+  }, [ingest]);
 
   const importMusic = useCallback(async () => {
     const res = await DocumentPicker.getDocumentAsync({ type: ['audio/*'], multiple: true, copyToCacheDirectory: true });
@@ -741,12 +761,12 @@ export function LibraryProvider({ children }) {
     songs, plays, loaded, progress, scan, ghosts, playlists, tagWeights, analysis, canAnalyze: !!StefuAudio, reanalyzeAll, ...derived,
     importMusic, importFolder, updateSong, updateSongs, deleteSongs: deleteWithGhosts, recordListen, clearHistory, clearAll,
     createPlaylist, renamePlaylist, deletePlaylist, addToPlaylist, removeFromPlaylist, movePlaylistItem,
-    setTagWeight, importSound, findCovers, backupData, importHistory,
+    setTagWeight, importSound, findCovers, backupData, importHistory, openFile,
     songUri: s => MUSIC_DIR + s.file,
     coverUri: s => (s && s.cover ? COVERS_DIR + s.cover : null),
     getSong: id => songsRef.current.find(s => s.id === id),
   }), [songs, plays, loaded, progress, scan, ghosts, playlists, tagWeights, analysis, reanalyzeAll, derived, importMusic, importFolder, updateSong, updateSongs, deleteWithGhosts, recordListen, clearHistory, clearAll,
-    createPlaylist, renamePlaylist, deletePlaylist, addToPlaylist, removeFromPlaylist, movePlaylistItem, setTagWeight, importSound, findCovers, backupData, importHistory]);
+    createPlaylist, renamePlaylist, deletePlaylist, addToPlaylist, removeFromPlaylist, movePlaylistItem, setTagWeight, importSound, findCovers, backupData, importHistory, openFile]);
 
   return <Ctx.Provider value={value}>{children}</Ctx.Provider>;
 }

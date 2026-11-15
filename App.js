@@ -88,8 +88,9 @@ const SPLASH_MIN_MS = 1000;
 function AppSplash() {
   const dark = Appearance.getColorScheme() === 'dark';
   return (
-    <View style={{ flex: 1, backgroundColor: dark ? '#0A0A0A' : '#ffffff', alignItems: 'center', justifyContent: 'center' }}>
-      <StatusBar style={dark ? 'light' : 'dark'} />
+    // фон — как у системной заставки (assets/mk_icon.py → SPLASH_BG), знак и надпись белые
+    <View style={{ flex: 1, backgroundColor: '#7b3fcf', alignItems: 'center', justifyContent: 'center' }}>
+      <StatusBar style="light" />
       <Image source={dark ? SPLASH_DARK : SPLASH_LIGHT} style={{ width: 288, height: 288 }} />
     </View>
   );

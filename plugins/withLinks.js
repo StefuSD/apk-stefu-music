@@ -29,6 +29,19 @@ module.exports = function withLinks(config) {
         data: [{ $: { 'android:scheme': MARK } }],
       });
     }
+    // «Открыть с помощью» для аудиофайлов (мессенджеры, файловые менеджеры) — LinkHandler импортирует и играет.
+    const hasAudio = main['intent-filter'].some(f => (f.data || []).some(d => d.$['android:mimeType'] === 'audio/*'));
+    if (!hasAudio) {
+      main['intent-filter'].push({
+        action: [{ $: { 'android:name': 'android.intent.action.VIEW' } }],
+        category: [{ $: { 'android:name': 'android.intent.category.DEFAULT' } }],
+        data: [
+          { $: { 'android:scheme': 'content' } },
+          { $: { 'android:scheme': 'file' } },
+          ...['audio/*', 'application/ogg', 'application/x-flac'].map(m => ({ $: { 'android:mimeType': m } })),
+        ],
+      });
+    }
     return cfg;
   });
 };

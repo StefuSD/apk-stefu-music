@@ -24,6 +24,7 @@ export default function LinkHandler({ navRef, navReady, openPlayer }) {
   const { t, lang } = useLang();
   const pro = usePro();
   const [pending, setPending] = useState([]);
+  const [fileSong, setFileSong] = useState(null);   // id песни из открытого файла — играть, когда появится в библиотеке
   const playingRef = useRef(playing);
   playingRef.current = playing;
 
@@ -39,9 +40,25 @@ export default function LinkHandler({ navRef, navReady, openPlayer }) {
     const urls = pending;
     setPending([]);
     for (const u of urls) {
+      // Аудиофайл из другой программы («Открыть с помощью»): content://… или file://…
+      if (/^(content|file):/i.test(u)) {
+        lib.openFile(u).then(id => { if (id) setFileSong(id); else toast(t('nothing_found')); }).catch(() => {});
+        continue;
+      }
       try { run(parseLink(u)); } catch (e) { /* плохая ссылка — просто открыли приложение */ }
     }
   }, [pending, lib.loaded, player.ready, navReady]);
+
+  // Песня из файла попадает в библиотеку не сразу (сохранение состояния) — ждём её, затем играем:
+  // она первая, за ней похожие (как «радио»), и открываем плеер.
+  useEffect(() => {
+    const s = fileSong && lib.byId[fileSong];
+    if (!s) return;
+    setFileSong(null);
+    player.playList(radioQueue(s, lib.songs, lib.recIndex, 40), s.id);
+    toast(t('now_playing') + ': ' + s.title);
+    openPlayer();
+  }, [fileSong, lib.byId]);
 
   const go = (screen, params) => { try { navRef.navigate(screen, params); } catch (e) { /* */ } };
   const uiLangName = l => langName(l, lang);

@@ -10,16 +10,16 @@
     "splash": {
       "image": "./assets/splash-icon.png",
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff",
+      "backgroundColor": "#7b3fcf",
       "dark": {
         "image": "./assets/splash-icon-dark.png",
-        "backgroundColor": "#0A0A0A"
+        "backgroundColor": "#7b3fcf"
       }
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
+        "backgroundColor": "#3a1466"
       },
       "package": "com.stefu.music",
       "versionCode": 1,

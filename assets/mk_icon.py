@@ -1,6 +1,6 @@
-# Иконка Stefu Music: белый фон, на нём две ноты под толстой наклонной перекладиной (правая выше),
-# залитые градиентом темы «Сирень» (тёмно-фиолетовая основа и радиальные свечения — как шапка приложения,
-# src/components/HeaderBg.js). Градиент растянут на рамку знака, чтобы все свечения попали в ноты. Без фото. Запуск: python assets/mk_icon.py, затем
+# Иконка Stefu Music: две белые ноты под толстой наклонной перекладиной (правая выше) на фоне темы «Сирень»:
+# тёмно-фиолетовая основа и радиальные свечения — как шапка приложения (src/components/HeaderBg.js).
+# Монохромный знак, без фото. Запуск: python assets/mk_icon.py, затем
 # иконки сразу пишутся и в android/app/src/main/res/mipmap-* (без expo prebuild).
 from PIL import Image, ImageDraw, ImageFilter
 import math, os
@@ -62,41 +62,27 @@ def glyph(n, scale):
     g.putalpha(m)
     return g
 
-WHITE = (255, 255, 255, 255)
-
-
-def colored(n, scale):
-    """Знак, залитый градиентом «Сирень»: градиент растянут на рамку знака."""
-    g = glyph(n, scale)
-    a = g.split()[3]
-    x0, y0, x1, y1 = a.getbbox()
-    side = max(x1 - x0, y1 - y0)
-    grad = gradient(side).resize((x1 - x0, y1 - y0), Image.BICUBIC)
-    fill = Image.new('RGBA', (n, n), (0, 0, 0, 0))
-    fill.paste(grad.convert('RGBA'), (x0, y0))
-    fill.putalpha(a)
-    return fill
-
-
 def with_shadow(base, g):
     a = g.split()[3].filter(ImageFilter.GaussianBlur(N * 0.014))
-    sh = Image.new('RGBA', g.size, (58, 20, 102, 0))
-    sh.putalpha(a.point(lambda v: int(v * 0.18)))
+    sh = Image.new('RGBA', g.size, (35, 8, 70, 0))
+    sh.putalpha(a.point(lambda v: int(v * 0.35)))
     base.alpha_composite(sh, (0, int(N * 0.012)))
     base.alpha_composite(g)
     return base
 
 
-icon = with_shadow(Image.new('RGBA', (N, N), WHITE), colored(N, 0.68))
+icon = with_shadow(gradient(N).convert('RGBA'), glyph(N, 0.68))
 icon.convert('RGB').save('icon.png')
 icon.convert('RGB').resize((48, 48), Image.LANCZOS).save('favicon.png')
 
-# адаптивная: знак в безопасной зоне (середина 66/108 после маски), фон белый
-with_shadow(Image.new('RGBA', (N, N), WHITE), colored(N, 0.68 * 62 / 108)).save('adaptive-icon.png')
+# адаптивная: знак в безопасной зоне (середина 66/108 после маски)
+with_shadow(gradient(N, 108 / 66).convert('RGBA'), glyph(N, 0.68 * 62 / 108)).save('adaptive-icon.png')
 
 # Заставка — как в Stefu Football (правило для всех приложений Stefu): знак-силуэт без круга,
-# под ним название тонким Roboto Light с разрядкой. Светлая и тёмная; те же картинки и размер 288 dp
-# в App.js (экран загрузки), чтобы при переходе от системной заставки ничего не прыгало.
+# под ним название тонким Roboto Light с разрядкой. Фон — сиренево-фиолетовый SPLASH_BG (сплошной:
+# системная заставка Android градиент не умеет), знак и надпись белые — и в светлой, и в тёмной теме
+# телефона. Те же картинка, цвет и размер 288 dp в App.js (экран загрузки), чтобы ничего не прыгало.
+SPLASH_BG = '#7b3fcf'
 APP_NAME = 'Stefu Music'
 SPLASH = {'mark': 0.44, 'mark_cy': 0.38, 'text': 0.102, 'text_cy': 0.76, 'tracking': 0.06}
 FONT = 'C:/Windows/Fonts/Roboto-Light.ttf'
@@ -104,7 +90,7 @@ FONT = 'C:/Windows/Fonts/Roboto-Light.ttf'
 
 def splash(n=N, dark=False):
     from PIL import ImageFont
-    ink = (237, 242, 239, 255) if dark else (17, 24, 20, 255)
+    ink = (255, 255, 255, 255)
     img = Image.new('RGBA', (n, n), (0, 0, 0, 0))
     a = glyph(n, 0.9).split()[3]
     a = a.crop(a.getbbox())
@@ -166,8 +152,15 @@ if os.path.isdir(RES_M):
     if os.path.exists(col):
         txt = open(col, encoding='utf-8').read()
         import re as _re
-        txt = _re.sub(r'(<color name="iconBackground">)#[0-9a-fA-F]{6}(</color>)', r'\g<1>#ffffff\g<2>', txt)
+        txt = _re.sub(r'(<color name="iconBackground">)#[0-9a-fA-F]{6}(</color>)', r'\g<1>#3a1466\g<2>', txt)
         open(col, 'w', encoding='utf-8').write(txt)
+    # фон системной заставки — один и тот же в светлой и тёмной теме
+    for vals in ('values', 'values-night'):
+        col = os.path.join(RES_M, vals, 'colors.xml')
+        if os.path.exists(col):
+            txt = open(col, encoding='utf-8').read()
+            txt = _re.sub(r'(<color name="splashscreen_background">)#[0-9a-fA-F]{6}(</color>)', r'\g<1>' + SPLASH_BG + r'\g<2>', txt)
+            open(col, 'w', encoding='utf-8').write(txt)
 
 prev = Image.new('RGB', (620, 300), (255, 255, 255))
 pm = Image.new('L', (280, 280), 0); ImageDraw.Draw(pm).ellipse((0, 0, 279, 279), fill=255)
