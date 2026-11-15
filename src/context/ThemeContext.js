@@ -129,10 +129,10 @@ export function tagColor(colors) {
   return colors.dark ? '#a3a1a6' : '#6d6b70';
 }
 
-const ThemeContext = createContext({ colors: LIGHT, toggle: () => {}, setMode: () => {}, isDark: false });
+const ThemeContext = createContext({ colors: LILAC, toggle: () => {}, setMode: () => {}, isDark: false });
 
 export function ThemeProvider({ children }) {
-  const [colors, setColors] = useState(LIGHT);
+  const [colors, setColors] = useState(LILAC);   // «Сирень» — тема по умолчанию; выбранная пользователем читается ниже
   useEffect(() => {
     AsyncStorage.getItem('sm_theme').then(s => { if (MODES[s]) setColors(MODES[s]); });
   }, []);
@@ -141,7 +141,7 @@ export function ThemeProvider({ children }) {
     isDark: !!colors.dark,
     // тема по имени: 'light' | 'night' | 'lilac' | id тематического оформления
     setMode: (mode) => {
-      const next = MODES[mode] || LIGHT;
+      const next = MODES[mode] || LILAC;
       setColors(next);
       AsyncStorage.setItem('sm_theme', next.mode);
     },

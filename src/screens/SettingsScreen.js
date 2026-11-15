@@ -133,7 +133,7 @@ export default function SettingsScreen() {
           <View style={{ paddingHorizontal: 14, paddingTop: 12 }}>
             <Text style={{ fontSize: 15, fontWeight: '700', color: colors.text, marginBottom: 10 }}>{t('s_theme')}</Text>
             <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 8 }}>
-              {[[LIGHT, t('s_theme_light')], [DARK, t('s_theme_night')], [LILAC, t('s_theme_lilac')],
+              {[[LILAC, t('s_theme_lilac')], [LIGHT, t('s_theme_light')], [DARK, t('s_theme_night')],
                 ...APP_THEMES.map((th, i) => [th, appThemeName(APP_THEME_SPECS[i], lang)])].map(([th, label]) => {
                 const on = colors.mode === th.mode;
                 return (
