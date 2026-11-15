@@ -1,6 +1,8 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { View, Text, Pressable, ScrollView, StyleSheet, Switch, Alert, Modal, ActivityIndicator, ToastAndroid } from 'react-native';
 import HeaderBg from '../components/HeaderBg';
+import { backupInfo, chooseBackupDir, writeBackup } from '../utils/backup';
+import * as DocPicker from 'expo-document-picker';
 import { LIGHT, DARK, LILAC, APP_THEMES } from '../context/ThemeContext';
 import { APP_THEME_SPECS, appThemeName } from '../data/appThemes';
 import { usePlayer } from '../context/PlayerContext';
@@ -85,6 +87,27 @@ export default function SettingsScreen() {
       const r = await lib.importSound();
       if (r) Alert.alert('', t('sound_done', { n: r.matched, m: r.total }));
     } catch (e) { Alert.alert('', t('sound_bad') + '\n' + String(e?.message || e)); }
+  };
+
+  // автокопия истории в папку вне приложения и восстановление из файла
+  const [bak, setBak] = useState({ dir: null, at: null });
+  useEffect(() => { backupInfo().then(setBak).catch(() => {}); }, []);
+  const backupNow = async (pick) => {
+    try {
+      if (pick || !bak.dir) { const d = await chooseBackupDir(); if (!d) return; }
+      await writeBackup(lib.backupData());
+      setBak(await backupInfo());
+      Alert.alert('', t('bk_done'));
+    } catch (e) { Alert.alert('', String(e?.message || e)); }
+  };
+  const restore = async () => {
+    try {
+      const res = await DocPicker.getDocumentAsync({ type: ['application/json', 'text/plain', '*/*'], copyToCacheDirectory: true });
+      if (res.canceled || !res.assets?.length) return;
+      const data = JSON.parse((await FileSystem.readAsStringAsync(res.assets[0].uri)).replace(/^\uFEFF/, ''));
+      const r = lib.importHistory(data);
+      Alert.alert('', t('bk_restored', { n: r.added, m: r.matched, k: r.songs }));
+    } catch (e) { Alert.alert('', t('bk_bad')); }
   };
 
   const exportJson = async () => {
@@ -219,6 +242,14 @@ export default function SettingsScreen() {
         <Section title={t('s_library')}>
           <Row label={t('s_stats', { n: lib.songs.length, size: fmtSize(total) })} />
           <Row label={t('s_export')} onPress={exportJson} />
+          <Pressable onPress={() => backupNow(false)} style={({ pressed }) => [st.row, { borderColor: colors.border, borderBottomWidth: StyleSheet.hairlineWidth, backgroundColor: pressed ? colors.accentSoft : 'transparent', flexDirection: 'column', alignItems: 'flex-start' }]}>
+            <Text style={{ fontSize: 15, color: colors.text, fontWeight: '700' }}>{t(bak.dir ? 'bk_now' : 'bk_auto')}</Text>
+            <Text style={{ fontSize: 12, color: colors.textMuted, marginTop: 2 }}>
+              {!bak.dir ? t('bk_auto_off') : bak.at ? t('bk_auto_on', { d: new Date(bak.at).toLocaleDateString(lang) }) : t('bk_auto_never')}
+            </Text>
+          </Pressable>
+          {bak.dir ? <Row label={t('bk_folder')} onPress={() => backupNow(true)} /> : null}
+          <Row label={t('bk_restore')} onPress={restore} />
           <Row label={t('s_clear_history')} danger onPress={() => confirm(t('s_clear_history_q'), lib.clearHistory)} />
           <Row label={t('s_clear_all')} danger last onPress={() => confirm(t('s_clear_all_q'), lib.clearAll)} />
         </Section>

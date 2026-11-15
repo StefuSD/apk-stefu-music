@@ -91,6 +91,7 @@ export default {
   recap_empty: 'Du har inte lyssnat på något i år än.', recap_h: 'h', recap_streak: 'Dagar i rad (rekord)',
   recap_song: 'Årets låt', recap_month: 'Mest musikaliska månaden', recap_hour: 'Favorittid', recap_tag: 'Topptagg',
   recap_mode_year: 'År', recap_mode_month: 'Månad', recap_month_title: 'Sammanfattning: {m}', recap_month_empty: 'Du har inte lyssnat på något den här månaden än.', recap_song_month: 'Månadens låt', recap_day: 'Mest musikaliska dagen',
+  bk_auto: 'Automatisk säkerhetskopia av historik', bk_auto_off: 'Välj en mapp (t.ex. Hämtade filer): kopia görs varje vecka', bk_now: 'Säkerhetskopiera nu', bk_auto_on: 'Varje vecka, automatiskt · senast: {d}', bk_auto_never: 'Varje vecka, automatiskt · inga kopior än', bk_folder: 'Annan mapp för kopior', bk_restore: 'Återställ historik från fil', bk_done: 'Kopia sparad', bk_restored: 'Lyssningar tillagda: {n}. Låtar hittade: {m} av {k}.', bk_bad: 'Filen passar inte: en kopia eller export från Stefu Music behövs',
   recap_share: 'Dela som bild',
   show_all: 'Visa alla ({n})', show_less: 'Visa färre',
   s_play: 'Uppspelning', xfade: 'Övertoning mellan låtar',

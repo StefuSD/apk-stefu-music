@@ -89,6 +89,7 @@ export default {
   recap_empty: 'Quest’anno non hai ancora ascoltato nulla.', recap_h: 'h', recap_streak: 'Giorni di fila (record)',
   recap_song: 'Brano dell’anno', recap_month: 'Mese più musicale', recap_hour: 'Momento preferito', recap_tag: 'Tag principale',
   recap_mode_year: 'Anno', recap_mode_month: 'Mese', recap_month_title: 'Riepilogo: {m}', recap_month_empty: 'Questo mese non hai ancora ascoltato nulla.', recap_song_month: 'Canzone del mese', recap_day: 'Giorno più musicale',
+  bk_auto: 'Backup automatico della cronologia', bk_auto_off: 'Scegli una cartella (es. Download): il backup sarà settimanale', bk_now: 'Esegui backup ora', bk_auto_on: 'Settimanale, automatico · ultimo: {d}', bk_auto_never: 'Settimanale, automatico · nessun backup ancora', bk_folder: 'Altra cartella per i backup', bk_restore: 'Ripristina cronologia da file', bk_done: 'Backup salvato', bk_restored: 'Ascolti aggiunti: {n}. Brani trovati: {m} su {k}.', bk_bad: 'File non adatto: serve un backup o un’esportazione di Stefu Music',
   recap_share: 'Condividi come immagine',
   show_all: 'Mostra tutto ({n})', show_less: 'Mostra meno',
   s_play: 'Riproduzione', xfade: 'Dissolvenza tra i brani',

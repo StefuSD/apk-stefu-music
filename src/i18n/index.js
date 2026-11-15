@@ -117,6 +117,7 @@ const ru = {
   recap_empty: 'В этом году вы ещё ничего не слушали.', recap_h: 'ч', recap_streak: 'Дней подряд (рекорд)',
   recap_song: 'Песня года', recap_month: 'Самый музыкальный месяц', recap_hour: 'Любимое время', recap_tag: 'Главный тег',
   recap_mode_year: 'Год', recap_mode_month: 'Месяц', recap_month_title: 'Итоги: {m}', recap_month_empty: 'В этом месяце вы ещё ничего не слушали.', recap_song_month: 'Песня месяца', recap_day: 'Самый музыкальный день',
+  bk_auto: 'Автокопия истории', bk_auto_off: 'Выберите папку (например, «Загрузки») — копия будет раз в неделю', bk_now: 'Сделать копию сейчас', bk_auto_on: 'Раз в неделю сама · последняя: {d}', bk_auto_never: 'Раз в неделю сама · копий ещё не было', bk_folder: 'Другая папка для копий', bk_restore: 'Восстановить историю из файла', bk_done: 'Копия сохранена', bk_restored: 'Добавлено прослушиваний: {n}. Песен найдено: {m} из {k}.', bk_bad: 'Файл не подходит: нужна копия или экспорт Stefu Music',
   recap_share: 'Поделиться картинкой',
   show_all: 'Показать все ({n})', show_less: 'Свернуть',
   // настройки
@@ -235,6 +236,7 @@ const en = {
   recap_empty: 'You have not listened to anything this year yet.', recap_h: 'h', recap_streak: 'Days in a row (record)',
   recap_song: 'Song of the year', recap_month: 'Most musical month', recap_hour: 'Favorite time', recap_tag: 'Top tag',
   recap_mode_year: 'Year', recap_mode_month: 'Month', recap_month_title: 'Recap: {m}', recap_month_empty: 'You have not listened to anything this month yet.', recap_song_month: 'Song of the month', recap_day: 'Most musical day',
+  bk_auto: 'Auto backup of history', bk_auto_off: 'Choose a folder (e.g. Downloads): a backup will be made weekly', bk_now: 'Back up now', bk_auto_on: 'Weekly, automatic · last: {d}', bk_auto_never: 'Weekly, automatic · no backups yet', bk_folder: 'Another folder for backups', bk_restore: 'Restore history from file', bk_done: 'Backup saved', bk_restored: 'Listens added: {n}. Songs matched: {m} of {k}.', bk_bad: 'This file does not fit: a Stefu Music backup or export is needed',
   recap_share: 'Share as image',
   show_all: 'Show all ({n})', show_less: 'Show less',
   s_play: 'Playback', xfade: 'Crossfade between songs',

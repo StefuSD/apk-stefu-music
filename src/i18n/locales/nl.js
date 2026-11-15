@@ -91,6 +91,7 @@ export default {
   recap_empty: 'Je hebt dit jaar nog niets geluisterd.', recap_h: 'u', recap_streak: 'Dagen op rij (record)',
   recap_song: 'Nummer van het jaar', recap_month: 'Meest muzikale maand', recap_hour: 'Favoriete tijd', recap_tag: 'Toptag',
   recap_mode_year: 'Jaar', recap_mode_month: 'Maand', recap_month_title: 'Overzicht: {m}', recap_month_empty: 'Je hebt deze maand nog niets geluisterd.', recap_song_month: 'Nummer van de maand', recap_day: 'Meest muzikale dag',
+  bk_auto: 'Automatische back-up van geschiedenis', bk_auto_off: 'Kies een map (bijv. Downloads): wekelijks een back-up', bk_now: 'Nu back-up maken', bk_auto_on: 'Wekelijks, automatisch · laatste: {d}', bk_auto_never: 'Wekelijks, automatisch · nog geen back-ups', bk_folder: 'Andere map voor back-ups', bk_restore: 'Geschiedenis herstellen uit bestand', bk_done: 'Back-up opgeslagen', bk_restored: 'Luisterbeurten toegevoegd: {n}. Nummers gevonden: {m} van {k}.', bk_bad: 'Bestand past niet: back-up of export van Stefu Music nodig',
   recap_share: 'Delen als afbeelding',
   show_all: 'Alles tonen ({n})', show_less: 'Minder tonen',
   s_play: 'Afspelen', xfade: 'Crossfade tussen nummers',

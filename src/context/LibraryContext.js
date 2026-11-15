@@ -1,6 +1,7 @@
 import React, { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { AppState } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { maybeAutoBackup } from '../utils/backup';
 import * as FileSystem from 'expo-file-system/legacy';
 import * as DocumentPicker from 'expo-document-picker';
 import { readTags, mp3Duration, splitArtistTitle } from '../utils/id3';
@@ -676,16 +677,76 @@ export function LibraryProvider({ children }) {
     return { playCount: count, lastPlayed: last, allTags, allLangs, byId, recIndex: buildIndex(songs, plays, tagWeights) };
   }, [songs, plays, tagWeights]);
 
+  /** Копия истории и списка песен — для автокопии и восстановления (src/utils/backup.js). */
+  const backupData = useCallback(() => ({
+    app: 'Stefu Music', kind: 'backup', v: 2, exportedAt: new Date().toISOString(),
+    songs: songsRef.current.map(s => ({ id: s.id, title: s.title, artist: s.artist, origName: s.origName, size: s.size,
+      duration: s.duration, genre: s.genre, tags: s.tags, langs: s.langs })),
+    ghosts,
+    plays: playsRef.current,
+  }), [ghosts]);
+
+  /**
+   * Восстановить историю из копии или ручного «Экспорта»: прослушивания добавляются к текущим
+   * без повторов. Песни после переустановки получают новые id — ищем по имени файла, размеру,
+   * исполнителю и названию; не нашлась — прослушивания остаются в отчётах под старым названием.
+   */
+  const importHistory = useCallback((data) => {
+    const rows = Array.isArray(data && data.songs) ? data.songs : [];
+    const src = (Array.isArray(data && data.plays) ? data.plays : []).map(p => (p.s != null ? p
+      : { s: p.song, t: Date.parse(p.start), d: p.seconds, c: p.counted ? 1 : 0 })).filter(p => p.s && Number.isFinite(p.t));
+    if (!src.length) throw new Error('plays');
+    const cur = songsRef.current, curIds = new Set(cur.map(s => s.id));
+    const byName = {}, bySize = {}, byTA = {};
+    for (const s of cur) {
+      if (s.origName) byName[s.origName.toLowerCase()] = s.id;
+      if (s.size) bySize[s.size] = s.id;
+      byTA[normKey(s.artist) + '|' + normKey(s.title)] = s.id;
+    }
+    const map = {}, newGhosts = {};
+    let matched = 0;
+    for (const r of rows) {
+      const id = curIds.has(r.id) ? r.id
+        : byName[(r.origName || '').toLowerCase()] || (r.size && bySize[r.size]) || byTA[normKey(r.artist) + '|' + normKey(r.title)];
+      if (id) { map[r.id] = id; matched++; }
+      else newGhosts[r.id] = { title: r.title, artist: r.artist, genre: r.genre, tags: r.tags, langs: r.langs };
+    }
+    const have = new Set(playsRef.current.map(p => p.s + '|' + p.t));
+    const add = [];
+    for (const p of src) {
+      const s = map[p.s] || p.s;
+      if (have.has(s + '|' + p.t)) continue;
+      have.add(s + '|' + p.t);
+      add.push({ id: p.id || newId(), s, t: p.t, d: Math.round(p.d || 0), c: p.c ? 1 : 0 });
+    }
+    const next = [...playsRef.current, ...add].sort((a, b) => a.t - b.t);
+    playsOk.current = true;           // восстановление — по просьбе: записать можно
+    playsRef.current = next;
+    setPlays(next);
+    flushPlays();
+    const g = { ...(data.ghosts || {}), ...newGhosts, ...ghosts };
+    setGhosts(g);
+    AsyncStorage.setItem('sm_ghosts', JSON.stringify(g));
+    return { added: add.length, total: src.length, matched, songs: rows.length };
+  }, [ghosts, flushPlays]);
+
+  // автокопия раз в неделю (если выбрана папка): через 15 с после загрузки, когда история прочитана
+  useEffect(() => {
+    if (!loaded || !playsOk.current) return;
+    const h = setTimeout(() => { maybeAutoBackup(backupData).catch(() => {}); }, 15000);
+    return () => clearTimeout(h);
+  }, [loaded]);
+
   const value = useMemo(() => ({
     songs, plays, loaded, progress, scan, ghosts, playlists, tagWeights, analysis, canAnalyze: !!StefuAudio, reanalyzeAll, ...derived,
     importMusic, importFolder, updateSong, updateSongs, deleteSongs: deleteWithGhosts, recordListen, clearHistory, clearAll,
     createPlaylist, renamePlaylist, deletePlaylist, addToPlaylist, removeFromPlaylist, movePlaylistItem,
-    setTagWeight, importSound, findCovers,
+    setTagWeight, importSound, findCovers, backupData, importHistory,
     songUri: s => MUSIC_DIR + s.file,
     coverUri: s => (s && s.cover ? COVERS_DIR + s.cover : null),
     getSong: id => songsRef.current.find(s => s.id === id),
   }), [songs, plays, loaded, progress, scan, ghosts, playlists, tagWeights, analysis, reanalyzeAll, derived, importMusic, importFolder, updateSong, updateSongs, deleteWithGhosts, recordListen, clearHistory, clearAll,
-    createPlaylist, renamePlaylist, deletePlaylist, addToPlaylist, removeFromPlaylist, movePlaylistItem, setTagWeight, importSound, findCovers]);
+    createPlaylist, renamePlaylist, deletePlaylist, addToPlaylist, removeFromPlaylist, movePlaylistItem, setTagWeight, importSound, findCovers, backupData, importHistory]);
 
   return <Ctx.Provider value={value}>{children}</Ctx.Provider>;
 }

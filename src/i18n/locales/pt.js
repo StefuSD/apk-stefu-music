@@ -89,6 +89,7 @@ export default {
   recap_empty: 'Você ainda não ouviu nada este ano.', recap_h: 'h', recap_streak: 'Dias seguidos (recorde)',
   recap_song: 'Música do ano', recap_month: 'Mês mais musical', recap_hour: 'Horário favorito', recap_tag: 'Tag principal',
   recap_mode_year: 'Ano', recap_mode_month: 'Mês', recap_month_title: 'Resumo: {m}', recap_month_empty: 'Este mês você ainda não ouviu nada.', recap_song_month: 'Música do mês', recap_day: 'Dia mais musical',
+  bk_auto: 'Cópia automática do histórico', bk_auto_off: 'Escolha uma pasta (ex.: Downloads): a cópia será semanal', bk_now: 'Copiar agora', bk_auto_on: 'Semanal, automática · última: {d}', bk_auto_never: 'Semanal, automática · ainda sem cópias', bk_folder: 'Outra pasta para as cópias', bk_restore: 'Restaurar histórico de arquivo', bk_done: 'Cópia salva', bk_restored: 'Audições adicionadas: {n}. Músicas encontradas: {m} de {k}.', bk_bad: 'Arquivo inválido: é preciso uma cópia ou exportação do Stefu Music',
   recap_share: 'Compartilhar como imagem',
   show_all: 'Mostrar tudo ({n})', show_less: 'Mostrar menos',
   s_play: 'Reprodução', xfade: 'Crossfade entre músicas',
