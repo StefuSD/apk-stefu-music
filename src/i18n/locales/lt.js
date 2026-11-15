@@ -90,6 +90,7 @@ export default {
   recap_title: 'Tavo {y} m. muzikoje', recap_sub: 'Tavo metai muzikoje kortele, kuria galima pasidalyti',
   recap_empty: 'Šiais metais dar nieko neklausei.', recap_h: 'val.', recap_streak: 'Dienų iš eilės (rekordas)',
   recap_song: 'Metų daina', recap_month: 'Muzikaliausias mėnuo', recap_hour: 'Mėgstamas laikas', recap_tag: 'Pagrindinė žyma',
+  recap_mode_year: 'Metai', recap_mode_month: 'Mėnuo', recap_month_title: 'Apžvalga: {m}', recap_month_empty: 'Šį mėnesį dar nieko neklausėte.', recap_song_month: 'Mėnesio daina', recap_day: 'Muzikaliausia diena',
   recap_share: 'Bendrinti kaip paveikslėlį',
   show_all: 'Rodyti visas ({n})', show_less: 'Rodyti mažiau',
   s_play: 'Atkūrimas', xfade: 'Sklandus perėjimas tarp dainų',

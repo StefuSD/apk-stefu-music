@@ -88,6 +88,7 @@ export default {
   recap_title: 'Müzikle {y} yılınız', recap_sub: 'Müzikle geçen yılınız, paylaşılabilir bir kartta',
   recap_empty: 'Bu yıl henüz hiçbir şey dinlemediniz.', recap_h: 'sa', recap_streak: 'Art arda gün (rekor)',
   recap_song: 'Yılın şarkısı', recap_month: 'En müzikli ay', recap_hour: 'En sevdiğiniz saat', recap_tag: 'Ana etiket',
+  recap_mode_year: 'Yıl', recap_mode_month: 'Ay', recap_month_title: 'Özet: {m}', recap_month_empty: 'Bu ay henüz hiçbir şey dinlemediniz.', recap_song_month: 'Ayın şarkısı', recap_day: 'En müzikli gün',
   recap_share: 'Resim olarak paylaş',
   show_all: 'Tümünü göster ({n})', show_less: 'Daha az göster',
   s_play: 'Çalma', xfade: 'Şarkılar arasında geçiş (crossfade)',

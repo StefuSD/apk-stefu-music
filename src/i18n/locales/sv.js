@@ -90,6 +90,7 @@ export default {
   recap_title: 'Ditt {y} i musik', recap_sub: 'Ditt musikår som ett kort du kan dela',
   recap_empty: 'Du har inte lyssnat på något i år än.', recap_h: 'h', recap_streak: 'Dagar i rad (rekord)',
   recap_song: 'Årets låt', recap_month: 'Mest musikaliska månaden', recap_hour: 'Favorittid', recap_tag: 'Topptagg',
+  recap_mode_year: 'År', recap_mode_month: 'Månad', recap_month_title: 'Sammanfattning: {m}', recap_month_empty: 'Du har inte lyssnat på något den här månaden än.', recap_song_month: 'Månadens låt', recap_day: 'Mest musikaliska dagen',
   recap_share: 'Dela som bild',
   show_all: 'Visa alla ({n})', show_less: 'Visa färre',
   s_play: 'Uppspelning', xfade: 'Övertoning mellan låtar',

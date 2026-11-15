@@ -88,6 +88,7 @@ export default {
   recap_title: 'Підсумки {y} року', recap_sub: 'Ваш рік у музиці — карткою, якою можна поділитися',
   recap_empty: 'Цього року ви ще нічого не слухали.', recap_h: 'год', recap_streak: 'Днів поспіль (рекорд)',
   recap_song: 'Пісня року', recap_month: 'Наймузичніший місяць', recap_hour: 'Улюблений час', recap_tag: 'Головний тег',
+  recap_mode_year: 'Рік', recap_mode_month: 'Місяць', recap_month_title: 'Підсумки: {m}', recap_month_empty: 'Цього місяця ви ще нічого не слухали.', recap_song_month: 'Пісня місяця', recap_day: 'Наймузичніший день',
   recap_share: 'Поділитися картинкою',
   show_all: 'Показати всі ({n})', show_less: 'Згорнути',
   s_play: 'Відтворення', xfade: 'Плавний перехід між піснями',

@@ -9,19 +9,22 @@ import { useLibrary } from '../context/LibraryContext';
 import { artistsOf } from '../utils/artists';
 import { dayKey } from '../utils/format';
 import Cover from './Cover';
+import HeaderBg from './HeaderBg';
 import { AppGlyphIcon, CloseIcon, ShareIcon } from './icons';
 
 const DAY = 86400000;
 
-/** Итоги года по истории: время, песни, исполнители, лучший месяц, серия дней, любимый час. */
-function useRecap(year) {
+/** Итоги года (month = null) или месяца (0–11) по истории: время, песни, исполнители,
+ *  лучший месяц (у месяца — лучший день), серия дней, любимый час. */
+function useRecap(year, month = null) {
   const lib = useLibrary();
   return useMemo(() => {
-    const from = new Date(year, 0, 1).getTime(), to = new Date(year + 1, 0, 1).getTime();
+    const from = month == null ? new Date(year, 0, 1).getTime() : new Date(year, month, 1).getTime();
+    const to = month == null ? new Date(year + 1, 0, 1).getTime() : new Date(year, month + 1, 1).getTime();
     const ev = lib.plays.filter(e => e.t >= from && e.t < to && e.d > 0);
     const info = id => lib.byId[id] || lib.ghosts[id] || { title: '?', artist: '' };
     let sec = 0, plays = 0;
-    const songs = {}, artists = {}, tags = {}, months = new Array(12).fill(0), hours = new Array(24).fill(0);
+    const songs = {}, artists = {}, tags = {}, months = new Array(12).fill(0), hours = new Array(24).fill(0), dayTime = {};
     const days = new Set();
     for (const e of ev) {
       sec += e.d; plays += e.c;
@@ -31,6 +34,7 @@ function useRecap(year) {
       for (const tg of s.tags || []) tags[tg] = (tags[tg] || 0) + e.d;
       const d = new Date(e.t);
       months[d.getMonth()] += e.d;
+      dayTime[d.getDate()] = (dayTime[d.getDate()] || 0) + e.d;
       hours[d.getHours()] += e.d;
       if (e.c) days.add(dayKey(e.t));
     }
@@ -41,13 +45,15 @@ function useRecap(year) {
     const topOf = (m, n) => Object.entries(m).sort((a, b) => b[1] - a[1]).slice(0, n);
     const mBest = months.indexOf(Math.max(...months));
     const hBest = hours.indexOf(Math.max(...hours));
+    const dBest = Object.entries(dayTime).sort((a, b) => b[1] - a[1])[0];
     return {
       sec, plays, uniq: Object.keys(songs).length, days: days.size, streak: best,
       songs: topOf(songs, 5).map(([id, v]) => ({ id, v, song: lib.byId[id], ...info(id) })),
       artists: topOf(artists, 5), tag: topOf(tags, 1)[0],
       month: Math.max(...months) > 0 ? mBest : -1, hour: Math.max(...hours) > 0 ? hBest : -1,
+      day: dBest ? Number(dBest[0]) : -1,
     };
-  }, [lib.plays, lib.byId, lib.ghosts, year]);
+  }, [lib.plays, lib.byId, lib.ghosts, year, month]);
 }
 
 export default function YearRecap({ visible, onClose }) {
@@ -55,7 +61,8 @@ export default function YearRecap({ visible, onClose }) {
   const { t, lang } = useLang();
   const insets = useSafeAreaInsets();
   const [year, setYear] = useState(new Date().getFullYear());
-  const R = useRecap(year);
+  const [mode, setMode] = useState('year');                      // итоги года или месяца
+  const [month, setMonth] = useState(new Date().getMonth());
   const card = useRef(null);
   const [busy, setBusy] = useState(false);
   const lib = useLibrary();
@@ -64,9 +71,24 @@ export default function YearRecap({ visible, onClose }) {
     ys.add(new Date().getFullYear());
     return [...ys].sort((a, b) => b - a);
   }, [lib.plays]);
+  // месяцы выбранного года, где что-то слушали (и текущий месяц текущего года)
+  const months = useMemo(() => {
+    const ms = new Set(lib.plays.filter(p => new Date(p.t).getFullYear() === year).map(p => new Date(p.t).getMonth()));
+    const now = new Date();
+    if (year === now.getFullYear()) ms.add(now.getMonth());
+    return [...ms].sort((a, b) => b - a);
+  }, [lib.plays, year]);
+  const mon = months.includes(month) ? month : (months[0] ?? 0);
+  const isMonth = mode === 'month';
+  const R = useRecap(year, isMonth ? mon : null);
+  const monLabel = m => new Date(year, m, 15).toLocaleDateString(lang, { month: 'long' });
+  // фон карточки — всегда градиент в цветах темы: основа шапки, свечения и декор темы
+  const cardTheme = useMemo(() => ({ ...colors, headerGlow: colors.headerGlow || colors.cardGlow }), [colors]);
 
   const hours = Math.floor(R.sec / 3600), mins = Math.round((R.sec % 3600) / 60);
   const monthName = R.month >= 0 ? new Date(year, R.month, 15).toLocaleDateString(lang, { month: 'long' }) : '—';
+  const dayName = R.day > 0 ? new Date(year, mon, R.day).toLocaleDateString(lang, { day: 'numeric', month: 'long' }) : '—';
+  const periodName = isMonth ? new Date(year, mon, 15).toLocaleDateString(lang, { month: 'long', year: 'numeric' }) : String(year);
 
   const share = async () => {
     setBusy(true);
@@ -90,6 +112,13 @@ export default function YearRecap({ visible, onClose }) {
       <View style={{ flex: 1, backgroundColor: colors.bg, paddingTop: insets.top + 8, paddingBottom: insets.bottom + 8 }}>
         <View style={{ flexDirection: 'row', alignItems: 'center', paddingHorizontal: 14, marginBottom: 8 }}>
           <Pressable onPress={onClose} hitSlop={10}><CloseIcon color={colors.text} size={26} /></Pressable>
+          <View style={{ flexDirection: 'row', marginLeft: 12, borderRadius: 16, borderWidth: 1, borderColor: colors.border, overflow: 'hidden' }}>
+            {[['year', t('recap_mode_year')], ['month', t('recap_mode_month')]].map(([k, l]) => (
+              <Pressable key={k} onPress={() => setMode(k)} style={{ paddingHorizontal: 14, paddingVertical: 7, backgroundColor: mode === k ? colors.ink : 'transparent' }}>
+                <Text style={{ color: mode === k ? colors.onInk : colors.text, fontWeight: '700' }}>{l}</Text>
+              </Pressable>
+            ))}
+          </View>
           <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ gap: 6, paddingHorizontal: 12 }}>
             {years.map(y => (
               <Pressable key={y} onPress={() => setYear(y)} style={[st.year, y === year ? { backgroundColor: colors.ink } : { borderWidth: 1, borderColor: colors.border }]}>
@@ -98,17 +127,29 @@ export default function YearRecap({ visible, onClose }) {
             ))}
           </ScrollView>
         </View>
+        {isMonth ? (
+          <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{ flexGrow: 0 }} contentContainerStyle={{ gap: 6, paddingHorizontal: 14, paddingBottom: 8 }}>
+            {months.map(m => (
+              <Pressable key={m} onPress={() => setMonth(m)} style={[st.year, m === mon ? { backgroundColor: colors.ink } : { borderWidth: 1, borderColor: colors.border }]}>
+                <Text style={{ color: m === mon ? colors.onInk : colors.text, fontWeight: '700' }}>{monLabel(m)}</Text>
+              </Pressable>
+            ))}
+          </ScrollView>
+        ) : null}
         <ScrollView contentContainerStyle={{ padding: 14 }}>
           {/* Сама карточка — её и снимаем картинкой для «Поделиться». */}
-          <View ref={card} collapsable={false} style={[st.card, { backgroundColor: '#18171a' }]}>
+          <View ref={card} collapsable={false} style={[st.card, { backgroundColor: colors.bgHeader, overflow: 'hidden' }]}>
+            <HeaderBg theme={cardTheme} small={false} />
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
               <AppGlyphIcon color={W} size={26} />
               <Text style={{ color: W, fontWeight: '700', marginLeft: 8, fontSize: 15, flex: 1 }}>Stefu Music</Text>
-              <Text style={{ color: M, fontWeight: '700' }}>{year}</Text>
+              <Text style={{ color: M, fontWeight: '700' }}>{periodName}</Text>
             </View>
-            <Text style={{ color: W, fontSize: 30, fontWeight: '800', marginTop: 18 }}>{t('recap_title', { y: year })}</Text>
+            <Text style={{ color: W, fontSize: 30, fontWeight: '800', marginTop: 18 }}>
+              {isMonth ? t('recap_month_title', { m: periodName }) : t('recap_title', { y: year })}
+            </Text>
             {R.sec === 0 ? (
-              <Text style={{ color: M, marginTop: 14, lineHeight: 20 }}>{t('recap_empty')}</Text>
+              <Text style={{ color: M, marginTop: 14, lineHeight: 20 }}>{t(isMonth ? 'recap_month_empty' : 'recap_empty')}</Text>
             ) : (<>
               <View style={{ flexDirection: 'row', marginTop: 18 }}>
                 <Big v={hours ? `${hours} ${t('recap_h')} ${mins} ${t('min_short')}` : `${mins} ${t('min_short')}`} label={t('r_time')} />
@@ -119,10 +160,10 @@ export default function YearRecap({ visible, onClose }) {
                 <Big v={String(R.streak)} label={t('recap_streak')} />
               </View>
               {R.songs[0] ? (
-                <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 22, padding: 12, borderRadius: 16, backgroundColor: '#ffffff14' }}>
+                <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 22, padding: 12, borderRadius: 16, backgroundColor: '#ffffff1f' }}>
                   <Cover song={R.songs[0].song || { id: R.songs[0].id, title: R.songs[0].title, artist: R.songs[0].artist }} size={64} radius={12} />
                   <View style={{ flex: 1, marginLeft: 12 }}>
-                    <Text style={{ color: M, fontSize: 12 }}>{t('recap_song')}</Text>
+                    <Text style={{ color: M, fontSize: 12 }}>{t(isMonth ? 'recap_song_month' : 'recap_song')}</Text>
                     <Text style={{ color: W, fontSize: 18, fontWeight: '800' }} numberOfLines={2}>{R.songs[0].title}</Text>
                     <Text style={{ color: M }} numberOfLines={1}>{R.songs[0].artist}</Text>
                   </View>
@@ -143,7 +184,7 @@ export default function YearRecap({ visible, onClose }) {
                 </View>
               </View>
               <View style={{ flexDirection: 'row', marginTop: 18 }}>
-                <Big v={monthName} label={t('recap_month')} />
+                {isMonth ? <Big v={dayName} label={t('recap_day')} /> : <Big v={monthName} label={t('recap_month')} />}
                 <Big v={R.hour >= 0 ? `${R.hour}:00` : '—'} label={t('recap_hour')} />
               </View>
               {R.tag ? <Text style={{ color: M, marginTop: 14 }}>{t('recap_tag')}: <Text style={{ color: W, fontWeight: '700' }}>{R.tag[0]}</Text></Text> : null}

@@ -88,6 +88,7 @@ export default {
   recap_title: 'Il tuo {y} in musica', recap_sub: 'Il tuo anno in musica, in una scheda da condividere',
   recap_empty: 'Quest’anno non hai ancora ascoltato nulla.', recap_h: 'h', recap_streak: 'Giorni di fila (record)',
   recap_song: 'Brano dell’anno', recap_month: 'Mese più musicale', recap_hour: 'Momento preferito', recap_tag: 'Tag principale',
+  recap_mode_year: 'Anno', recap_mode_month: 'Mese', recap_month_title: 'Riepilogo: {m}', recap_month_empty: 'Questo mese non hai ancora ascoltato nulla.', recap_song_month: 'Canzone del mese', recap_day: 'Giorno più musicale',
   recap_share: 'Condividi come immagine',
   show_all: 'Mostra tutto ({n})', show_less: 'Mostra meno',
   s_play: 'Riproduzione', xfade: 'Dissolvenza tra i brani',

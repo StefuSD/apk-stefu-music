@@ -90,6 +90,7 @@ export default {
   recap_title: 'Tvůj hudební rok {y}', recap_sub: 'Tvůj rok v hudbě jako karta ke sdílení',
   recap_empty: 'Letos jsi ještě nic neposlouchal(a).', recap_h: 'h', recap_streak: 'Dní v řadě (rekord)',
   recap_song: 'Skladba roku', recap_month: 'Nejhudebnější měsíc', recap_hour: 'Oblíbený čas', recap_tag: 'Hlavní štítek',
+  recap_mode_year: 'Rok', recap_mode_month: 'Měsíc', recap_month_title: 'Shrnutí: {m}', recap_month_empty: 'Tento měsíc jste zatím nic neposlouchali.', recap_song_month: 'Píseň měsíce', recap_day: 'Nejhudebnější den',
   recap_share: 'Sdílet jako obrázek',
   show_all: 'Zobrazit vše ({n})', show_less: 'Zobrazit méně',
   s_play: 'Přehrávání', xfade: 'Prolínání skladeb',

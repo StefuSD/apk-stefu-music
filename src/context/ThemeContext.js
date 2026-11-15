@@ -14,6 +14,12 @@ export const LIGHT = {
   mode: 'light',
   bg: '#f5f5f4',
   bgHeader: INK,
+  // шапка: та же схема, что у «Сирени» — три радиальных свечения, только графитовые
+  headerGlow: [
+    { cx: 88, cy: 0, r: 75, color: '#7a7880', o: 0.8 },     // светлый графит сверху справа
+    { cx: 0, cy: 100, r: 85, color: '#4a4850', o: 0.75 },   // графит снизу слева
+    { cx: 55, cy: 125, r: 60, color: '#5c6170', o: 0.6 },   // холодный серый снизу
+  ],
   bgCard: '#ffffff',
   bgInput: '#efeeed',
   bgSubtle: '#f8f8f7',
@@ -119,6 +125,12 @@ export const LILAC = {
 };
 
 DARK.dark = true;
+// тёмная тема: шапка сплошная, а для картинки итогов — мягкий градиент того же рисунка
+DARK.cardGlow = [
+  { cx: 88, cy: 0, r: 75, color: '#4a4850', o: 0.8 },
+  { cx: 0, cy: 100, r: 85, color: '#2c2b30', o: 0.75 },
+  { cx: 55, cy: 125, r: 60, color: '#3a3f4e', o: 0.6 },
+];
 
 // Тематические оформления (Новый год, Хэллоуин, Космос …) — src/data/appThemes.js
 export const APP_THEMES = APP_THEME_SPECS.map(s => makeAppTheme(s, s.dark ? DARK : LIGHT));

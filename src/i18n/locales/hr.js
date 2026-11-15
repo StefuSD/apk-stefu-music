@@ -90,6 +90,7 @@ export default {
   recap_title: 'Tvoja {y}. u glazbi', recap_sub: 'Tvoja godina u glazbi kao kartica za dijeljenje',
   recap_empty: 'Ove godine još ništa nisi slušao.', recap_h: 'h', recap_streak: 'Dana zaredom (rekord)',
   recap_song: 'Pjesma godine', recap_month: 'Najglazbeniji mjesec', recap_hour: 'Omiljeno vrijeme', recap_tag: 'Glavna oznaka',
+  recap_mode_year: 'Godina', recap_mode_month: 'Mjesec', recap_month_title: 'Sažetak: {m}', recap_month_empty: 'Ovaj mjesec još niste ništa slušali.', recap_song_month: 'Pjesma mjeseca', recap_day: 'Najglazbeniji dan',
   recap_share: 'Podijeli kao sliku',
   show_all: 'Prikaži sve ({n})', show_less: 'Prikaži manje',
   s_play: 'Reprodukcija', xfade: 'Pretapanje između pjesama',

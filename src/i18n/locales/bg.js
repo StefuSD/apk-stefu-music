@@ -90,6 +90,7 @@ export default {
   recap_title: 'Твоята {y} година в музиката', recap_sub: 'Годината ти в музиката като карта за споделяне',
   recap_empty: 'Тази година още не си слушал нищо.', recap_h: 'ч', recap_streak: 'Поредни дни (рекорд)',
   recap_song: 'Песен на годината', recap_month: 'Най-музикалният месец', recap_hour: 'Любимо време', recap_tag: 'Главен етикет',
+  recap_mode_year: 'Година', recap_mode_month: 'Месец', recap_month_title: 'Обобщение: {m}', recap_month_empty: 'Този месец още не сте слушали нищо.', recap_song_month: 'Песен на месеца', recap_day: 'Най-музикалният ден',
   recap_share: 'Сподели като изображение',
   show_all: 'Покажи всички ({n})', show_less: 'Покажи по-малко',
   s_play: 'Възпроизвеждане', xfade: 'Плавен преход между песните',

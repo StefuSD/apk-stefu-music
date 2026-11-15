@@ -88,6 +88,7 @@ export default {
   recap_title: 'Anul tău {y} în muzică', recap_sub: 'Anul tău în muzică, pe un card pe care îl poți distribui',
   recap_empty: 'Anul acesta încă n-ai ascultat nimic.', recap_h: 'h', recap_streak: 'Zile la rând (record)',
   recap_song: 'Melodia anului', recap_month: 'Cea mai muzicală lună', recap_hour: 'Ora preferată', recap_tag: 'Eticheta principală',
+  recap_mode_year: 'An', recap_mode_month: 'Lună', recap_month_title: 'Rezumat: {m}', recap_month_empty: 'Luna aceasta nu ați ascultat încă nimic.', recap_song_month: 'Melodia lunii', recap_day: 'Cea mai muzicală zi',
   recap_share: 'Distribuie ca imagine',
   show_all: 'Arată tot ({n})', show_less: 'Arată mai puțin',
   s_play: 'Redare', xfade: 'Tranziție lină între melodii',

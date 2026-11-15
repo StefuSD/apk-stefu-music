@@ -90,6 +90,7 @@ export default {
   recap_title: 'A {y}. éved zenében', recap_sub: 'A zenei éved megosztható kártyán',
   recap_empty: 'Idén még nem hallgattál semmit.', recap_h: 'ó', recap_streak: 'Napok egymás után (rekord)',
   recap_song: 'Az év dala', recap_month: 'A legzenésebb hónap', recap_hour: 'Kedvenc időpont', recap_tag: 'Fő címke',
+  recap_mode_year: 'Év', recap_mode_month: 'Hónap', recap_month_title: 'Összegzés: {m}', recap_month_empty: 'Ebben a hónapban még semmit sem hallgattál.', recap_song_month: 'A hónap dala', recap_day: 'A legzenésebb nap',
   recap_share: 'Megosztás képként',
   show_all: 'Összes mutatása ({n})', show_less: 'Kevesebb',
   s_play: 'Lejátszás', xfade: 'Áttűnés a dalok között',

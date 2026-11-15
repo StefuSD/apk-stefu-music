@@ -10,7 +10,7 @@ import { useTheme } from '../context/ThemeContext';
  * Ставится первым ребёнком шапки: лежит под содержимым и не влияет на раскладку.
  * theme — показать чужую тему (превью в настройках), а не текущую.
  */
-export default function HeaderBg({ theme }) {
+export default function HeaderBg({ theme, small = !!theme }) {
   const cur = useTheme().colors;
   const colors = theme || cur;
   const [size, setSize] = useState(null);
@@ -31,7 +31,7 @@ export default function HeaderBg({ theme }) {
         <Rect x="0" y="0" width="100" height="100" fill={colors.bgHeader} />
         {glow.map((g, i) => <Rect key={i} x="0" y="0" width="100" height="100" fill={`url(#hg${i})`} />)}
       </Svg>
-      {size && colors.decor && colors.decor !== 'none' ? <Decor kind={colors.decor} w={size.width} h={size.height} small={!!theme} /> : null}
+      {size && colors.decor && colors.decor !== 'none' ? <Decor kind={colors.decor} w={size.width} h={size.height} small={small} /> : null}
     </View>
   );
 }

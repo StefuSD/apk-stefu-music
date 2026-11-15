@@ -90,6 +90,7 @@ export default {
   recap_title: 'Το {y} σου στη μουσική', recap_sub: 'Η χρονιά σου στη μουσική σε μια κάρτα για κοινοποίηση',
   recap_empty: 'Δεν έχεις ακούσει ακόμα τίποτα φέτος.', recap_h: 'ώ.', recap_streak: 'Συνεχόμενες ημέρες (ρεκόρ)',
   recap_song: 'Τραγούδι της χρονιάς', recap_month: 'Ο πιο μουσικός μήνας', recap_hour: 'Αγαπημένη ώρα', recap_tag: 'Κύρια ετικέτα',
+  recap_mode_year: 'Έτος', recap_mode_month: 'Μήνας', recap_month_title: 'Απολογισμός: {m}', recap_month_empty: 'Αυτόν τον μήνα δεν έχετε ακούσει τίποτα ακόμα.', recap_song_month: 'Τραγούδι του μήνα', recap_day: 'Η πιο μουσική μέρα',
   recap_share: 'Κοινοποίηση ως εικόνα',
   show_all: 'Εμφάνιση όλων ({n})', show_less: 'Λιγότερα',
   s_play: 'Αναπαραγωγή', xfade: 'Crossfade μεταξύ τραγουδιών',
