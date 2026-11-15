@@ -24,7 +24,7 @@ import { navRef } from '../navigation/navRef';
 import { artistsOf } from '../utils/artists';
 import {
   PlayIcon, PauseIcon, NextIcon, PrevIcon, ShuffleIcon, RepeatIcon, RepeatOneIcon,
-  DownIcon, CloseIcon, HeartIcon, HeartOffIcon, EditIcon, RadioIcon, LyricsIcon, VideoIcon, LanguageIcon, MoonIcon, ImageIcon,
+  DownIcon, CloseIcon, HeartIcon, HeartOffIcon, EditIcon, RadioIcon, LyricsIcon, BoltIcon, VideoIcon, LanguageIcon, MoonIcon, ImageIcon,
 } from './icons';
 
 /** Подпись кнопки таймера сна: «Сон · 23 мин» или «После песни»; обновляется раз в 15 с. */
@@ -305,7 +305,10 @@ export function PlayerSheet({ visible, onClose, onEdit }) {
           )}
           {p.snippets && song ? (
             <View style={st.snipBox}>
-              <Text style={{ color: W, fontWeight: '800', fontSize: 13, letterSpacing: 0.5 }}>{t('snip_mode').toUpperCase()}</Text>
+              <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}>
+                <BoltIcon color={W} size={16} />
+                <Text style={{ color: W, fontWeight: '800', fontSize: 13, letterSpacing: 0.5 }}>{t('snip_mode').toUpperCase()}</Text>
+              </View>
               <Text style={{ color: '#ffffffb0', fontSize: 12, marginTop: 2 }}>{t('snip_mode_hint')}</Text>
               {pro.limit('snippetsDay') !== Infinity ? (
                 <Text style={{ color: '#ffffffb0', fontSize: 12, marginTop: 2 }}>
@@ -380,6 +383,7 @@ export function PlayerSheet({ visible, onClose, onEdit }) {
                 </Pressable>
               ) : null}
               <Pressable onPress={() => p.setSnippets(!p.snippets)} style={[st.pill, p.snippets ? { backgroundColor: W, borderColor: W } : null]}>
+                <BoltIcon color={p.snippets ? colors.player : W} size={16} style={{ marginRight: 6 }} />
                 <Text style={{ color: p.snippets ? colors.player : W, fontWeight: '600' }}>{t('snip_mode')}</Text>
               </Pressable>
               <Pressable onPress={() => setSleepMenu(true)} style={[st.pill, p.sleep ? { backgroundColor: W, borderColor: W } : null]}>
@@ -486,9 +490,12 @@ export function MiniPlayer({ onOpen }) {
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
             <Text style={{ color: mc.text, fontWeight: '700', fontSize: 15, flex: 1 }} numberOfLines={1}>{song.title}</Text>
           </View>
-          <Text style={{ color: mc.sub, fontSize: 12 }} numberOfLines={1}>
-            {p.snippets ? t('snip_mode') + ' · ' : ''}{song.artist || t('unknown_artist')}
-          </Text>
+          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+            {p.snippets ? <BoltIcon color={mc.sub} size={12} style={{ marginRight: 3 }} /> : null}
+            <Text style={{ color: mc.sub, fontSize: 12, flexShrink: 1 }} numberOfLines={1}>
+              {p.snippets ? t('snip_mode') + ' · ' : ''}{song.artist || t('unknown_artist')}
+            </Text>
+          </View>
         </View>
         {p.snippets ? (
           <Pressable onPress={() => { lib.updateSong(song.id, { fav: !song.fav }); if (!song.fav) showFavToast(t('snip_liked')); }} hitSlop={10} style={{ padding: 6 }}>

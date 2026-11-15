@@ -22,7 +22,7 @@ import ActionSheet from '../components/ActionSheet';
 import { shareSong } from '../utils/shareSong';
 import {
   PlusIcon, SearchIcon, HeartIcon, MoreIcon, PlayIcon, ShuffleIcon, CloseIcon, MusicIcon,
-  ShareIcon, PlayNextIcon, EditIcon, TrashIcon, SparkleIcon, SortIcon, LanguageIcon, VideoIcon, ScissorsIcon, AppGlyphIcon,
+  ShareIcon, PlayNextIcon, EditIcon, TrashIcon, SparkleIcon, BoltIcon, SortIcon, LanguageIcon, VideoIcon, ScissorsIcon, AppGlyphIcon,
   PlaylistIcon, CheckIcon, DragIcon, SelectIcon, LyricsIcon,
 } from '../components/icons';
 
@@ -296,7 +296,7 @@ export default function LibraryScreen({ route }) {
           )}
           {lib.songs.length > 0 ? (
             <Pressable onPress={playSnippets} hitSlop={6} style={[st.iconBtn, { backgroundColor: colors.headerBtn }]}>
-              <LyricsIcon color={colors.headerText} size={20} />
+              <BoltIcon color={colors.headerText} size={22} />
             </Pressable>
           ) : null}
         </View>
@@ -373,7 +373,7 @@ export default function LibraryScreen({ route }) {
                 {/* Только припевы: быстро понять, что нравится, не слушая песни целиком. */}
                 <Pressable onPress={playSnippets}
                   style={[st.act, { backgroundColor: colors.accentSoft, marginLeft: 8 }]}>
-                  <LyricsIcon color={colors.accent} size={18} />
+                  <BoltIcon color={colors.accent} size={18} />
                   <Text style={{ color: colors.accent, fontWeight: '700', marginLeft: 6 }}>{t('snip_short')}</Text>
                   {player.snipUsed >= pro.limit('snippetsDay') ? <Text style={{ color: colors.accent, fontWeight: '800', fontSize: 10, marginLeft: 5 }}>PRO</Text> : null}
                 </Pressable>
