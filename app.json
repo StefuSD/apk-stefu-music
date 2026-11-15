@@ -57,6 +57,7 @@
       ],
       "./plugins/withShotsBuild",
       "./plugins/withLinks",
+      "./plugins/withShortcuts",
       "./plugins/withReleaseSigning",
       [
         "react-native-android-widget",
