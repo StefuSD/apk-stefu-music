@@ -54,6 +54,38 @@ function writeSongsFile(json) {
   return writeChain;
 }
 
+// История прослушиваний — тоже файлом (раньше sm_plays в AsyncStorage). Запись больше ~2 МБ
+// AsyncStorage на Android не может прочитать (CursorWindow): чтение падало, приложение начинало
+// с пустой историей и при уходе в фон записывало её поверх — накопленная статистика пропадала.
+const PLAYS_FILE = FileSystem.documentDirectory + 'plays.json';
+const PLAYS_TMP = FileSystem.documentDirectory + 'plays.tmp.json';
+const PLAYS_BAK = FileSystem.documentDirectory + 'plays-backup.json';   // копия раз в сутки
+const DAY = 24 * 3600 * 1000;
+
+async function loadPlaysRaw() {
+  const i = await FileSystem.getInfoAsync(PLAYS_FILE);
+  if (i.exists) return { raw: await FileSystem.readAsStringAsync(PLAYS_FILE), inFile: true };
+  return { raw: await AsyncStorage.getItem(K_PLAYS), inFile: false };
+}
+
+let playsChain = Promise.resolve();
+function writePlaysFile(json) {
+  playsChain = playsChain.catch(() => {}).then(async () => {
+    // резервная копия: не чаще раза в сутки, из прошлого удачного файла
+    try {
+      const [cur, bak] = await Promise.all([FileSystem.getInfoAsync(PLAYS_FILE), FileSystem.getInfoAsync(PLAYS_BAK)]);
+      if (cur.exists && cur.size > 2 && (!bak.exists || !bak.modificationTime || Date.now() - bak.modificationTime * 1000 > DAY)) {
+        await FileSystem.deleteAsync(PLAYS_BAK, { idempotent: true });
+        await FileSystem.copyAsync({ from: PLAYS_FILE, to: PLAYS_BAK });
+      }
+    } catch (e) { /* без копии */ }
+    await FileSystem.writeAsStringAsync(PLAYS_TMP, json);
+    try { await FileSystem.moveAsync({ from: PLAYS_TMP, to: PLAYS_FILE }); }
+    catch (e) { await FileSystem.writeAsStringAsync(PLAYS_FILE, json); }
+  });
+  return playsChain;
+}
+
 const newId = () => Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
 
 const MIME_EXT = {
@@ -128,6 +160,8 @@ export function LibraryProvider({ children }) {
   const [tagWeights, setTagWeights] = useState({});
   const listsRef = useRef([]);
   const playsRef = useRef([]);
+  // История прочитана: только тогда её можно записывать (иначе пустая затёрла бы сохранённую).
+  const playsOk = useRef(false);
   const songsRef = useRef([]);
   const saveTimer = useRef(null);
 
@@ -135,7 +169,25 @@ export function LibraryProvider({ children }) {
     (async () => {
       try {
         await ensureDirs();
-        const [s, p] = await Promise.all([loadSongsRaw(), AsyncStorage.getItem(K_PLAYS)]);
+        // история — отдельно от песен: сбой одного не обнуляет другое
+        let pp = [];
+        try {
+          const { raw, inFile } = await loadPlaysRaw();
+          pp = raw ? JSON.parse(raw) : [];
+          if (!Array.isArray(pp)) throw new Error('plays');
+          playsOk.current = true;
+          // перенос из AsyncStorage в файл; старую запись убираем только после проверки
+          if (!inFile && pp.length) {
+            try {
+              const json = JSON.stringify(pp);
+              await writePlaysFile(json);
+              const back = await FileSystem.readAsStringAsync(PLAYS_FILE);
+              if (back.length === json.length) AsyncStorage.removeItem(K_PLAYS);
+            } catch (e) { /* останется в AsyncStorage */ }
+          }
+        } catch (e) { pp = []; /* не прочиталась — не перезаписываем (playsOk = false) */ }
+        playsRef.current = pp; setPlays(pp);
+        const s = await loadSongsRaw();
         let ss = s ? JSON.parse(s) : [];
         // Старые записи: одна строка «A & B» → отдельные исполнители и показ через «·».
         let migrated = false;
@@ -165,15 +217,14 @@ export function LibraryProvider({ children }) {
             if (!inFile && back.length === json.length) AsyncStorage.removeItem(K_SONGS);
           } catch (e) { /* останется в AsyncStorage */ }
         }
-        const pp = p ? JSON.parse(p) : [];
         try {
           const [l, w] = await Promise.all([AsyncStorage.getItem(K_LISTS), AsyncStorage.getItem(K_TAGW)]);
           const ll = l ? JSON.parse(l) : [];
           listsRef.current = ll; setPlaylists(ll);
           if (w) setTagWeights(JSON.parse(w));
         } catch (e) { /* без плейлистов */ }
-        songsRef.current = ss; playsRef.current = pp;
-        setSongs(ss); setPlays(pp);
+        songsRef.current = ss;
+        setSongs(ss);
       } catch (e) { /* пустая библиотека */ }
       setLoaded(true);
     })();
@@ -194,7 +245,8 @@ export function LibraryProvider({ children }) {
 
   const flushPlays = useCallback(() => {
     if (saveTimer.current) { clearTimeout(saveTimer.current); saveTimer.current = null; }
-    AsyncStorage.setItem(K_PLAYS, JSON.stringify(playsRef.current));
+    if (!playsOk.current) return;     // сохранённую историю не удалось прочитать — не затираем её
+    writePlaysFile(JSON.stringify(playsRef.current)).catch(() => {});
   }, []);
 
   // История пишется часто (каждые несколько секунд игры) — на диск
@@ -591,6 +643,7 @@ export function LibraryProvider({ children }) {
   }, [ghosts, deleteSongs]);
 
   const clearHistory = useCallback(() => {
+    playsOk.current = true;           // очистка — по просьбе: записать пустую можно
     playsRef.current = [];
     setPlays([]);
     flushPlays();
