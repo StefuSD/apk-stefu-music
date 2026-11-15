@@ -115,4 +115,5 @@ export default {
   an_title: 'Hangelemzés', an_progress: 'Dalok elemzése: {n} / {m}…', an_redo: 'Összes dal újraelemzése',
   an_redo_q: 'Újra megkeressük az összes dal részletét, tempóját és energiáját? A kézzel megadott részletek megmaradnak.',
   an_hint: 'Közvetlenül a telefonon, internet nélkül: részlet (a dal legfülbemászóbb része), tempó, energia és fényesség. Az új dalokat hozzáadás után automatikusan elemezzük.',
+  w_top_week: 'A hét toplistája', w_today: 'Ma', w_week: 'Ezen a héten', w_most: 'Legtöbbet hallgatott', w_no_pl: 'Még nincs lejátszási lista', w_no_plays: 'Még nincs hallgatás', hour_short: 'ó',
 };

@@ -74,6 +74,114 @@
               "previewImage": "./assets/widget-preview.png",
               "resizeMode": "horizontal",
               "updatePeriodMillis": 0
+            },
+            {
+              "name": "PlayerLarge",
+              "label": "Player — large",
+              "description": "Cover, song, progress and controls",
+              "minWidth": "250dp",
+              "minHeight": "110dp",
+              "targetCellWidth": 4,
+              "targetCellHeight": 2,
+              "previewImage": "./assets/widgets/player_large.png",
+              "resizeMode": "horizontal|vertical",
+              "updatePeriodMillis": 0
+            },
+            {
+              "name": "Cover",
+              "label": "Album art",
+              "description": "Cover of the current song with play/pause",
+              "minWidth": "110dp",
+              "minHeight": "110dp",
+              "targetCellWidth": 2,
+              "targetCellHeight": 2,
+              "previewImage": "./assets/widgets/cover.png",
+              "resizeMode": "horizontal|vertical",
+              "updatePeriodMillis": 0
+            },
+            {
+              "name": "Actions",
+              "label": "Quick actions",
+              "description": "Shuffle, mix for you, snippets, sleep timer",
+              "minWidth": "250dp",
+              "minHeight": "40dp",
+              "targetCellWidth": 4,
+              "targetCellHeight": 1,
+              "previewImage": "./assets/widgets/actions.png",
+              "resizeMode": "horizontal",
+              "updatePeriodMillis": 0
+            },
+            {
+              "name": "Playlists",
+              "label": "Playlists",
+              "description": "Start a playlist with one tap",
+              "minWidth": "250dp",
+              "minHeight": "110dp",
+              "targetCellWidth": 4,
+              "targetCellHeight": 2,
+              "previewImage": "./assets/widgets/playlists.png",
+              "resizeMode": "horizontal|vertical",
+              "updatePeriodMillis": 0
+            },
+            {
+              "name": "TopWeek",
+              "label": "Top of the week",
+              "description": "Most played songs this week",
+              "minWidth": "250dp",
+              "minHeight": "110dp",
+              "targetCellWidth": 4,
+              "targetCellHeight": 2,
+              "previewImage": "./assets/widgets/top_week.png",
+              "resizeMode": "horizontal|vertical",
+              "updatePeriodMillis": 0
+            },
+            {
+              "name": "Stats",
+              "label": "Listening stats",
+              "description": "Minutes today and this week, most played artist",
+              "minWidth": "110dp",
+              "minHeight": "110dp",
+              "targetCellWidth": 2,
+              "targetCellHeight": 2,
+              "previewImage": "./assets/widgets/stats.png",
+              "resizeMode": "horizontal|vertical",
+              "updatePeriodMillis": 0
+            },
+            {
+              "name": "ShortSnippets",
+              "label": "Snippets",
+              "description": "Play song snippets",
+              "minWidth": "40dp",
+              "minHeight": "40dp",
+              "targetCellWidth": 1,
+              "targetCellHeight": 1,
+              "previewImage": "./assets/widgets/short_snippets.png",
+              "resizeMode": "none",
+              "updatePeriodMillis": 0
+            },
+            {
+              "name": "ShortMix",
+              "label": "Mix for you",
+              "description": "Play a mix for you",
+              "minWidth": "40dp",
+              "minHeight": "40dp",
+              "targetCellWidth": 1,
+              "targetCellHeight": 1,
+              "previewImage": "./assets/widgets/short_mix.png",
+              "resizeMode": "none",
+              "updatePeriodMillis": 0
+            },
+            {
+              "name": "ShortSleep",
+              "label": "Sleep timer",
+              "description": "Sleep timer, 30 minutes",
+              "minWidth": "40dp",
+              "minHeight": "40dp",
+              "targetCellWidth": 1,
+              "targetCellHeight": 1,
+              "previewImage": "./assets/widgets/short_sleep.png",
+              "resizeMode": "none",
+              "updatePeriodMillis": 0
             }
           ]
         }

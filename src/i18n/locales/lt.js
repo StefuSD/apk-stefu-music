@@ -115,4 +115,5 @@ export default {
   an_title: 'Garso analizė', an_progress: 'Analizuojamos dainos: {n} iš {m}…', an_redo: 'Iš naujo analizuoti visas dainas',
   an_redo_q: 'Iš naujo rasti visų dainų fragmentus, tempą ir energiją? Rankiniu būdu nustatyti fragmentai liks.',
   an_hint: 'Tiesiog telefone, be interneto: fragmentas (įsimintiniausia dainos dalis), tempas, energija ir garso ryškumas. Naujos dainos analizuojamos automatiškai po pridėjimo.',
+  w_top_week: 'Savaitės topas', w_today: 'Šiandien', w_week: 'Šią savaitę', w_most: 'Dažniausiai', w_no_pl: 'Grojaraščių dar nėra', w_no_plays: 'Dar nieko neklausyta', hour_short: 'val.',
 };

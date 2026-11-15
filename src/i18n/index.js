@@ -143,6 +143,7 @@ const ru = {
   an_title: 'Разбор звука', an_progress: 'Разбираю песни: {n} из {m}…', an_redo: 'Разобрать все песни заново',
   an_redo_q: 'Найти сниппеты, темп и энергию для всех песен заново? Ручные сниппеты останутся.',
   an_hint: 'Прямо на телефоне, без интернета: сниппет (самая яркая часть песни), темп, энергия и яркость звука. Новые песни разбираются сами после добавления.',
+  w_top_week: 'Топ недели', w_today: 'Сегодня', w_week: 'За неделю', w_most: 'Чаще всего', w_no_pl: 'Плейлистов пока нет', w_no_plays: 'Пока нет прослушиваний', hour_short: 'ч',
 };
 
 const en = {
@@ -261,6 +262,7 @@ const en = {
   an_title: 'Sound analysis', an_progress: 'Analyzing songs: {n} of {m}…', an_redo: 'Analyze all songs again',
   an_redo_q: 'Find snippets, tempo and energy for all songs again? Snippets set by hand stay.',
   an_hint: 'Right on the phone, offline: the snippet (the catchiest part of the song), tempo, energy and brightness. New songs are analyzed automatically after adding.',
+  w_top_week: 'Top of the week', w_today: 'Today', w_week: 'This week', w_most: 'Most played', w_no_pl: 'No playlists yet', w_no_plays: 'No listens yet', hour_short: 'h',
 };
 
 // 19 языков интерфейса. Русский и английский — здесь, остальные — в locales/.
@@ -293,6 +295,16 @@ function pluralForm(n, forms) {
   if (y >= 2 && y <= 4) return f[1];
   return f[2];
 }
+
+/** Перевод без React (виджеты на рабочем столе: обработчик работает и без открытого приложения). */
+export function translate(lang, k, p) {
+  const dict = LANGS[lang] || en;
+  let s = dict[k] ?? en[k] ?? k;
+  if (s.includes('{songs}')) s = s.split('{songs}').join(pluralForm(p && p.n, dict.songs_forms || en.songs_forms));
+  if (p) for (const n of Object.keys(p)) s = s.split('{' + n + '}').join(String(p[n]));
+  return s;
+}
+export { deviceLang };
 
 const LangContext = createContext({ lang: 'ru', t: k => k, setLang: () => {} });
 

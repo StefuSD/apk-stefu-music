@@ -113,4 +113,5 @@ export default {
   an_title: 'Analisi del suono', an_progress: 'Analizzo i brani: {n} di {m}…', an_redo: 'Rianalizza tutti i brani',
   an_redo_q: 'Cercare di nuovo frammenti, tempo ed energia per tutti i brani? I frammenti impostati a mano restano.',
   an_hint: 'Direttamente sul telefono, senza internet: il frammento (la parte più orecchiabile del brano), tempo, energia e brillantezza. I nuovi brani vengono analizzati da soli dopo l’aggiunta.',
+  w_top_week: 'Top della settimana', w_today: 'Oggi', w_week: 'Questa settimana', w_most: 'Più ascoltato', w_no_pl: 'Ancora nessuna playlist', w_no_plays: 'Ancora nessun ascolto', hour_short: 'h',
 };

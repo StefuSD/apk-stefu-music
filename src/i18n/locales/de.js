@@ -113,4 +113,5 @@ export default {
   an_title: 'Klanganalyse', an_progress: 'Analysiere Songs: {n} von {m}…', an_redo: 'Alle Songs neu analysieren',
   an_redo_q: 'Snippets, Tempo und Energie für alle Songs neu ermitteln? Von Hand gesetzte Snippets bleiben.',
   an_hint: 'Direkt auf dem Handy, ohne Internet: das Snippet (der eingängigste Teil des Songs), Tempo, Energie und Helligkeit. Neue Songs werden nach dem Hinzufügen automatisch analysiert.',
+  w_top_week: 'Top der Woche', w_today: 'Heute', w_week: 'Diese Woche', w_most: 'Am meisten gehört', w_no_pl: 'Noch keine Playlists', w_no_plays: 'Noch nichts gehört', hour_short: 'Std.',
 };

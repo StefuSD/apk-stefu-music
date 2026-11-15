@@ -115,4 +115,5 @@ export default {
   an_title: 'Analýza zvuku', an_progress: 'Analyzuji skladby: {n} z {m}…', an_redo: 'Znovu analyzovat všechny skladby',
   an_redo_q: 'Znovu najít úryvky, tempo a energii pro všechny skladby? Ručně nastavené úryvky zůstanou.',
   an_hint: 'Přímo v telefonu, bez internetu: úryvek (nejchytlavější část skladby), tempo, energie a jas zvuku. Nové skladby se po přidání analyzují samy.',
+  w_top_week: 'Top týdne', w_today: 'Dnes', w_week: 'Tento týden', w_most: 'Nejčastěji', w_no_pl: 'Zatím žádné playlisty', w_no_plays: 'Zatím žádná poslechnutí', hour_short: 'h',
 };

@@ -12,7 +12,7 @@ const K_SNIP_DAY = 'sm_snip_day';   // { d: день, n: сколько снип
 import { Platform } from 'react-native';
 import { requestWidgetUpdate } from 'react-native-android-widget';
 import PlayerWidget from '../widget/PlayerWidget';
-import { K_WIDGET } from '../widget/widgetTaskHandler';
+import { K_WIDGET, SCHEME } from '../widget/data';
 
 /**
  * Плеер: один на всё приложение.
@@ -559,7 +559,11 @@ export function PlayerProvider({ children }) {
   cmds.current = { toggle, next: () => next(false), prev };
   const widgetState = () => {
     const song = libRef.current.byId[st.current.queue[st.current.index]];
-    return { title: song ? song.title : '', artist: song ? song.artist : '', playing: !!player.playing };
+    return {
+      id: song ? song.id : '', title: song ? song.title : '', artist: song ? song.artist : '',
+      cover: song ? song.cover || '' : '', fav: !!(song && song.fav), duration: song ? song.duration || 0 : 0,
+      pos: player.currentTime || 0, playing: !!player.playing,
+    };
   };
   useEffect(() => {
     global.__stefuWidget = {
@@ -567,6 +571,10 @@ export function PlayerProvider({ children }) {
         if (a === 'TOGGLE') cmds.current.toggle();
         else if (a === 'NEXT') cmds.current.next();
         else if (a === 'PREV') cmds.current.prev();
+        else if (a === 'FAV') {
+          const song = libRef.current.byId[st.current.queue[st.current.index]];
+          if (song) libRef.current.updateSong(song.id, { fav: !song.fav });
+        }
       },
       state: widgetState,
     };
@@ -576,8 +584,9 @@ export function PlayerProvider({ children }) {
     if (Platform.OS !== 'android') return;
     const s = widgetState();
     s.playing = !!status.playing;
-    AsyncStorage.setItem(K_WIDGET, JSON.stringify({ title: s.title, artist: s.artist })).catch(() => {});
-    requestWidgetUpdate({ widgetName: 'Player', renderWidget: () => <PlayerWidget {...s} live /> }).catch(() => {});
+    const { playing: _p, pos: _q, ...keep } = s;
+    AsyncStorage.setItem(K_WIDGET, JSON.stringify(keep)).catch(() => {});
+    requestWidgetUpdate({ widgetName: 'Player', renderWidget: () => <PlayerWidget {...s} live scheme={SCHEME} />, widgetNotFound: () => {} }).catch(() => {});
   }, [currentId, status.playing, lib.byId]);
 
   const statusValue = useMemo(() => ({

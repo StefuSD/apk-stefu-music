@@ -113,4 +113,5 @@ export default {
   an_title: 'Analyse du son', an_progress: 'Analyse des titres : {n} sur {m}…', an_redo: 'Réanalyser tous les titres',
   an_redo_q: 'Rechercher à nouveau extraits, tempo et énergie pour tous les titres ? Les extraits définis à la main sont conservés.',
   an_hint: 'Directement sur le téléphone, sans Internet : l’extrait (la partie la plus accrocheuse du titre), tempo, énergie et brillance. Les nouveaux titres sont analysés automatiquement après leur ajout.',
+  w_top_week: 'Top de la semaine', w_today: 'Aujourd’hui', w_week: 'Cette semaine', w_most: 'Le plus écouté', w_no_pl: 'Pas encore de playlists', w_no_plays: 'Pas encore d’écoutes', hour_short: 'h',
 };

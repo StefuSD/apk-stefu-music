@@ -113,4 +113,5 @@ export default {
   an_title: 'Análise do som', an_progress: 'Analisando músicas: {n} de {m}…', an_redo: 'Analisar todas as músicas de novo',
   an_redo_q: 'Buscar de novo trechos, andamento e energia de todas as músicas? Os trechos definidos à mão continuam.',
   an_hint: 'No próprio celular, sem internet: o trecho (a parte mais marcante da música), andamento, energia e brilho. Músicas novas são analisadas sozinhas depois de adicionadas.',
+  w_top_week: 'Top da semana', w_today: 'Hoje', w_week: 'Esta semana', w_most: 'Mais ouvido', w_no_pl: 'Ainda sem playlists', w_no_plays: 'Ainda sem audições', hour_short: 'h',
 };

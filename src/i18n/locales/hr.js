@@ -115,4 +115,5 @@ export default {
   an_title: 'Analiza zvuka', an_progress: 'Analiziram pjesme: {n} od {m}…', an_redo: 'Ponovno analiziraj sve pjesme',
   an_redo_q: 'Ponovno pronaći isječke, tempo i energiju za sve pjesme? Ručno postavljeni isječci ostaju.',
   an_hint: 'Izravno na mobitelu, bez interneta: isječak (najzarazniji dio pjesme), tempo, energija i svjetlina zvuka. Nove pjesme analiziraju se same nakon dodavanja.',
+  w_top_week: 'Top tjedna', w_today: 'Danas', w_week: 'Ovaj tjedan', w_most: 'Najčešće', w_no_pl: 'Još nema popisa', w_no_plays: 'Još nema slušanja', hour_short: 'h',
 };

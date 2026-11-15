@@ -115,4 +115,5 @@ export default {
   an_title: 'Ljudanalys', an_progress: 'Analyserar låtar: {n} av {m}…', an_redo: 'Analysera alla låtar igen',
   an_redo_q: 'Hitta snuttar, tempo och energi för alla låtar igen? Snuttar som satts för hand behålls.',
   an_hint: 'Direkt i telefonen, utan internet: snutten (den mest catchiga delen av låten), tempo, energi och klangfärg. Nya låtar analyseras automatiskt när de läggs till.',
+  w_top_week: 'Veckans topp', w_today: 'I dag', w_week: 'Den här veckan', w_most: 'Mest spelad', w_no_pl: 'Inga spellistor än', w_no_plays: 'Inga lyssningar än', hour_short: 'h',
 };

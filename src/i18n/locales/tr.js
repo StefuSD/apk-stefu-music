@@ -113,4 +113,5 @@ export default {
   an_title: 'Ses analizi', an_progress: 'Şarkılar analiz ediliyor: {n} / {m}…', an_redo: 'Tüm şarkıları yeniden analiz et',
   an_redo_q: 'Tüm şarkılar için kesit, tempo ve enerji yeniden bulunsun mu? Elle ayarlanan kesitler kalır.',
   an_hint: 'Doğrudan telefonda, internetsiz: kesit (şarkının en akılda kalan kısmı), tempo, enerji ve ses parlaklığı. Yeni şarkılar eklendikten sonra otomatik analiz edilir.',
+  w_top_week: 'Haftanın en iyileri', w_today: 'Bugün', w_week: 'Bu hafta', w_most: 'En çok dinlenen', w_no_pl: 'Henüz çalma listesi yok', w_no_plays: 'Henüz dinleme yok', hour_short: 'sa',
 };

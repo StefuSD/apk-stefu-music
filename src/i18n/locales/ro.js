@@ -113,4 +113,5 @@ export default {
   an_title: 'Analiza sunetului', an_progress: 'Analizez melodii: {n} din {m}…', an_redo: 'Analizează din nou toate melodiile',
   an_redo_q: 'Cauți din nou fragmentele, tempoul și energia pentru toate melodiile? Fragmentele setate manual rămân.',
   an_hint: 'Direct pe telefon, fără internet: fragmentul (partea cea mai catchy a melodiei), tempo, energie și luminozitate. Melodiile noi sunt analizate automat după adăugare.',
+  w_top_week: 'Topul săptămânii', w_today: 'Azi', w_week: 'Săptămâna asta', w_most: 'Cel mai ascultat', w_no_pl: 'Încă nu ai playlisturi', w_no_plays: 'Încă nicio ascultare', hour_short: 'h',
 };

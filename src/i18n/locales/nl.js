@@ -115,4 +115,5 @@ export default {
   an_title: 'Geluidsanalyse', an_progress: 'Nummers analyseren: {n} van {m}…', an_redo: 'Alle nummers opnieuw analyseren',
   an_redo_q: 'Fragmenten, tempo en energie voor alle nummers opnieuw bepalen? Handmatig ingestelde fragmenten blijven.',
   an_hint: 'Gewoon op je telefoon, zonder internet: het fragment (het meest pakkende deel van het nummer), tempo, energie en helderheid. Nieuwe nummers worden na het toevoegen automatisch geanalyseerd.',
+  w_top_week: 'Top van de week', w_today: 'Vandaag', w_week: 'Deze week', w_most: 'Meest beluisterd', w_no_pl: 'Nog geen afspeellijsten', w_no_plays: 'Nog niets beluisterd', hour_short: 'u',
 };

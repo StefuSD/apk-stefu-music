@@ -113,4 +113,5 @@ export default {
   an_title: 'Análisis del sonido', an_progress: 'Analizando canciones: {n} de {m}…', an_redo: 'Volver a analizar todas las canciones',
   an_redo_q: '¿Buscar de nuevo fragmentos, tempo y energía de todas las canciones? Los fragmentos puestos a mano se mantienen.',
   an_hint: 'En el propio teléfono, sin internet: el fragmento (la parte más pegadiza de la canción), tempo, energía y brillo. Las canciones nuevas se analizan solas al añadirlas.',
+  w_top_week: 'Top de la semana', w_today: 'Hoy', w_week: 'Esta semana', w_most: 'Más escuchado', w_no_pl: 'Aún no hay listas', w_no_plays: 'Aún no hay escuchas', hour_short: 'h',
 };

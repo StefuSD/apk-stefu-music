@@ -32,7 +32,9 @@ export default function LinkHandler({ navRef, navReady, openPlayer }) {
     let alive = true;
     Linking.getInitialURL().then(u => { if (alive && u) setPending(p => [...p, u]); }).catch(() => {});
     const sub = Linking.addEventListener('url', e => { if (e && e.url) setPending(p => [...p, e.url]); });
-    return () => { alive = false; sub.remove(); };
+    // Кнопки виджетов, пока приложение в памяти, присылают ссылку сюда (src/widget/widgetTaskHandler.js).
+    global.__stefuLink = u => setPending(p => [...p, u]);
+    return () => { alive = false; sub.remove(); global.__stefuLink = null; };
   }, []);
 
   useEffect(() => {
@@ -151,6 +153,13 @@ export default function LinkHandler({ navRef, navReady, openPlayer }) {
       }
       case 'play': {
         if (!lib.songs.length) { go('Music'); return; }
+        if (a.id && lib.byId[a.id]) {
+          // конкретная песня (виджет «Топ недели»): она, а за ней похожие
+          const s = lib.byId[a.id];
+          player.playList(radioQueue(s, lib.songs, lib.recIndex, 40), s.id);
+          toast(t('now_playing') + ': ' + s.title);
+          return;
+        }
         if (!hasFilter(a)) {
           // «Включи музыку»: продолжить начатое, иначе — всю библиотеку (новые первыми).
           if (!a.shuffle && player.queue.length) { if (!playingRef.current) player.toggle(); return; }

@@ -113,4 +113,5 @@ export default {
   an_title: 'Analiza dźwięku', an_progress: 'Analizuję utwory: {n} z {m}…', an_redo: 'Przeanalizuj wszystkie utwory ponownie',
   an_redo_q: 'Wykryć ponownie fragmenty, tempo i energię dla wszystkich utworów? Ręcznie ustawione fragmenty zostaną.',
   an_hint: 'Bezpośrednio na telefonie, bez internetu: fragment (najbardziej chwytliwa część utworu), tempo, energia i jasność brzmienia. Nowe utwory są analizowane automatycznie po dodaniu.',
+  w_top_week: 'Top tygodnia', w_today: 'Dziś', w_week: 'W tym tygodniu', w_most: 'Najczęściej', w_no_pl: 'Brak playlist', w_no_plays: 'Brak odsłuchań', hour_short: 'godz.',
 };

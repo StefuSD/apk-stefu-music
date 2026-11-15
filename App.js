@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { View, Platform, Image, Appearance } from 'react-native';
+import { View, Platform, Image, Appearance, Animated, StyleSheet } from 'react-native';
+import Svg, { Defs, LinearGradient, RadialGradient, Stop, Rect } from 'react-native-svg';
 import { NavigationContainer, DefaultTheme, DarkTheme } from '@react-navigation/native';
 import { navRef } from './src/navigation/navRef';
 import { ProProvider } from './src/pro/ProContext';
@@ -21,6 +22,7 @@ import LibraryScreen from './src/screens/LibraryScreen';
 import ReportsScreen from './src/screens/ReportsScreen';
 import SettingsScreen from './src/screens/SettingsScreen';
 import LinkHandler from './src/links/LinkHandler';
+import WidgetSync from './src/widget/WidgetSync';
 
 const Tab = createBottomTabNavigator();
 // Ссылки com.stefu.music://… переключают вкладки (src/links/LinkHandler.js); navRef — src/navigation/navRef.js.
@@ -85,12 +87,38 @@ function Tabs({ onOpenPlayer }) {
 const SPLASH_LIGHT = require('./assets/splash-icon.png');
 const SPLASH_DARK = require('./assets/splash-icon-dark.png');
 const SPLASH_MIN_MS = 1000;
+// Системная заставка Android 12+ умеет только сплошной цвет (SPLASH_BG в assets/mk_icon.py), поэтому
+// градиент — здесь: поверх того же цвета он проявляется за 450 мс. Средний тон градиента равен SPLASH_BG,
+// так что смена заставок не видна, а фон «оживает»: сиреневый сверху справа → фиолетовый снизу слева.
 function AppSplash() {
   const dark = Appearance.getColorScheme() === 'dark';
+  const fade = React.useRef(new Animated.Value(0)).current;
+  useEffect(() => { Animated.timing(fade, { toValue: 1, duration: 450, useNativeDriver: true }).start(); }, []);
   return (
-    // фон — как у системной заставки (assets/mk_icon.py → SPLASH_BG), знак и надпись белые
     <View style={{ flex: 1, backgroundColor: '#7b3fcf', alignItems: 'center', justifyContent: 'center' }}>
       <StatusBar style="light" />
+      <Animated.View pointerEvents="none" style={[StyleSheet.absoluteFill, { opacity: fade }]}>
+        <Svg width="100%" height="100%" viewBox="0 0 100 100" preserveAspectRatio="none">
+          <Defs>
+            <LinearGradient id="sb" x1="1" y1="0" x2="0" y2="1">
+              <Stop offset="0" stopColor="#a678ee" />
+              <Stop offset="0.5" stopColor="#7b3fcf" />
+              <Stop offset="1" stopColor="#4f1a9e" />
+            </LinearGradient>
+            <RadialGradient id="g1" cx="95" cy="0" r="60" gradientUnits="userSpaceOnUse">
+              <Stop offset="0" stopColor="#d9c2ff" stopOpacity="0.55" />
+              <Stop offset="1" stopColor="#d9c2ff" stopOpacity="0" />
+            </RadialGradient>
+            <RadialGradient id="g2" cx="0" cy="100" r="65" gradientUnits="userSpaceOnUse">
+              <Stop offset="0" stopColor="#c026d3" stopOpacity="0.45" />
+              <Stop offset="1" stopColor="#c026d3" stopOpacity="0" />
+            </RadialGradient>
+          </Defs>
+          <Rect x="0" y="0" width="100" height="100" fill="url(#sb)" />
+          <Rect x="0" y="0" width="100" height="100" fill="url(#g1)" />
+          <Rect x="0" y="0" width="100" height="100" fill="url(#g2)" />
+        </Svg>
+      </Animated.View>
       <Image source={dark ? SPLASH_DARK : SPLASH_LIGHT} style={{ width: 288, height: 288 }} />
     </View>
   );
@@ -130,6 +158,7 @@ function Main() {
         <PlayerSheet visible={playerOpen} onClose={() => setPlayerOpen(false)} onEdit={s => setEditing(s)} />
         {editing && <SongEditor song={editing} onClose={() => setEditing(null)} />}
         <LinkHandler navRef={navRef} navReady={navReady} openPlayer={() => setPlayerOpen(true)} />
+        <WidgetSync />
         {!playerOpen ? <FavToast bottom={170} /> : null}
       </UIProvider>
     </View>

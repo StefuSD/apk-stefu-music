@@ -64,7 +64,7 @@ export function parseQuery(qs) {
 }
 
 /**
- * Ссылка → { action, q, title, artist, album, genre, tag, lang, fav, shuffle, period }
+ * Ссылка → { action, q, title, artist, album, genre, tag, lang, fav, shuffle, period, id }
  * или null, если ссылка не наша / действие неизвестно.
  */
 export function parseLink(url) {
@@ -86,6 +86,7 @@ export function parseLink(url) {
     if (v) a[k] = v;
   }
   if (p.lang) { const l = normLang(p.lang); if (l) a.lang = l; }
+  if (p.id && /^[\w-]{1,40}$/.test(p.id.trim())) a.id = p.id.trim();   // play?id=… — песня из виджета «Топ недели»
   if (truthy(p.fav)) a.fav = true;
   if (truthy(p.shuffle)) a.shuffle = true;
   if (name === 'favorites') { a.action = 'play'; a.fav = true; }
