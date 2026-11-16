@@ -59,6 +59,7 @@
       "./plugins/withLinks",
       "./plugins/withShortcuts",
       "./plugins/withReleaseSigning",
+      "./plugins/withTransparentNavBar",
       [
         "react-native-android-widget",
         {
