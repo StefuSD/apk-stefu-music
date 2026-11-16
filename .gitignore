@@ -6,3 +6,26 @@ build-out/
 # сборка нативного модуля и кэш Python
 modules/*/android/build/
 __pycache__/
+
+# Общие исключения (16.11.2026): зависимости, сборки, apk, ключи подписи, .env
+dist/
+web-build/
+*.log
+.DS_Store
+/releases/
+*.apk
+*.aab
+*.jks
+*.keystore
+!debug.keystore
+.env
+.env.*
+!.env.example
+build/
+.gradle/
+.cxx/
+local.properties
+*.hprof
+.idea/
+*.iml
+nul/
