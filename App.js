@@ -146,12 +146,12 @@ function Main() {
   const [navReady, setNavReady] = useState(false);
 
   // Системная панель внизу прозрачная (plugins/withTransparentNavBar.js): под ней видно нижнее меню
-  // вкладок. Значки кнопок — тёмные на светлом меню, белые на тёмном.
+  // вкладок или открытый плеер. Значки кнопок — тёмные на светлом меню, белые на тёмном (плеер всегда тёмный).
   const lightTabBar = isLightColor(colors.tabBar);
   useEffect(() => {
     if (Platform.OS !== 'android') return;
-    NavigationBar.setButtonStyleAsync(lightTabBar ? 'dark' : 'light').catch(() => {});
-  }, [lightTabBar]);
+    NavigationBar.setButtonStyleAsync(lightTabBar && !playerOpen ? 'dark' : 'light').catch(() => {});
+  }, [lightTabBar, playerOpen]);
 
   const ui = useMemo(() => ({ openEditor: s => setEditing(s), openPlayer: () => setPlayerOpen(true) }), []);
   const base = isDark ? DarkTheme : DefaultTheme;

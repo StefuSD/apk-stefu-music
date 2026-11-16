@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { View, Text, Pressable, Modal, StyleSheet, Dimensions, ScrollView, Animated, Easing, Linking, Alert, Image } from 'react-native';
+import { View, Text, Pressable, Modal, StyleSheet, Dimensions, ScrollView, Animated, Easing, Linking, Alert, Image, BackHandler } from 'react-native';
 import { langName } from '../utils/languages';
 import Svg, { Defs, LinearGradient, Stop, Rect } from 'react-native-svg';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -231,11 +231,11 @@ export function PlayerSheet({ visible, onClose, onEdit }) {
   const sleepLabel = useSleepLabel(p.sleep, t);
 
   return (
-    // Нижняя системная панель здесь непрозрачная (без navigationBarTranslucent): Android рисует её чёрной
-    // с белыми кнопками. Прозрачная панель в светлой теме телефона получала светлую подложку под кнопками
-    // (контраст) — светлая полоса под тёмным плеером. Поэтому и снизу отступ без высоты панели.
-    <Modal visible={visible} animationType="slide" onRequestClose={onClose} statusBarTranslucent>
-      <View style={{ flex: 1, backgroundColor: colors.player, paddingTop: insets.top + 6, paddingBottom: 10 }}>
+    // Не Modal, а слой поверх приложения в том же окне: окну Modal React Native сам рисует под системными
+    // кнопками светлую подложку (в светлой теме телефона), а здесь системная панель прозрачная —
+    // под кнопками видно плеер. Список внизу получает отступ на высоту панели (insets.bottom).
+    <SlideSheet visible={visible} onClose={onClose}>
+      <View style={{ flex: 1, backgroundColor: colors.player, paddingTop: insets.top + 6 }}>
         {/* Обложка — фон под названием и кнопками. Сверху и снизу затемнение,
             чтобы белый текст и кнопки читались на любой картинке; книзу
             обложка растворяется в цвете плеера. */}
@@ -264,7 +264,7 @@ export function PlayerSheet({ visible, onClose, onEdit }) {
           <Text style={{ color: '#ffffff99', fontWeight: '600', letterSpacing: 1.5, fontSize: 11 }}>{t('now_playing').toUpperCase()}</Text>
           <Pressable onPress={() => song && onEdit(song)} hitSlop={12} style={st.round}><EditIcon color={W} size={22} /></Pressable>
         </View>
-        <ScrollView ref={scrollRef} keyboardShouldPersistTaps="handled" contentContainerStyle={{ paddingHorizontal: 28, paddingBottom: 20 }}>
+        <ScrollView ref={scrollRef} keyboardShouldPersistTaps="handled" contentContainerStyle={{ paddingHorizontal: 28, paddingBottom: 30 + insets.bottom }}>
           {/* Название сразу под верхними кнопками: обложка/абстракция остаётся фоном, без пустого места сверху. */}
           <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 22 }}>
             <View style={{ flex: 1 }}>
@@ -444,7 +444,34 @@ export function PlayerSheet({ visible, onClose, onEdit }) {
           { label: t('sleep_end'), onPress: () => p.setSleep('end') },
           ...(p.sleep ? [{ label: t('sleep_off'), danger: true, onPress: () => p.setSleep(null) }] : []),
         ]} />
-    </Modal>
+    </SlideSheet>
+  );
+}
+
+/** Полноэкранный слой, выезжающий снизу (замена Modal без своего окна); «Назад» закрывает. */
+function SlideSheet({ visible, onClose, children }) {
+  const h = Dimensions.get('window').height;
+  const y = useRef(new Animated.Value(visible ? 0 : h)).current;
+  const [mounted, setMounted] = useState(visible);
+  useEffect(() => {
+    if (visible) {
+      setMounted(true);
+      Animated.timing(y, { toValue: 0, duration: 260, easing: Easing.out(Easing.cubic), useNativeDriver: true }).start();
+    } else if (mounted) {
+      Animated.timing(y, { toValue: h, duration: 220, easing: Easing.in(Easing.cubic), useNativeDriver: true })
+        .start(() => setMounted(false));
+    }
+  }, [visible]);
+  useEffect(() => {
+    if (!visible) return;
+    const sub = BackHandler.addEventListener('hardwareBackPress', () => { onClose(); return true; });
+    return () => sub.remove();
+  }, [visible, onClose]);
+  if (!mounted) return null;
+  return (
+    <Animated.View style={[StyleSheet.absoluteFill, { transform: [{ translateY: y }] }]}>
+      {children}
+    </Animated.View>
   );
 }
 
